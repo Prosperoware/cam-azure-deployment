@@ -688,28 +688,7 @@
                                 "status": "Active",
                                 "enableBatchedOperations": true,
                                 "autoDeleteOnIdle": "P14D"
-                            },
-                            "resources": [
-                                {
-                                    "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
-                                    "apiVersion": "2018-01-01-preview",
-                                    "name": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'), '/', variables('renewalTopicName'), '-sub/$Default')]",
-                                    "location": "[parameters('location')]",
-                                    "dependsOn": [
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('renewalTopicName'), concat(variables('renewalTopicName'), '-sub'))]",
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('renewalTopicName'))]",
-                                        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
-                                    ],
-                                    "properties": {
-                                        "action": {},
-                                        "filterType": "SqlFilter",
-                                        "sqlFilter": {
-                                            "sqlExpression": "1=1",
-                                            "compatibilityLevel": 20
-                                        }
-                                    }
-                                }
-                            ]
+                            }
                         }
                     ]
                 },
@@ -753,28 +732,7 @@
                                 "status": "Active",
                                 "enableBatchedOperations": true,
                                 "autoDeleteOnIdle": "P14D"
-                            },
-                            "resources": [
-                                {
-                                    "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
-                                    "apiVersion": "2018-01-01-preview",
-                                    "name": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'), '/', variables('mappingTopicName'), '-sub/$Default')]",
-                                    "location": "[parameters('location')]",
-                                    "dependsOn": [
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('mappingTopicName'), concat(variables('mappingTopicName'), '-sub'))]",
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('mappingTopicName'))]",
-                                        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
-                                    ],
-                                    "properties": {
-                                        "action": {},
-                                        "filterType": "SqlFilter",
-                                        "sqlFilter": {
-                                            "sqlExpression": "1=1",
-                                            "compatibilityLevel": 20
-                                        }
-                                    }
-                                }
-                            ]
+                            }
                         }
                     ]
                 },
@@ -818,28 +776,7 @@
                                 "status": "Active",
                                 "enableBatchedOperations": true,
                                 "autoDeleteOnIdle": "P14D"
-                            },
-                            "resources": [
-                                {
-                                    "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
-                                    "apiVersion": "2018-01-01-preview",
-                                    "name": "[concat(variables('serviceBusName'), '/', variables('reloadTopicName'), '/', variables('reloadTopicName'), '-sub/$Default')]",
-                                    "location": "[parameters('location')]",
-                                    "dependsOn": [
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('reloadTopicName'), concat(variables('reloadTopicName'), '-sub'))]",
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('reloadTopicName'))]",
-                                        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
-                                    ],
-                                    "properties": {
-                                        "action": {},
-                                        "filterType": "SqlFilter",
-                                        "sqlFilter": {
-                                            "sqlExpression": "1=1",
-                                            "compatibilityLevel": 20
-                                        }
-                                    }
-                                }
-                            ]
+                            }
                         }
                     ]
                 }
