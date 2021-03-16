@@ -948,10 +948,6 @@
                         "[resourceId('Microsoft.Web/sites',variables('sitesApiName'))]"
                     ],
                     "properties": {
-                        "script_root_path_href": "https://contentsyncdev-io-etl-api.azurewebsites.net/admin/vfs/site/wwwroot/activateMapping/",
-                        "script_href": "https://contentsyncdev-io-etl-api.azurewebsites.net/admin/vfs/site/wwwroot/az-etl-api-1.0-SNAPSHOT.jar",
-                        "config_href": "https://contentsyncdev-io-etl-api.azurewebsites.net/admin/vfs/site/wwwroot/activateMapping/function.json",
-                        "href": "https://contentsyncdev-io-etl-api.azurewebsites.net/admin/functions/activateMapping",
                         "config": {}
                     }
                 }
