@@ -166,19 +166,6 @@
                             }
                         }
                     ]
-                },
-                {
-                    "type": "Microsoft.Storage/storageAccounts/tableServices",
-                    "apiVersion": "2020-08-01-preview",
-                    "name": "[concat(variables('storageAccountName'), '/default')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-                    ],
-                    "properties": {
-                        "cors": {
-                            "corsRules": []
-                        }
-                    }
                 }
             ]
         },
@@ -638,20 +625,6 @@
                     }
                 },
                 {
-                    "type": "Microsoft.ServiceBus/namespaces/networkRuleSets",
-                    "apiVersion": "2018-01-01-preview",
-                    "name": "[concat(variables('serviceBusName'), '/default')]",
-                    "location": "[parameters('location')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
-                    ],
-                    "properties": {
-                        "defaultAction": "Deny",
-                        "virtualNetworkRules": [],
-                        "ipRules": []
-                    }
-                },
-                {
                     "type": "Microsoft.ServiceBus/namespaces/queues",
                     "apiVersion": "2018-01-01-preview",
                     "name": "[concat(variables('serviceBusName'), '/', variables('queueName'))]",
@@ -699,7 +672,7 @@
                         {
                             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
                             "apiVersion": "2018-01-01-preview",
-                            "name": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'), '/', variables('renewalTopicName'), '_subscription')]",
+                            "name": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'), '/', variables('renewalTopicName'), '-sub')]",
                             "location": "[parameters('location')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('renewalTopicName'))]",
@@ -720,10 +693,10 @@
                                 {
                                     "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
                                     "apiVersion": "2018-01-01-preview",
-                                    "name": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'), '/', variables('renewalTopicName'), '_subscription/$Default')]",
+                                    "name": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'), '/', variables('renewalTopicName'), '-sub/$Default')]",
                                     "location": "[parameters('location')]",
                                     "dependsOn": [
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('renewalTopicName'), concat(variables('renewalTopicName'), '_subscription'))]",
+                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('renewalTopicName'), concat(variables('renewalTopicName'), '-sub'))]",
                                         "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('renewalTopicName'))]",
                                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                                     ],
@@ -764,14 +737,14 @@
                         {
                             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
                             "apiVersion": "2018-01-01-preview",
-                            "name": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'), '/', variables('mappingTopicName'), '_subscription')]",
+                            "name": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'), '/', variables('mappingTopicName'), '-sub')]",
                             "location": "[parameters('location')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('mappingTopicName'))]",
                                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                             ],
                             "properties": {
-                                "lockDuration": "PT30S",
+                                "lockDuration": "PT5M",
                                 "requiresSession": false,
                                 "defaultMessageTimeToLive": "P14D",
                                 "deadLetteringOnMessageExpiration": false,
@@ -785,10 +758,10 @@
                                 {
                                     "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
                                     "apiVersion": "2018-01-01-preview",
-                                    "name": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'), '/', variables('mappingTopicName'), '_subscription/$Default')]",
+                                    "name": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'), '/', variables('mappingTopicName'), '-sub/$Default')]",
                                     "location": "[parameters('location')]",
                                     "dependsOn": [
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('mappingTopicName'), concat(variables('mappingTopicName'), '_subscription'))]",
+                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('mappingTopicName'), concat(variables('mappingTopicName'), '-sub'))]",
                                         "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('mappingTopicName'))]",
                                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                                     ],
@@ -829,7 +802,7 @@
                         {
                             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
                             "apiVersion": "2018-01-01-preview",
-                            "name": "[concat(variables('serviceBusName'), '/', variables('reloadTopicName'), '/', variables('reloadTopicName'), '_subscription')]",
+                            "name": "[concat(variables('serviceBusName'), '/', variables('reloadTopicName'), '/', variables('reloadTopicName'), '-sub')]",
                             "location": "[parameters('location')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('reloadTopicName'))]",
@@ -850,10 +823,10 @@
                                 {
                                     "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions/rules",
                                     "apiVersion": "2018-01-01-preview",
-                                    "name": "[concat(variables('serviceBusName'), '/', variables('reloadTopicName'), '/', variables('reloadTopicName'), '_subscription/$Default')]",
+                                    "name": "[concat(variables('serviceBusName'), '/', variables('reloadTopicName'), '/', variables('reloadTopicName'), '-sub/$Default')]",
                                     "location": "[parameters('location')]",
                                     "dependsOn": [
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('reloadTopicName'), concat(variables('reloadTopicName'), '_subscription'))]",
+                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('reloadTopicName'), concat(variables('reloadTopicName'), '-sub'))]",
                                         "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('reloadTopicName'))]",
                                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                                     ],
