@@ -53,9 +53,7 @@
         "commonId": "[concat('contentsync', parameters('EnvironmentStage'), parameters('TopLevelDomain'))]",
         "resourcesNamespace": "[concat('contentsync-', parameters('EnvironmentStage'), '-', parameters('TopLevelDomain'))]",
         "mySqlServerName": "[concat('mysql-', variables('resourcesNamespace'))]",
-        "databaseName": "[concat(variables('mySqlServerName'), '/', variables('commonId'))]",
         "cosmosName": "[concat('cosmos-', variables('resourcesNamespace'))]",
-        "cosmosDatabase": "[concat(variables('cosmosName'), '/', variables('commonId'))]",
         "serviceBusName": "[concat('servicebus-', variables('resourcesNamespace'))]",
         "queueName": "[concat(variables('resourcesNamespace'), '-etl-process-v1')]",
         "renewalTopicName": "[concat(variables('resourcesNamespace'), '-etl_mapping_worker_start')]",
@@ -215,7 +213,7 @@
                 {
                     "type": "Microsoft.DBForMySQL/servers/databases",
                     "apiVersion": "2017-12-01",
-                    "name": "[variables('databaseName')]",
+                    "name": "[concat(variables('mySqlServerName'), '/', variables('commonId'))]",
                     "dependsOn": [
                         "[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]"
                     ],
@@ -279,7 +277,7 @@
                 {
                     "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
                     "apiVersion": "2020-09-01",
-                    "name": "[variables('cosmosDatabase')]",
+                    "name": "[concat(variables('cosmosName'), '/', variables('commonId'))]",
                     "dependsOn": [
                         "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                     ],        
@@ -292,9 +290,9 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosDatabase'), '/', variables('commonId'), '-tenant')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-tenant')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosDatabase'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
@@ -333,9 +331,9 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosDatabase'), '/', variables('commonId'), '-etl-auth')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-etl-auth')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosDatabase'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
@@ -380,9 +378,9 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosDatabase'), '/', variables('commonId'), '-etl-job')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-etl-job')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosDatabase'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
@@ -427,9 +425,9 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosDatabase'), '/', variables('commonId'), '-etl-job-items')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-etl-job-items')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosDatabase'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
@@ -474,9 +472,9 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosDatabase'), '/', variables('commonId'), '-etl-mapping')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-etl-mapping')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosDatabase'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
@@ -521,9 +519,9 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosDatabase'), '/', variables('commonId'), '-etl-office-subscription')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-etl-office-subscription')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosDatabase'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
@@ -568,9 +566,9 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosDatabase'), '/', variables('commonId'), '-systemauth')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-systemauth')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosDatabase'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
@@ -704,7 +702,7 @@
                             "name": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'), '/', variables('renewalTopicName'), '_subscription')]",
                             "location": "[parameters('location')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), '/', variables('renewalTopicName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('renewalTopicName'))]",
                                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                             ],
                             "properties": {
@@ -725,8 +723,8 @@
                                     "name": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'), '/', variables('renewalTopicName'), '_subscription/$Default')]",
                                     "location": "[parameters('location')]",
                                     "dependsOn": [
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), '/', variables('renewalTopicName'), '/', variables('renewalTopicName'), '_subscription')]",
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), '/', variables('renewalTopicName'))]",
+                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('renewalTopicName'), concat(variables('renewalTopicName'), '_subscription'))]",
+                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('renewalTopicName'))]",
                                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                                     ],
                                     "properties": {
@@ -769,7 +767,7 @@
                             "name": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'), '/', variables('mappingTopicName'), '_subscription')]",
                             "location": "[parameters('location')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), '/', variables('mappingTopicName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('mappingTopicName'))]",
                                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                             ],
                             "properties": {
@@ -790,8 +788,8 @@
                                     "name": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'), '/', variables('mappingTopicName'), '_subscription/$Default')]",
                                     "location": "[parameters('location')]",
                                     "dependsOn": [
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), '/', variables('mappingTopicName'), '/', variables('mappingTopicName'), '_subscription')]",
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), '/', variables('mappingTopicName'))]",
+                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('mappingTopicName'), concat(variables('mappingTopicName'), '_subscription'))]",
+                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('mappingTopicName'))]",
                                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                                     ],
                                     "properties": {
@@ -834,7 +832,7 @@
                             "name": "[concat(variables('serviceBusName'), '/', variables('reloadTopicName'), '/', variables('reloadTopicName'), '_subscription')]",
                             "location": "[parameters('location')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), '/', variables('reloadTopicName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('reloadTopicName'))]",
                                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                             ],
                             "properties": {
@@ -855,8 +853,8 @@
                                     "name": "[concat(variables('serviceBusName'), '/', variables('reloadTopicName'), '/', variables('reloadTopicName'), '_subscription/$Default')]",
                                     "location": "[parameters('location')]",
                                     "dependsOn": [
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), '/', variables('reloadTopicName'), '/', variables('reloadTopicName'), '_subscription')]",
-                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), '/', variables('reloadTopicName'))]",
+                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('reloadTopicName'), concat(variables('reloadTopicName'), '_subscription'))]",
+                                        "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('reloadTopicName'))]",
                                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                                     ],
                                     "properties": {
