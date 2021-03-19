@@ -9,13 +9,6 @@
                 "description": "Is Production?"
             }
         },
-        "Location": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().location]",
-            "metadata": {
-                "description": "Location"
-            }
-        },
         "EnvironmentStage": {
             "type": "string",
             "allowedValues": [
@@ -52,6 +45,9 @@
     "variables": {
         "commonId": "[concat('contentsync', parameters('EnvironmentStage'), parameters('TopLevelDomain'))]",
         "resourcesNamespace": "[concat('contentsync-', parameters('EnvironmentStage'), '-', parameters('TopLevelDomain'))]",
+        "storageAccountName": "[concat('strg', variables('commonId'))]",
+        "applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
+        "encryptedBucket": "[concat(variables('resourcesNamespace'), '-encrypted-bucket')]",
         "mySqlServerName": "[concat('mysql-', variables('resourcesNamespace'))]",
         "cosmosName": "[concat('cosmos-', variables('resourcesNamespace'))]",
         "serviceBusName": "[concat('servicebus-', variables('resourcesNamespace'))]",
@@ -59,23 +55,19 @@
         "renewalTopicName": "[concat(variables('resourcesNamespace'), '-etl_mapping_worker_start')]",
         "mappingTopicName": "[concat(variables('resourcesNamespace'), '-etl_renewal_worker_start')]",
         "reloadTopicName": "[concat(variables('resourcesNamespace'), '-systemauth_reload')]",
-        "storageAccountName": "[concat('strg', variables('commonId'))]",
-        "applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
-        "encryptedBucket": "[concat(variables('resourcesNamespace'), '-encrypted-bucket')]",
         "webServerName": "[concat(variables('resourcesNamespace'), '-api-app-srvr')]",
         "apiSitesName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
-        "renewalSiteName": "[concat(variables('resourcesNamespace'), '-io-etl-renewal')]",
-        "mappingSiteName": "[concat(variables('resourcesNamespace'), '-io-etl-mapping')]",
-        "processSiteName": "[concat(variables('resourcesNamespace'), '-io-etl-process')]",
-        "sourceCodeRepositoryURL": "https://github.com/Prosperoware/cam-azure-deployment",
-        "sourceCodeBranch": "master"
+        "renewalSiteName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
+        "mappingSiteName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
+        "processSiteName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
+        "Location": "[resourceGroup().location]"
     },
     "resources": [
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2020-08-01-preview",
             "name": "[variables('storageAccountName')]",
-            "location": "[parameters('location')]",
+            "location": "[variables('location')]",
             "sku": {
                 "name": "Standard_RAGRS",
                 "tier": "Standard"
@@ -178,7 +170,7 @@
             "type": "Microsoft.DBforMySQL/servers",
             "apiVersion": "2017-12-01",
             "name": "[variables('mySqlServerName')]",
-            "location": "[parameters('location')]",
+            "location": "[variables('location')]",
             "sku": {
                 "name": "B_Gen5_1",
                 "tier": "Basic",
@@ -220,7 +212,7 @@
             "type": "Microsoft.DocumentDB/databaseAccounts",
             "apiVersion": "2020-09-01",
             "name": "[variables('cosmosName')]",
-            "location": "[parameters('location')]",
+            "location": "[variables('location')]",
             "tags": {
                 "defaultExperience": "Core (SQL)",
                 "hidden-cosmos-mmspecial": "",
@@ -244,7 +236,7 @@
                 },
                 "locations": [
                     {
-                        "locationName": "[parameters('location')]",
+                        "locationName": "[variables('location')]",
                         "provisioningState": "Succeeded",
                         "failoverPriority": 0,
                         "isZoneRedundant": false
@@ -604,7 +596,7 @@
             "type": "Microsoft.ServiceBus/namespaces",
             "apiVersion": "2018-01-01-preview",
             "name": "[variables('serviceBusName')]",
-            "location": "[parameters('location')]",
+            "location": "[variables('location')]",
             "sku": {
                 "name": "Standard",
                 "tier": "Standard"
@@ -617,7 +609,7 @@
                     "type": "Microsoft.ServiceBus/namespaces/AuthorizationRules",
                     "apiVersion": "2017-04-01",
                     "name": "[concat(variables('serviceBusName'), '/RootManageSharedAccessKey')]",
-                    "location": "[parameters('location')]",
+                    "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                     ],
@@ -633,7 +625,7 @@
                     "type": "Microsoft.ServiceBus/namespaces/queues",
                     "apiVersion": "2018-01-01-preview",
                     "name": "[concat(variables('serviceBusName'), '/', variables('queueName'))]",
-                    "location": "[parameters('location')]",
+                    "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                     ],
@@ -657,7 +649,7 @@
                     "type": "Microsoft.ServiceBus/namespaces/topics",
                     "apiVersion": "2018-01-01-preview",
                     "name": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'))]",
-                    "location": "[parameters('location')]",
+                    "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                     ],
@@ -678,7 +670,7 @@
                             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
                             "apiVersion": "2018-01-01-preview",
                             "name": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'), '/', variables('renewalTopicName'), '-sub')]",
-                            "location": "[parameters('location')]",
+                            "location": "[variables('location')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('renewalTopicName'))]",
                                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
@@ -701,7 +693,7 @@
                     "type": "Microsoft.ServiceBus/namespaces/topics",
                     "apiVersion": "2018-01-01-preview",
                     "name": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'))]",
-                    "location": "[parameters('location')]",
+                    "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                     ],
@@ -722,7 +714,7 @@
                             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
                             "apiVersion": "2018-01-01-preview",
                             "name": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'), '/', variables('mappingTopicName'), '-sub')]",
-                            "location": "[parameters('location')]",
+                            "location": "[variables('location')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('mappingTopicName'))]",
                                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
@@ -745,7 +737,7 @@
                     "type": "Microsoft.ServiceBus/namespaces/topics",
                     "apiVersion": "2018-01-01-preview",
                     "name": "[concat(variables('serviceBusName'), '/', variables('reloadTopicName'))]",
-                    "location": "[parameters('location')]",
+                    "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                     ],
@@ -766,7 +758,7 @@
                             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
                             "apiVersion": "2018-01-01-preview",
                             "name": "[concat(variables('serviceBusName'), '/', variables('reloadTopicName'), '/', variables('reloadTopicName'), '-sub')]",
-                            "location": "[parameters('location')]",
+                            "location": "[variables('location')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('reloadTopicName'))]",
                                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
@@ -791,7 +783,7 @@
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2018-02-01",
             "name": "[variables('webServerName')]",
-            "location": "[parameters('Location')]",
+            "location": "[variables('location')]",
             "sku": {
                 "name": "Y1",
                 "tier": "Dynamic",
@@ -815,7 +807,7 @@
             "type": "Microsoft.Web/sites",
             "apiVersion": "2018-11-01",
             "name": "[variables('apiSitesName')]",
-            "location": "[parameters('Location')]",
+            "location": "[variables('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
@@ -845,12 +837,8 @@
                 "siteConfig": {
                     "appSettings": [
                         {
-                            "name": "FUNCTIONS_EXTENSION_VERSION",
-                            "value": "~3"
-                        },
-                        {
-                            "name": "Project",
-                            "value": "contentsyncdev-io-etl-api"
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
                         }
                     ]
                 },
@@ -868,10 +856,11 @@
             "type": "Microsoft.Web/sites",
             "apiVersion": "2018-11-01",
             "name": "[variables('renewalSiteName')]",
-            "location": "[parameters('Location')]",
+            "location": "[variables('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('renewalTopicName'), concat(variables('renewalTopicName'), '-sub'))]"
             ],
             "kind": "functionapp",
             "identity": {
@@ -895,7 +884,14 @@
                 "reserved": false,
                 "isXenon": false,
                 "hyperV": false,
-                "siteConfig": {},
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                        }
+                    ]
+                },
                 "scmSiteAlsoStopped": false,
                 "clientAffinityEnabled": false,
                 "clientCertEnabled": false,
@@ -910,10 +906,11 @@
             "type": "Microsoft.Web/sites",
             "apiVersion": "2018-11-01",
             "name": "[variables('mappingSiteName')]",
-            "location": "[parameters('Location')]",
+            "location": "[variables('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('mappingTopicName'), concat(variables('mappingTopicName'), '-sub'))]"
             ],
             "kind": "functionapp",
             "identity": {
@@ -937,7 +934,22 @@
                 "reserved": false,
                 "isXenon": false,
                 "hyperV": false,
-                "siteConfig": {},
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "etl_mapping_worker_subscription",
+                            "value": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'), '/', variables('mappingTopicName'), '-sub')]"
+                        },
+                        {
+                            "name": "etl_mapping_worker_topic",
+                            "value": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'))]"
+                        }
+                    ]
+                },
                 "scmSiteAlsoStopped": false,
                 "clientAffinityEnabled": false,
                 "clientCertEnabled": false,
@@ -952,10 +964,11 @@
             "type": "Microsoft.Web/sites",
             "apiVersion": "2018-11-01",
             "name": "[variables('processSiteName')]",
-            "location": "[parameters('Location')]",
+            "location": "[variables('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('queueName'))]"
             ],
             "kind": "functionapp",
             "identity": {
@@ -979,7 +992,18 @@
                 "reserved": false,
                 "isXenon": false,
                 "hyperV": false,
-                "siteConfig": {},
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "etl_job_process_queue",
+                            "value": "[concat(variables('serviceBusName'), '/', variables('queueName'))]"
+                        }
+                    ]
+                },
                 "scmSiteAlsoStopped": false,
                 "clientAffinityEnabled": false,
                 "clientCertEnabled": false,

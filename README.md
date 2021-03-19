@@ -3,11 +3,18 @@
 
 [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2FProsperoware%2Fcam-azure-deployment%2Fmaster%2FazureDeploy.json)
 
-When you deploy this Azure Resource Manager template, the following entities will be created:
-* Storage Account
-    * Storage blob container to keep application configuration files
-    * Encryption Scope
-    * Storage BLOB container with the encryption scope to keep the data at rest
+## CAM Azure Stack Architecture
+![](https://github.com/Prosperoware/cam-azure-deployment/blob/master/Archi.png)
+
+
+## Azure Resources
+When you deploy this Azure Resource Manager template, the following resources will be created:
+* Storage Account: this is the main storage account that is used to create 2 storage blobs
+    * Application Config Storage BLOB container to keep application configuration files
+    * Encryption Scope to encrypt the temporary data in the data stroage BLOB
+    * Data Storage BLOB container with the encryption scope to keep the data at rest
+* Azure Database for MySQL server
+    * Default database
 * Cosmos
     * Cosmos DB
         * Containers:
@@ -18,72 +25,45 @@ When you deploy this Azure Resource Manager template, the following entities wil
             * etl-mapping
             * etl-office-subscription
             * systemauth
-* Azure Database for MySQL server
 * Service Bus
     * Queue
     * Topics:
         * Renewal
         * Mapping
         * Reload
-* Web Server
-    * Site
-        * Functions:
-            * activateMapping
-            * checkHealth
-            * crearteSubscription
-            * createEtlJobs
-            * createJob
-            * createMapping
-            * createSearchEntity
-            * deleteMapping
-            * etlJobProcessDLHandler
-            * etlJobProcessHandler
-            * etlMappingJobManagerHandler
-            * etlMappingJobWorkerHandler
-            * etlRenewalManagerHandler
-            * etlRenewalWorkerHandler
-            * getAuthToken
-            * getEtlJobStatus
-            * getMapping
-            * getMappingJobsById
-            * getMappingJobsByMappingId
-            * getMappingStatus
-            * handleValidation
-            * jobSetting
-            * listMappingJobs
-            * replaceShortCutMapping
-            * retryMapping
-            * saveEtlAuthDetails
-            * searchEntitySrcExtObjectId
-            * searchMappingJobs
-            * subscriptionCount
+* Web Server:
+    * Function Apps:
+        * API App
+        * Renewal App
+        * Mapping App
+        * Process App
 
-![](https://github.com/Prosperoware/cam-azure-deployment/blob/master/Archi.png)
-
-
-Parameters:
+## Template Parameters
 * Is Production: Yes/No
 * Environment Stage: dev/qa/stg/prod
 * Top Level Domain: io/eu/com
 * MySQL administrator Login
 * MySQL administrator Login Password
 
-Variables:
+## Resources' Naming Convention Variables:
 * Common Id: "contentsync" + <Stage> + <TLD> (e.g. contentsyncdevio)
-* Resources Namespace: "contentsync-" + <Stage> + "-" + <TLD> (e.g. contentsync-dev-io)
+* Storage Account: "strg" + <CommonId> (e.g. strgcontentsyncdevio)
+    * Application Config Bucket: <NS> + "-application-config" (e.g. contentsync-dev-io-application-config)
+    * Encryption Scope: DataAtRest
+    * Encrypted Bucket: <NS> + "-encrypted-bucket" (e.g. contentsync-dev-io-encrypted-bucket)
 * MySQL server name: "mysql-" + <NS> (e.g. mysql-contentsync-dev-io)
     * MySQL default database: <CommonId> (e.g. contentsyncdevio)
 * Cosmos Name: "cosmos-" + <NS>  (e.g. cosmos-contentsync-dev-io)
     * Cosmos Database Name: <CommonId> (e.g. contentsyncdevio)
+* Resources Namespace: "contentsync-" + <Stage> + "-" + <TLD> (e.g. contentsync-dev-io)
 * Service Bus Name: "servicebus-" + <NS> (e.g. servicebus-contentsync-dev-io)
     * Queue Name: <NS> + "-etl-process-v1" (e.g. contentsync-dev-io-etl-process-v1)
     * Service Bus Topics:
         * Mapping: <NS> + "-etl_mapping_worker_start" (e.g. contentsync-dev-io-etl_mapping_worker_start)
         * Renewal: <NS> + "-etl_renewal_worker_start" (e.g. contentsync-dev-io-etl_renewal_worker_start)
         * Reload: <NS> + "-systemauth_reload" (e.g. contentsync-dev-io-systemauth_reload)
-* Storage Account: "strg" + <CommonId> (e.g. strgcontentsyncdevio)
-    * Encryption Scope: DataAtRest
-    * Application Config Bucket: <NS> + "-application-config" (e.g. contentsync-dev-io-application-config)
-    * Encrypted Bucket: <NS> + "-encrypted-bucket" (e.g. contentsync-dev-io-encrypted-bucket)
 * Web Server: <NS> + "-api-app-srvr" (e.g. contentsync-dev-io-api-app)
-    * Web Site: <NS> + "-etl-api" (e.g. contentsync-dev-io-etl-api)
+    * API Function App: <NS> + "-etl-api" (e.g. contentsync-dev-io-etl-api)
+    * Renewal Function App: <NS> + "-etl-renewal" (e.g. contentsync-dev-io-etl-renewal)
+    * Mapping Function App: <NS> + "-etl-mapping" (e.g. contentsync-dev-io-etl-mapping)
+    * Resources Function App: <NS> + "-etl-process" (e.g. contentsync-dev-io-etl-process)
