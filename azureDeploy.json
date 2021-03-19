@@ -838,7 +838,7 @@
                     "appSettings": [
                         {
                             "name": "AzureWebJobsStorage",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
                         }
                     ]
                 },
@@ -888,7 +888,7 @@
                     "appSettings": [
                         {
                             "name": "AzureWebJobsStorage",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
                         }
                     ]
                 },
@@ -938,7 +938,7 @@
                     "appSettings": [
                         {
                             "name": "AzureWebJobsStorage",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
                         },
                         {
                             "name": "etl_mapping_worker_subscription",
@@ -996,7 +996,7 @@
                     "appSettings": [
                         {
                             "name": "AzureWebJobsStorage",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
                         },
                         {
                             "name": "etl_job_process_queue",
