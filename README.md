@@ -42,11 +42,13 @@ When you deploy this Azure Resource Manager template, the following resources wi
 * Is Production: Yes/No
 * Environment Stage: dev/qa/stg/prod
 * Top Level Domain: io/eu/com
+* Instance Unique Name: All resources on Azure should be unique, use this to match CAM url (e.g. contentsync)
 * MySQL administrator Login
 * MySQL administrator Login Password
 
-## Resources' Naming Convention Variables:
-* Common Id: "contentsync" + <Stage> + <TLD> (e.g. contentsyncdevio)
+## Resources' Naming Convention Variables
+* Common Id: <UniqueName> + <Stage> + <TLD> (e.g. contentsyncdevio)
+* Resources Namespace: <UniqueName> + "-" + <Stage> + "-" + <TLD> (e.g. contentsync-dev-io)
 * Storage Account: "strg" + <CommonId> (e.g. strgcontentsyncdevio)
     * Application Config Bucket: <NS> + "-application-config" (e.g. contentsync-dev-io-application-config)
     * Encryption Scope: DataAtRest
@@ -55,7 +57,6 @@ When you deploy this Azure Resource Manager template, the following resources wi
     * MySQL default database: <CommonId> (e.g. contentsyncdevio)
 * Cosmos Name: "cosmos-" + <NS>  (e.g. cosmos-contentsync-dev-io)
     * Cosmos Database Name: <CommonId> (e.g. contentsyncdevio)
-* Resources Namespace: "contentsync-" + <Stage> + "-" + <TLD> (e.g. contentsync-dev-io)
 * Service Bus Name: "servicebus-" + <NS> (e.g. servicebus-contentsync-dev-io)
     * Queue Name: <NS> + "-etl-process-v1" (e.g. contentsync-dev-io-etl-process-v1)
     * Service Bus Topics:

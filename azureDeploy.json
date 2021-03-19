@@ -18,6 +18,11 @@
                 "prod"
             ]
         },
+        "InstanceUniqueName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 11
+        },
         "TopLevelDomain": {
             "type": "string",
             "allowedValues": [
@@ -43,8 +48,8 @@
         }
     },
     "variables": {
-        "commonId": "[concat('contentsync', parameters('EnvironmentStage'), parameters('TopLevelDomain'))]",
-        "resourcesNamespace": "[concat('contentsync-', parameters('EnvironmentStage'), '-', parameters('TopLevelDomain'))]",
+        "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), parameters('TopLevelDomain'))]",
+        "resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', parameters('TopLevelDomain'))]",
         "storageAccountName": "[concat('strg', variables('commonId'))]",
         "applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
         "encryptedBucket": "[concat(variables('resourcesNamespace'), '-encrypted-bucket')]",
@@ -60,7 +65,8 @@
         "renewalSiteName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
         "mappingSiteName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
         "processSiteName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
-        "Location": "[resourceGroup().location]"
+        "Location": "[resourceGroup().location]",
+        "apiVersion": "/api/v1"
     },
     "resources": [
         {
@@ -72,7 +78,7 @@
                 "name": "Standard_RAGRS",
                 "tier": "Standard"
             },
-            "kind": "BlobStorage",
+            "kind": "StorageV2",
             "properties": {
                 "minimumTlsVersion": "TLS1_2",
                 "allowBlobPublicAccess": true,
@@ -851,6 +857,30 @@
                         {
                             "name": "FUNCTIONS_WORKER_RUNTIME",
                             "value": "java"
+                        },
+                        {
+                            "name": "lambda_profile",
+                            "value": "[parameters('EnvironmentStage')]"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
+                            "value": "1"
+                        },
+                        {
+                            "name": "storage_accountname",
+                            "value": "[variables('storageAccountName')]"
+                        },
+                        {
+                            "name": "api_base_url",
+                            "value": "[concat(variables('renewalSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                        },
+                        {
+                            "name": "service_id",
+                            "value": "[variables('renewalSiteName')]"
+                        },
+                        {
+                            "name": "service_name",
+                            "value": "[variables('renewalSiteName')]"
                         }
                     ]
                 },
@@ -928,6 +958,38 @@
                         {
                             "name": "FUNCTIONS_WORKER_RUNTIME",
                             "value": "java"
+                        },
+                        {
+                            "name": "lambda_profile",
+                            "value": "[parameters('EnvironmentStage')]"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
+                            "value": "1"
+                        },
+                        {
+                            "name": "storage_accountname",
+                            "value": "[variables('storageAccountName')]"
+                        },
+                        {
+                            "name": "api_base_url",
+                            "value": "[concat(variables('renewalSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                        },
+                        {
+                            "name": "service_id",
+                            "value": "[variables('renewalSiteName')]"
+                        },
+                        {
+                            "name": "service_name",
+                            "value": "[variables('renewalSiteName')]"
+                        },
+                        {
+                            "name": "etl_renewal_worker_subscription",
+                            "value": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'), '/', variables('renewalTopicName'), '-sub')]"
+                        },
+                        {
+                            "name": "etl_renewal_worker_topic",
+                            "value": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'))]"
                         }
                     ]
                 },
@@ -939,7 +1001,22 @@
                 "dailyMemoryTimeQuota": 0,
                 "httpsOnly": false,
                 "redundancyMode": "None"
-            }
+            },
+            "resources": [
+                {
+                    "type": "Extensions",
+                    "apiVersion": "2018-11-01",
+                    "name": "MSDeploy",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('renewalSiteName'))]"
+                    ],
+                    "properties": {
+                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/contentsyncdev-io-etl-renewal.zip",
+                        "setParameters": {
+                        }
+                    }
+                }
+            ]
         },
         {
             "type": "Microsoft.Web/sites",
@@ -992,6 +1069,30 @@
                             "value": "java"
                         },
                         {
+                            "name": "lambda_profile",
+                            "value": "[parameters('EnvironmentStage')]"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
+                            "value": "1"
+                        },
+                        {
+                            "name": "storage_accountname",
+                            "value": "[variables('storageAccountName')]"
+                        },
+                        {
+                            "name": "api_base_url",
+                            "value": "[concat(variables('mappingSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                        },
+                        {
+                            "name": "service_id",
+                            "value": "[variables('mappingSiteName')]"
+                        },
+                        {
+                            "name": "service_name",
+                            "value": "[variables('mappingSiteName')]"
+                        },
+                        {
                             "name": "etl_mapping_worker_subscription",
                             "value": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'), '/', variables('mappingTopicName'), '-sub')]"
                         },
@@ -1009,7 +1110,22 @@
                 "dailyMemoryTimeQuota": 0,
                 "httpsOnly": false,
                 "redundancyMode": "None"
-            }
+            },
+            "resources": [
+                {
+                    "type": "Extensions",
+                    "apiVersion": "2018-11-01",
+                    "name": "MSDeploy",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('mappingSiteName'))]"
+                    ],
+                    "properties": {
+                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/contentsyncdev-io-etl-mapping.zip",
+                        "setParameters": {
+                        }
+                    }
+                }
+            ]
         },
         {
             "type": "Microsoft.Web/sites",
@@ -1062,6 +1178,30 @@
                             "value": "java"
                         },
                         {
+                            "name": "lambda_profile",
+                            "value": "[parameters('EnvironmentStage')]"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
+                            "value": "1"
+                        },
+                        {
+                            "name": "storage_accountname",
+                            "value": "[variables('storageAccountName')]"
+                        },
+                        {
+                            "name": "api_base_url",
+                            "value": "[concat(variables('processSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                        },
+                        {
+                            "name": "service_id",
+                            "value": "[variables('processSiteName')]"
+                        },
+                        {
+                            "name": "service_name",
+                            "value": "[variables('processSiteName')]"
+                        },
+                        {
                             "name": "etl_job_process_queue",
                             "value": "[concat(variables('serviceBusName'), '/', variables('queueName'))]"
                         }
@@ -1075,7 +1215,22 @@
                 "dailyMemoryTimeQuota": 0,
                 "httpsOnly": false,
                 "redundancyMode": "None"
-            }
+            },
+            "resources": [
+                {
+                    "type": "Extensions",
+                    "apiVersion": "2018-11-01",
+                    "name": "MSDeploy",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('processSiteName'))]"
+                    ],
+                    "properties": {
+                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/contentsyncdev-io-etl-process.zip",
+                        "setParameters": {
+                        }
+                    }
+                }
+            ]
         }
     ]
 }
