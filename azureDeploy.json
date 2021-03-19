@@ -63,7 +63,12 @@
         "applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
         "encryptedBucket": "[concat(variables('resourcesNamespace'), '-encrypted-bucket')]",
         "webServerName": "[concat(variables('resourcesNamespace'), '-api-app-srvr')]",
-        "sitesApiName": "[concat(variables('resourcesNamespace'), '-etl-api')]"
+        "apiSitesName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
+        "renewalSiteName": "[concat(variables('resourcesNamespace'), '-io-etl-renewal')]",
+        "mappingSiteName": "[concat(variables('resourcesNamespace'), '-io-etl-mapping')]",
+        "processSiteName": "[concat(variables('resourcesNamespace'), '-io-etl-process')]",
+        "sourceCodeRepositoryURL": "https://github.com/Prosperoware/cam-azure-deployment",
+        "sourceCodeBranch": "master"
     },
     "resources": [
         {
@@ -809,10 +814,11 @@
         {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2018-11-01",
-            "name": "[variables('sitesApiName')]",
+            "name": "[variables('apiSitesName')]",
             "location": "[parameters('Location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
             ],
             "kind": "functionapp",
             "identity": {
@@ -822,12 +828,65 @@
                 "enabled": true,
                 "hostNameSslStates": [
                     {
-                        "name": "[concat(variables('sitesApiName'), '.azurewebsites.net')]",
+                        "name": "[concat(variables('apiSitesName'), '.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Standard"
                     },
                     {
-                        "name": "[concat(variables('sitesApiName'), '.scm.azurewebsites.net')]",
+                        "name": "[concat(variables('apiSitesName'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~3"
+                        },
+                        {
+                            "name": "Project",
+                            "value": "contentsyncdev-io-etl-api"
+                        }
+                    ]
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "hostNamesDisabled": false,
+                "containerSize": 1536,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[variables('renewalSiteName')]",
+            "location": "[parameters('Location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            ],
+            "kind": "functionapp",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(variables('renewalSiteName'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(variables('renewalSiteName'), '.scm.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Repository"
                     }
@@ -845,21 +904,91 @@
                 "dailyMemoryTimeQuota": 0,
                 "httpsOnly": false,
                 "redundancyMode": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[variables('mappingSiteName')]",
+            "location": "[parameters('Location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            ],
+            "kind": "functionapp",
+            "identity": {
+                "type": "SystemAssigned"
             },
-            "resources": [
-                {
-                    "type": "Microsoft.Web/sites/functions",
-                    "apiVersion": "2018-11-01",
-                    "name": "[concat(variables('sitesApiName'), '/activateMapping')]",
-                    "location": "[parameters('Location')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites',variables('sitesApiName'))]"
-                    ],
-                    "properties": {
-                        "config": {}
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(variables('mappingSiteName'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(variables('mappingSiteName'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
                     }
-                }
-            ]
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "siteConfig": {},
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "hostNamesDisabled": false,
+                "containerSize": 1536,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[variables('processSiteName')]",
+            "location": "[parameters('Location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            ],
+            "kind": "functionapp",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(variables('processSiteName'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(variables('processSiteName'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "siteConfig": {},
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "hostNamesDisabled": false,
+                "containerSize": 1536,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None"
+            }
         }
     ]
 }
