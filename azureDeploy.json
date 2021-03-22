@@ -1195,7 +1195,7 @@
                         },
                         {
                             "name": "api_base_url",
-                            "value": "['https://', concat(variables('processSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                            "value": "[concat(variables('processSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
                         },
                         {
                             "name":"cs_ddt_prefix",
