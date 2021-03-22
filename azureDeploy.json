@@ -1191,7 +1191,7 @@
                         },
                         {
                             "name": "api_base_url",
-                            "value": "[concat(variables('processSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                            "value": "['https://', concat(variables('processSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
                         },
                         {
                             "name": "service_id",
@@ -1214,7 +1214,13 @@
                 "containerSize": 1536,
                 "dailyMemoryTimeQuota": 0,
                 "httpsOnly": false,
-                "redundancyMode": "None"
+                "redundancyMode": "None",
+                "runtimeConfiguration":{
+                    "lifetime":{
+                        "unit":"day",
+                        "count":"10"
+                    }
+                }
             },
             "resources": [
                 {
