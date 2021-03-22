@@ -872,15 +872,15 @@
                         },
                         {
                             "name": "api_base_url",
-                            "value": "[concat(variables('renewalSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                            "value": "[concat('https://', variables('apiSitesName'), '.azurewebsites.net', variables('apiVersion'))]"
                         },
                         {
                             "name": "service_id",
-                            "value": "[variables('renewalSiteName')]"
+                            "value": "[variables('apiSitesName')]"
                         },
                         {
                             "name": "service_name",
-                            "value": "[variables('renewalSiteName')]"
+                            "value": "[variables('apiSitesName')]"
                         }
                     ]
                 },
