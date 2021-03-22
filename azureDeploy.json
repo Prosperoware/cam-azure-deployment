@@ -1186,6 +1186,10 @@
                             "value": "1"
                         },
                         {
+                            "name": "application_group",
+                            "value":"[variables('resourcesNamespace')]"
+                        },
+                        {
                             "name": "storage_accountname",
                             "value": "[variables('storageAccountName')]"
                         },
