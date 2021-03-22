@@ -65,6 +65,13 @@
         "renewalSiteName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
         "mappingSiteName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
         "processSiteName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
+        "listAccountSasRequestContent": {
+            "signedServices": "bfqt",
+            "signedPermission": "rwdlacup",
+            "signedStart": "2018-10-01T00:00:00Z",
+            "signedExpiry": "2218-10-30T00:00:00Z",
+            "signedResourceTypes": "sco"
+        },
         "Location": "[resourceGroup().location]",
         "apiVersion": "/api/v1"
     },
@@ -872,15 +879,23 @@
                         },
                         {
                             "name": "api_base_url",
-                            "value": "[concat(variables('renewalSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                            "value": "[concat('https://', variables('apiSitesName'), '.azurewebsites.net', variables('apiVersion'))]"
                         },
                         {
                             "name": "service_id",
-                            "value": "[variables('renewalSiteName')]"
+                            "value": "[variables('apiSitesName')]"
                         },
                         {
                             "name": "service_name",
-                            "value": "[variables('renewalSiteName')]"
+                            "value": "[variables('apiSitesName')]"
+                        },
+                        {
+                            "name": "application_group",
+                            "value":"[variables('resourcesNamespace')]"
+                        },
+                        {
+                            "name":"cs_ddt_prefix",
+                            "value":"[variables('resourcesNamespace')]"
                         }
                     ]
                 },
@@ -894,6 +909,7 @@
                 "redundancyMode": "None"
             },
             "resources": [
+
                 {
                     "type": "Extensions",
                     "apiVersion": "2018-11-01",
@@ -973,7 +989,7 @@
                         },
                         {
                             "name": "api_base_url",
-                            "value": "[concat(variables('renewalSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                            "value": "[concat('https://', variables('renewalSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
                         },
                         {
                             "name": "service_id",
@@ -990,6 +1006,14 @@
                         {
                             "name": "etl_renewal_worker_topic",
                             "value": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'))]"
+                        }, 
+                        {
+                            "name": "application_group",
+                            "value":"[variables('resourcesNamespace')]"
+                        },
+                        {
+                            "name":"cs_ddt_prefix",
+                            "value":"[variables('resourcesNamespace')]"
                         }
                     ]
                 },
@@ -1003,6 +1027,24 @@
                 "redundancyMode": "None"
             },
             "resources": [
+                {
+                    "type": "config",
+                    "apiVersion": "2018-02-01",
+                    "name":"logs",
+                    "dependsOn": [
+                        "[concat('Microsoft.Web/sites/', variables('renewalSiteName'))]"
+                    ],
+                    "properties": {
+                        "applicationLogs":{
+                            "azureBlobStorage":{
+                                "level": "Verbose",
+                                "retentionInDays":"90",
+                                "sasUrl": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))).primaryEndpoints.blob, concat(variables('storageAccountName'), '/default/', variables('applicationConfigBucket')), '?', listAccountSas(variables('storageAccountName'), '2018-02-01', variables('listAccountSasRequestContent')).accountSasToken)]"
+                            }
+                        }
+                    }
+                },
+
                 {
                     "type": "Extensions",
                     "apiVersion": "2018-11-01",
@@ -1082,7 +1124,7 @@
                         },
                         {
                             "name": "api_base_url",
-                            "value": "[concat(variables('mappingSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                            "value": "[concat('https://', variables('mappingSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
                         },
                         {
                             "name": "service_id",
@@ -1099,7 +1141,15 @@
                         {
                             "name": "etl_mapping_worker_topic",
                             "value": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'))]"
-                        }
+                        },
+                        {
+                            "name": "application_group",
+                            "value":"[variables('resourcesNamespace')]"
+                        },
+                        {
+                            "name":"cs_ddt_prefix",
+                            "value":"[variables('resourcesNamespace')]"
+                        } 
                     ]
                 },
                 "scmSiteAlsoStopped": false,
@@ -1190,12 +1240,16 @@
                             "value":"[variables('resourcesNamespace')]"
                         },
                         {
+                            "name":"cs_ddt_prefix",
+                            "value":"[variables('resourcesNamespace')]"
+                        },
+                        {
                             "name": "storage_accountname",
                             "value": "[variables('storageAccountName')]"
                         },
                         {
                             "name": "api_base_url",
-                            "value": "['https://', concat(variables('processSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                            "value": "[concat('https://', variables('processSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
                         },
                         {
                             "name":"cs_ddt_prefix",
@@ -1222,13 +1276,7 @@
                 "containerSize": 1536,
                 "dailyMemoryTimeQuota": 0,
                 "httpsOnly": false,
-                "redundancyMode": "None",
-                "runtimeConfiguration":{
-                    "lifetime":{
-                        "unit":"day",
-                        "count":"10"
-                    }
-                }
+                "redundancyMode": "None"
             },
             "resources": [
                 {
