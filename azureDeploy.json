@@ -1200,7 +1200,7 @@
                         {
                             "name":"cs_ddt_prefix",
                             "value":"[variables('resourcesNamespace')]"
-                        }
+                        },
                         {
                             "name": "service_id",
                             "value": "[variables('processSiteName')]"
