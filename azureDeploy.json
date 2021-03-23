@@ -65,15 +65,13 @@
         "renewalSiteName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
         "mappingSiteName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
         "processSiteName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
-        "listAccountSasRequestContent": {
-            "signedServices": "bfqt",
-            "signedPermission": "rwdlacup",
-            "signedStart": "2018-10-01T00:00:00Z",
-            "signedExpiry": "2218-10-30T00:00:00Z",
-            "signedResourceTypes": "sco"
-        },
         "Location": "[resourceGroup().location]",
-        "apiVersion": "/api/v1"
+        "apiVersion": "/api/v1",
+        "authorizationRulesName": "RootManageSharedAccessKey",
+        "apiAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
+        "renewalAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
+        "mappingAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
+        "processAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-process')]"
     },
     "resources": [
         {
@@ -621,7 +619,7 @@
                 {
                     "type": "Microsoft.ServiceBus/namespaces/AuthorizationRules",
                     "apiVersion": "2017-04-01",
-                    "name": "[concat(variables('serviceBusName'), '/RootManageSharedAccessKey')]",
+                    "name": "[concat(variables('serviceBusName'), '/', variables('authorizationRulesName'))]",
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
@@ -817,13 +815,27 @@
             }
         },
         {
+            "type": "Microsoft.Insights/components",
+            "apiVersion": "2020-02-02-preview",
+            "name": "[variables('apiAppInsightsName')]",
+            "location": "[variables('Location')]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "IngestionMode": "ApplicationInsights",
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            }
+        },
+        {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2018-11-01",
             "name": "[variables('apiSitesName')]",
             "location": "[variables('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Insights/components', variables('apiAppInsightsName'))]"
             ],
             "kind": "functionapp",
             "identity": {
@@ -850,16 +862,36 @@
                 "siteConfig": {
                     "appSettings": [
                         {
+                            "name": "application_group",
+                            "value":"[variables('resourcesNamespace')]"
+                        },
+                        {
+                            "name": "AzureWebJobsDashboard",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "AzureWebJobsServiceBusConnection",
+                            "value": "[concat('Endpoint=sb://', variables('serviceBusName'), '.servicebus.windows.net/;SharedAccessKeyName=', variables('authorizationRulesName') ,';SharedAccessKey=', listKeys(resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName')), '2017-04-01').primaryKey)]"
+                        },
+                        {
                             "name": "AzureWebJobsStorage",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
                         },
                         {
-                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                            "name": "config_basepath",
+                            "value": "[concat('az:', variables('applicationConfigBucket'))]"
+                        },
+                        {
+                            "name":"cs_ddt_prefix",
+                            "value":"[variables('resourcesNamespace')]"
                         },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
                             "value": "~3"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
+                            "value": "1"
                         },
                         {
                             "name": "FUNCTIONS_WORKER_RUNTIME",
@@ -870,16 +902,21 @@
                             "value": "[parameters('EnvironmentStage')]"
                         },
                         {
-                            "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
-                            "value": "1"
-                        },
-                        {
                             "name": "storage_accountname",
                             "value": "[variables('storageAccountName')]"
                         },
                         {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
                             "name": "api_base_url",
                             "value": "[concat('https://', variables('apiSitesName'), '.azurewebsites.net', variables('apiVersion'))]"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('Microsoft.Insights/components', variables('apiAppInsightsName')), '2020-02-02-preview').InstrumentationKey]"
+
                         },
                         {
                             "name": "service_id",
@@ -888,14 +925,6 @@
                         {
                             "name": "service_name",
                             "value": "[variables('apiSitesName')]"
-                        },
-                        {
-                            "name": "application_group",
-                            "value":"[variables('resourcesNamespace')]"
-                        },
-                        {
-                            "name":"cs_ddt_prefix",
-                            "value":"[variables('resourcesNamespace')]"
                         }
                     ]
                 },
@@ -909,7 +938,6 @@
                 "redundancyMode": "None"
             },
             "resources": [
-
                 {
                     "type": "Extensions",
                     "apiVersion": "2018-11-01",
@@ -922,8 +950,44 @@
                         "setParameters": {
                         }
                     }
+                },
+                {  
+                    "type":"Microsoft.Web/sites/providers/diagnosticsettings",
+                    "apiVersion": "2017-05-01-preview",
+                    "location": "[variables('location')]",
+                    "name":"[concat(variables('apiSitesName'), '/Microsoft.Insights/function-logs')]",
+                    "dependsOn":[  
+                        "[resourceId('Microsoft.Web/sites', variables('apiSitesName'))]",
+                        "[concat('Microsoft.Web/Sites/', variables('apiSitesName'), '/Extensions/MSDeploy')]"
+                    ],
+                    "properties":{
+                        "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                        "logs":[
+                            {
+                                "category": "FunctionAppLogs",
+                                "enabled": true,
+                                "retentionPolicy": {
+                                    "enabled": true,
+                                    "days": 7
+                                }
+                            }
+                        ]
+                    }
                 }
             ]
+        },
+        {
+            "type": "Microsoft.Insights/components",
+            "apiVersion": "2020-02-02-preview",
+            "name": "[variables('renewalAppInsightsName')]",
+            "location": "[variables('Location')]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "IngestionMode": "ApplicationInsights",
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            }
         },
         {
             "type": "Microsoft.Web/sites",
@@ -933,7 +997,8 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('renewalTopicName'), concat(variables('renewalTopicName'), '-sub'))]"
+                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('renewalTopicName'), concat(variables('renewalTopicName'), '-sub'))]",
+                "[resourceId('Microsoft.Insights/components', variables('renewalAppInsightsName'))]"
             ],
             "kind": "functionapp",
             "identity": {
@@ -960,16 +1025,36 @@
                 "siteConfig": {
                     "appSettings": [
                         {
+                            "name": "application_group",
+                            "value":"[variables('resourcesNamespace')]"
+                        },
+                        {
+                            "name": "AzureWebJobsDashboard",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "AzureWebJobsServiceBusConnection",
+                            "value": "[concat('Endpoint=sb://', variables('serviceBusName'), '.servicebus.windows.net/;SharedAccessKeyName=', variables('authorizationRulesName') ,';SharedAccessKey=', listKeys(resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName')), '2017-04-01').primaryKey)]"
+                        },
+                        {
                             "name": "AzureWebJobsStorage",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
                         },
                         {
-                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                            "name": "config_basepath",
+                            "value": "[concat('az:', variables('applicationConfigBucket'))]"
+                        },
+                        {
+                            "name":"cs_ddt_prefix",
+                            "value":"[variables('resourcesNamespace')]"
                         },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
                             "value": "~3"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
+                            "value": "1"
                         },
                         {
                             "name": "FUNCTIONS_WORKER_RUNTIME",
@@ -980,16 +1065,33 @@
                             "value": "[parameters('EnvironmentStage')]"
                         },
                         {
-                            "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
-                            "value": "1"
-                        },
-                        {
                             "name": "storage_accountname",
                             "value": "[variables('storageAccountName')]"
                         },
                         {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
                             "name": "api_base_url",
                             "value": "[concat('https://', variables('renewalSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('Microsoft.Insights/components', variables('renewalAppInsightsName')), '2020-02-02-preview').InstrumentationKey]"
+
+                        },
+                        {
+                            "name": "etl_renewal_manager_schedule",
+                            "value": "0 */2 * * * *"
+                        },
+                        {
+                            "name": "etl_renewal_worker_subscription",
+                            "value": "[concat(variables('renewalTopicName'), '-sub')]"
+                        },
+                        {
+                            "name": "etl_renewal_worker_topic",
+                            "value": "[variables('renewalTopicName')]"
                         },
                         {
                             "name": "service_id",
@@ -998,22 +1100,6 @@
                         {
                             "name": "service_name",
                             "value": "[variables('renewalSiteName')]"
-                        },
-                        {
-                            "name": "etl_renewal_worker_subscription",
-                            "value": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'), '/', variables('renewalTopicName'), '-sub')]"
-                        },
-                        {
-                            "name": "etl_renewal_worker_topic",
-                            "value": "[concat(variables('serviceBusName'), '/', variables('renewalTopicName'))]"
-                        }, 
-                        {
-                            "name": "application_group",
-                            "value":"[variables('resourcesNamespace')]"
-                        },
-                        {
-                            "name":"cs_ddt_prefix",
-                            "value":"[variables('resourcesNamespace')]"
                         }
                     ]
                 },
@@ -1028,24 +1114,6 @@
             },
             "resources": [
                 {
-                    "type": "config",
-                    "apiVersion": "2018-02-01",
-                    "name":"logs",
-                    "dependsOn": [
-                        "[concat('Microsoft.Web/sites/', variables('renewalSiteName'))]"
-                    ],
-                    "properties": {
-                        "applicationLogs":{
-                            "azureBlobStorage":{
-                                "level": "Verbose",
-                                "retentionInDays":"90",
-                                "sasUrl": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))).primaryEndpoints.blob, concat(variables('storageAccountName'), '/default/', variables('applicationConfigBucket')), '?', listAccountSas(variables('storageAccountName'), '2018-02-01', variables('listAccountSasRequestContent')).accountSasToken)]"
-                            }
-                        }
-                    }
-                },
-
-                {
                     "type": "Extensions",
                     "apiVersion": "2018-11-01",
                     "name": "MSDeploy",
@@ -1057,8 +1125,44 @@
                         "setParameters": {
                         }
                     }
+                },
+                {  
+                    "type":"Microsoft.Web/sites/providers/diagnosticsettings",
+                    "apiVersion": "2017-05-01-preview",
+                    "location": "[variables('location')]",
+                    "name":"[concat(variables('renewalSiteName'), '/Microsoft.Insights/function-logs')]",
+                    "dependsOn":[  
+                        "[resourceId('Microsoft.Web/sites', variables('renewalSiteName'))]",
+                        "[concat('Microsoft.Web/Sites/', variables('renewalSiteName'), '/Extensions/MSDeploy')]"
+                    ],
+                    "properties":{
+                        "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                        "logs":[
+                            {
+                                "category": "FunctionAppLogs",
+                                "enabled": true,
+                                "retentionPolicy": {
+                                    "enabled": true,
+                                    "days": 7
+                                }
+                            }
+                        ]
+                    }
                 }
             ]
+        },
+        {
+            "type": "Microsoft.Insights/components",
+            "apiVersion": "2020-02-02-preview",
+            "name": "[variables('mappingAppInsightsName')]",
+            "location": "[variables('Location')]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "IngestionMode": "ApplicationInsights",
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            }
         },
         {
             "type": "Microsoft.Web/sites",
@@ -1068,7 +1172,8 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('mappingTopicName'), concat(variables('mappingTopicName'), '-sub'))]"
+                "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('mappingTopicName'), concat(variables('mappingTopicName'), '-sub'))]",
+                "[resourceId('Microsoft.Insights/components', variables('mappingAppInsightsName'))]"
             ],
             "kind": "functionapp",
             "identity": {
@@ -1095,16 +1200,36 @@
                 "siteConfig": {
                     "appSettings": [
                         {
+                            "name": "application_group",
+                            "value":"[variables('resourcesNamespace')]"
+                        },
+                        {
+                            "name": "AzureWebJobsDashboard",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "AzureWebJobsServiceBusConnection",
+                            "value": "[concat('Endpoint=sb://', variables('serviceBusName'), '.servicebus.windows.net/;SharedAccessKeyName=', variables('authorizationRulesName') ,';SharedAccessKey=', listKeys(resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName')), '2017-04-01').primaryKey)]"
+                        },
+                        {
                             "name": "AzureWebJobsStorage",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
                         },
                         {
-                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                            "name": "config_basepath",
+                            "value": "[concat('az:', variables('applicationConfigBucket'))]"
+                        },
+                        {
+                            "name":"cs_ddt_prefix",
+                            "value":"[variables('resourcesNamespace')]"
                         },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
                             "value": "~3"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
+                            "value": "1"
                         },
                         {
                             "name": "FUNCTIONS_WORKER_RUNTIME",
@@ -1115,16 +1240,33 @@
                             "value": "[parameters('EnvironmentStage')]"
                         },
                         {
-                            "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
-                            "value": "1"
-                        },
-                        {
                             "name": "storage_accountname",
                             "value": "[variables('storageAccountName')]"
                         },
                         {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
                             "name": "api_base_url",
                             "value": "[concat('https://', variables('mappingSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('Microsoft.Insights/components', variables('mappingAppInsightsName')), '2020-02-02-preview').InstrumentationKey]"
+
+                        },
+                        {
+                            "name": "etl_mapping_worker_subscription",
+                            "value": "[concat(variables('mappingTopicName'), '-sub')]"
+                        },
+                        {
+                            "name": "etl_mapping_worker_topic",
+                            "value": "[variables('mappingTopicName')]"
+                        },
+                        {
+                            "name": "etl_mappingjob_manager_schedule",
+                            "value": "0 */2 * * * *"
                         },
                         {
                             "name": "service_id",
@@ -1133,23 +1275,7 @@
                         {
                             "name": "service_name",
                             "value": "[variables('mappingSiteName')]"
-                        },
-                        {
-                            "name": "etl_mapping_worker_subscription",
-                            "value": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'), '/', variables('mappingTopicName'), '-sub')]"
-                        },
-                        {
-                            "name": "etl_mapping_worker_topic",
-                            "value": "[concat(variables('serviceBusName'), '/', variables('mappingTopicName'))]"
-                        },
-                        {
-                            "name": "application_group",
-                            "value":"[variables('resourcesNamespace')]"
-                        },
-                        {
-                            "name":"cs_ddt_prefix",
-                            "value":"[variables('resourcesNamespace')]"
-                        } 
+                        }
                     ]
                 },
                 "scmSiteAlsoStopped": false,
@@ -1174,8 +1300,44 @@
                         "setParameters": {
                         }
                     }
+                },
+                {  
+                    "type":"Microsoft.Web/sites/providers/diagnosticsettings",
+                    "apiVersion": "2017-05-01-preview",
+                    "location": "[variables('location')]",
+                    "name":"[concat(variables('mappingSiteName'), '/Microsoft.Insights/function-logs')]",
+                    "dependsOn":[  
+                        "[resourceId('Microsoft.Web/sites', variables('mappingSiteName'))]",
+                        "[concat('Microsoft.Web/Sites/', variables('mappingSiteName'), '/Extensions/MSDeploy')]"
+                    ],
+                    "properties":{
+                        "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                        "logs":[
+                            {
+                                "category": "FunctionAppLogs",
+                                "enabled": true,
+                                "retentionPolicy": {
+                                    "enabled": true,
+                                    "days": 7
+                                }
+                            }
+                        ]
+                    }
                 }
             ]
+        },
+        {
+            "type": "Microsoft.Insights/components",
+            "apiVersion": "2020-02-02-preview",
+            "name": "[variables('processAppInsightsName')]",
+            "location": "[variables('Location')]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "IngestionMode": "ApplicationInsights",
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            }
         },
         {
             "type": "Microsoft.Web/sites",
@@ -1185,7 +1347,8 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('queueName'))]"
+                "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('queueName'))]",
+                "[resourceId('Microsoft.Insights/components', variables('processAppInsightsName'))]"
             ],
             "kind": "functionapp",
             "identity": {
@@ -1212,16 +1375,40 @@
                 "siteConfig": {
                     "appSettings": [
                         {
+                            "name": "application_group",
+                            "value":"[variables('resourcesNamespace')]"
+                        },
+                        {
+                            "name": "AzureWebJobsDashboard",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "AzureWebJobsServiceBusConnection",
+                            "value": "[concat('Endpoint=sb://', variables('serviceBusName'), '.servicebus.windows.net/;SharedAccessKeyName=', variables('authorizationRulesName') ,';SharedAccessKey=', listKeys(resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName')), '2017-04-01').primaryKey)]"
+                        },
+                        {
                             "name": "AzureWebJobsStorage",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
                         },
                         {
-                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                            "name": "cam_log_debug",
+                            "value": "false"
+                        },
+                        {
+                            "name": "config_basepath",
+                            "value": "[concat('az:', variables('applicationConfigBucket'))]"
+                        },
+                        {
+                            "name":"cs_ddt_prefix",
+                            "value":"[variables('resourcesNamespace')]"
                         },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
                             "value": "~3"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
+                            "value": "1"
                         },
                         {
                             "name": "FUNCTIONS_WORKER_RUNTIME",
@@ -1232,28 +1419,41 @@
                             "value": "[parameters('EnvironmentStage')]"
                         },
                         {
-                            "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
-                            "value": "1"
-                        },
-                        {
-                            "name": "application_group",
-                            "value":"[variables('resourcesNamespace')]"
-                        },
-                        {
-                            "name":"cs_ddt_prefix",
-                            "value":"[variables('resourcesNamespace')]"
-                        },
-                        {
                             "name": "storage_accountname",
                             "value": "[variables('storageAccountName')]"
                         },
                         {
-                            "name": "api_base_url",
-                            "value": "[concat('https://', variables('processSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
                         },
                         {
-                            "name":"cs_ddt_prefix",
-                            "value":"[variables('resourcesNamespace')]"
+                            "name": "api_base_url",
+                            "value": "[concat('https://', variables('mappingSiteName'), '.azurewebsites.net', variables('apiVersion'))]"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('Microsoft.Insights/components', variables('processAppInsightsName')), '2020-02-02-preview').InstrumentationKey]"
+
+                        },
+                        {
+                            "name": "etl_mapping_worker_subscription",
+                            "value": "[concat(variables('mappingTopicName'), '-sub')]"
+                        },
+                        {
+                            "name": "etl_job_process_dl_schedule",
+                            "value": "0 */59 * * * *"
+                        },
+                        {
+                            "name": "etl_job_process_queue",
+                            "value": "[variables('queueName')]"
+                        },
+                        {
+                            "name": "etlJobProcessHandler_timeout_sec",
+                            "value": "600"
+                        },
+                        {
+                            "name": "safe_remaining_time",
+                            "value": "60"
                         },
                         {
                             "name": "service_id",
@@ -1262,10 +1462,6 @@
                         {
                             "name": "service_name",
                             "value": "[variables('processSiteName')]"
-                        },
-                        {
-                            "name": "etl_job_process_queue",
-                            "value": "[concat(variables('serviceBusName'), '/', variables('queueName'))]"
                         }
                     ]
                 },
@@ -1291,7 +1487,29 @@
                         "setParameters": {
                         }
                     }
-                }
+                },
+                {  
+                    "type":"Microsoft.Web/sites/providers/diagnosticsettings",
+                    "apiVersion": "2017-05-01-preview",
+                    "location": "[variables('location')]",
+                    "name":"[concat(variables('processSiteName'), '/Microsoft.Insights/function-logs')]",
+                    "dependsOn":[  
+                        "[resourceId('Microsoft.Web/sites', variables('processSiteName'))]",
+                        "[concat('Microsoft.Web/Sites/', variables('processSiteName'), '/Extensions/MSDeploy')]"
+                    ],
+                    "properties":{
+                        "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                        "logs":[
+                            {
+                                "category": "FunctionAppLogs",
+                                "enabled": true,
+                                "retentionPolicy": {
+                                    "enabled": true,
+                                    "days": 7
+                                }
+                            }
+                        ]
+                    }
             ]
         }
     ]
