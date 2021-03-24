@@ -184,7 +184,7 @@
            {
                 "type" : "Microsoft.Storage/storageAccounts/providers/roleAssignments",
                 "apiVersion": "2020-04-01-preview",
-                "name" : "[concat(variables('storageAccountName'), guid(subscription().subscriptionId, 'foo'))]",
+                "name" : "[concat(variables('storageAccountName'), '/Microsoft.Authorization/', guid(subscription().subscriptionId, 'foo'))]",
                  "dependsOn": [
                     "[variables('storageAccountName')]" 
                  ],
