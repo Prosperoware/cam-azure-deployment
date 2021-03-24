@@ -111,6 +111,23 @@
                 "accessTier": "Hot"
             },
             "resources": [
+
+                {
+                "type" : "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+                "apiVersion": "2017-05-01",
+                "name" : "[concat(variables('storageAccountName'), '/Microsoft.Authorization/', guid(subscription().subscriptionId, 'foo'))]",
+                "scope": "[concat('Microsoft.Storage/storageAccounts', '/', variables('storageAccountName'))]",
+                 "dependsOn": [
+                    "[variables('storageAccountName')]" 
+                 ],
+                 "properties": {
+                    "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'c12c1c16-33a1-487b-954d-41c89c60f349')]",
+                    "principalId" : "[reference(variables('apiSitesName'), '2018-11-30').principalId]"
+                 }
+
+            },
+            
+            
                 {
                     "type": "Microsoft.Storage/storageAccounts/encryptionScopes",
                     "apiVersion": "2020-08-01-preview",
