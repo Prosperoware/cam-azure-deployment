@@ -9,6 +9,11 @@
                 "description": "Is Production?"
             }
         },
+
+        "userAssignedIdentityName" : {
+            "type" : "string"
+            },
+
         "EnvironmentStage": {
             "type": "string",
             "allowedValues": [
@@ -71,9 +76,17 @@
         "apiAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
         "renewalAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
         "mappingAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
-        "processAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-process')]"
+        "processAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
+        "readeranddataaccess" : "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'c12c1c16-33a1-487b-954d-41c89c60f349')]"
+
     },
     "resources": [
+        {
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+      "name": "[parameters('userAssignedIdentityName')]",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2018-11-30" 
+        },
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2020-08-01-preview",
@@ -113,6 +126,20 @@
 
             "resources": [
 
+                {
+              "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+              "apiVersion": "2017-05-01",
+              "name": "[concat(variables('storageAccountName'), '/Microsoft.Authorization/', guid(subscription().subscriptionId, 'foo'))]",
+              "properties": {
+                "roleDefinitionId": "[variables('readeranddataaccess')]",
+                "principalId": "[reference(parameters('userAssignedIdentityName'), '2018-11-30').principalId]"
+              },
+              "dependsOn": [
+                  "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                  "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('userAssignedIdentityName'))]" 
+              ]
+                },
+
             
                 {
                     "type": "Microsoft.Storage/storageAccounts/encryptionScopes",
@@ -145,7 +172,7 @@
                             "enabled": false
                         }
                     },
-                    "resources": [
+                    "resources": [    
                         {
                             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
                             "apiVersion": "2020-08-01-preview",
@@ -180,22 +207,6 @@
                 }
             ]
         },
-
-           {
-                "type" : "Microsoft.Storage/storageAccounts/providers/roleAssignments",
-                "apiVersion": "2020-04-01-preview",
-                "name" : "[concat(variables('storageAccountName'), '/Microsoft.Authorization/', guid(subscription().subscriptionId, 'foo'))]",
-                 "dependsOn": [
-                    "[variables('storageAccountName')]" 
-                 ],
-                 "properties": {
-                    "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'c12c1c16-33a1-487b-954d-41c89c60f349')]",
-                    "principalId" : "[reference(variables('apiSitesName'), '2018-11-30').principalId]",
-                    "scope": "[concat('Microsoft.Storage/storageAccounts', '/', variables('storageAccountName'))]"
-                 }
-
-            },
-        
         {
             "type": "Microsoft.DBforMySQL/servers",
             "apiVersion": "2017-12-01",
