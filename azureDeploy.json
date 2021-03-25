@@ -13,9 +13,8 @@
          "builtInRoleType": {
             "type": "string",
             "allowedValues": [
-                "Owner",
-                "Contributor",
-                "Reader"
+                "Reader and Data Access",
+                "Service Key Operator Role"
             ],
             "metadata": {
                 "description": "Built-in role to assign"
