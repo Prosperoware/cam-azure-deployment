@@ -10,16 +10,6 @@
             }
         },
 
-         "builtInRoleType": {
-            "type": "string",
-            "allowedValues": [
-                "readeranddataaccess",
-                "servicekeyoperatorrole"
-            ],
-            "metadata": {
-                "description": "Built-in role to assign"
-            }
-        },
         "EnvironmentStage": {
             "type": "string",
             "allowedValues": [
@@ -85,7 +75,7 @@
         "processAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
         "readeranddataaccess": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'c12c1c16-33a1-487b-954d-41c89c60f349')]",
         "servicekeyoperatorrole": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '81a9662b-bebf-436f-a333-f67b29880f12')]",
-        "TestVariable": "[concat('YourStorageAccountName','/Microsoft.Authorization/',guid(subscription().subscriptionId))]"
+        "TestVariable": "[concat(variables('storageAccountName'),'/Microsoft.Authorization/',guid(subscription().subscriptionId))]"
 
     },
     "resources": [
@@ -199,10 +189,37 @@
             "apiVersion": "2020-04-01-preview",
             "name": "[variables('TestVariable')]",
             "properties": {
-                "roleDefinitionId": "[variables(parameters('builtInRoleType'))]",
+                "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]"
             }
-        },        
+        },
+         {
+            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('TestVariable')]",
+            "properties": {
+                "roleDefinitionId": "[variables('readeranddataaccess')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]"
+            }
+        },
+         {
+            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('TestVariable')]",
+            "properties": {
+                "roleDefinitionId": "[variables('readeranddataaccess')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingAppInsightsName')), '2018-02-01', 'Full').identity.principalId]"
+            }
+        },   
+         {
+            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('TestVariable')]",
+            "properties": {
+                "roleDefinitionId": "[variables('readeranddataaccess')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processAppInsightsName')), '2018-02-01', 'Full').identity.principalId]"
+            }
+        },              
         {
             "type": "Microsoft.DBforMySQL/servers",
             "apiVersion": "2017-12-01",
