@@ -187,7 +187,7 @@
          {
             "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[variables('TestVariable')]",
+            "name": "[concat(variables('TestVariable'), '1')]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]"
@@ -196,7 +196,7 @@
          {
             "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[variables('TestVariable')]",
+            "name": "[concat(variables('TestVariable'), '2')]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]"
@@ -205,7 +205,7 @@
          {
             "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[variables('TestVariable')]",
+            "name": "[concat(variables('TestVariable'), '3')]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingAppInsightsName')), '2018-02-01', 'Full').identity.principalId]"
@@ -214,7 +214,7 @@
          {
             "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[variables('TestVariable')]",
+            "name": "[concat(variables('TestVariable'), '4')]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processAppInsightsName')), '2018-02-01', 'Full').identity.principalId]"
