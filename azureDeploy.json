@@ -75,7 +75,10 @@
         "processAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
         "readeranddataaccess": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'c12c1c16-33a1-487b-954d-41c89c60f349')]",
         "servicekeyoperatorrole": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '81a9662b-bebf-436f-a333-f67b29880f12')]",
-        "TestVariable": "[concat(variables('storageAccountName'),'/Microsoft.Authorization/',guid(subscription().subscriptionId))]"
+        "TestVariable1": "[concat(guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),  variables('readeranddataaccess')))]",
+        "TestVariable2": "[concat(guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),  '/', variables('readeranddataaccess')))]",
+        "TestVariable3": "[concat(guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess')))]",
+        "TestVariable4": "[concat(guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess')))]"
 
     },
     "resources": [
@@ -187,16 +190,18 @@
          {
             "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[concat(variables('TestVariable'), '1')]",
+           "name" : "[concat(variables('apiSitesName'), '/default/',  variables('readeranddataaccess'))]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]"
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]",
+                 "principalType": "ServicePrincipal"
+                
             }
         },
          {
             "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[concat(variables('TestVariable'), '2')]",
+           "name" : "[concat(variables('apiSitesName'), '/default/', variables('readeranddataaccess'))]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]"
@@ -205,19 +210,21 @@
          {
             "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[concat(variables('TestVariable'), '3')]",
+           "name" : "[concat(variables('apiSitesName'),  variables('readeranddataaccess'))]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingAppInsightsName')), '2018-02-01', 'Full').identity.principalId]"
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingAppInsightsName')), '2018-02-01', 'Full').identity.principalId]",
+                 "principalType": "ServicePrincipal"
             }
         },   
          {
             "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[concat(variables('TestVariable'), '4')]",
+           "name" : "[concat(variables('apiSitesName'),  variables('readeranddataaccess'))]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processAppInsightsName')), '2018-02-01', 'Full').identity.principalId]"
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processAppInsightsName')), '2018-02-01', 'Full').identity.principalId]",
+                 "principalType": "ServicePrincipal"
             }
         },              
         {
