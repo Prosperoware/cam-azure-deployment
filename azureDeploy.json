@@ -45,6 +45,10 @@
             "metadata": {
                 "description": "MySQL Database administrator password"
             }
+        },
+        "apiAppOwnerRoleId": {
+            "type": "string",
+            "defaultValue": "[newGuid()]"
         }
     },
     "variables": {
@@ -71,7 +75,8 @@
         "apiAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
         "renewalAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
         "mappingAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
-        "processAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-process')]"
+        "processAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
+        "Owner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]"
     },
     "resources": [
         {
@@ -946,7 +951,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('apiSitesName'))]"
                     ],
                     "properties": {
-                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/contentsyncdev-io-etl-api.zip",
+                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/etl-api.zip",
                         "setParameters": {
                         }
                     }
@@ -1121,7 +1126,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('renewalSiteName'))]"
                     ],
                     "properties": {
-                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/contentsyncdev-io-etl-renewal.zip",
+                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/etl-renewal.zip",
                         "setParameters": {
                         }
                     }
@@ -1296,7 +1301,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('mappingSiteName'))]"
                     ],
                     "properties": {
-                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/contentsyncdev-io-etl-mapping.zip",
+                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/etl-mapping.zip",
                         "setParameters": {
                         }
                     }
@@ -1483,7 +1488,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('processSiteName'))]"
                     ],
                     "properties": {
-                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/contentsyncdev-io-etl-process.zip",
+                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/etl-process.zip",
                         "setParameters": {
                         }
                     }
@@ -1509,8 +1514,25 @@
                                 }
                             }
                         ]
-               }   }
+                    }
+                }
             ]
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[parameters('apiAppOwnerRoleId')]",
+            "scope": "[concat('Microsoft.Storage/storageAccounts', '/', variables('storageAccountName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('apiSitesName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('apiSitesName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('Owner')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-11-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            }
         }
     ]
 }
