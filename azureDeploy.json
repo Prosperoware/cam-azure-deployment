@@ -49,7 +49,20 @@
         "apiAppOwnerRoleId": {
             "type": "string",
             "defaultValue": "[newGuid()]"
+        },
+        "renewalAppOwnerRoleId": {
+            "type": "string",
+            "defaultValue": "[newGuid()]"
+        },
+        "mappingAppOwnerRoleId": {
+            "type": "string",
+            "defaultValue": "[newGuid()]"
+        },
+        "processAppOwnerRoleId": {
+            "type": "string",
+            "defaultValue": "[newGuid()]"
         }
+        
     },
     "variables": {
         "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), parameters('TopLevelDomain'))]",
@@ -1537,7 +1550,7 @@
         {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[parameters('apiAppOwnerRoleId')]",
+            "name": "[parameters('renewalAppOwnerRoleId')]",
             "scope": "[concat('Microsoft.Storage/storageAccounts', '/', variables('storageAccountName'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
@@ -1553,7 +1566,7 @@
         {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[parameters('apiAppOwnerRoleId')]",
+            "name": "[parameters('mappingAppOwnerRoleId')]",
             "scope": "[concat('Microsoft.Storage/storageAccounts', '/', variables('storageAccountName'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
@@ -1569,7 +1582,7 @@
         {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[parameters('apiAppOwnerRoleId')]",
+            "name": "[parameters('processAppOwnerRoleId')]",
             "scope": "[concat('Microsoft.Storage/storageAccounts', '/', variables('storageAccountName'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
