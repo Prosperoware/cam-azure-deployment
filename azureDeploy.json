@@ -75,10 +75,10 @@
         "processAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
         "readeranddataaccess": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'c12c1c16-33a1-487b-954d-41c89c60f349')]",
         "servicekeyoperatorrole": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '81a9662b-bebf-436f-a333-f67b29880f12')]",
-        "TestVariable1": "[concat(guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),  variables('readeranddataaccess')))]",
-        "TestVariable2": "[concat(guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),  '/', variables('readeranddataaccess')))]",
-        "TestVariable3": "[concat(guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess')))]",
-        "TestVariable4": "[concat(guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess')))]"
+        "raApiSitesName" : "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
+        "rarenewalSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
+        "ramappingSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
+        "raprocessSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]"
 
     },
     "resources": [
@@ -187,10 +187,11 @@
             ]
         },
 
-         {
-            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+         {  
+            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[concat(variables('apiSitesName'), variables('storageAccountName'),  variables('readeranddataaccess'))]",
+           "name" : "[variables('raApiSitesName')]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]",
@@ -199,18 +200,20 @@
             }
         },
          {
-            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[concat(variables('apiSitesName'), variables('storageAccountName'), variables('readeranddataaccess'))]",
+            "name" : "[variables('rarenewalSiteName')]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]"
             }
         },
          {
-            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[concat(variables('apiSitesName'), variables('storageAccountName'), variables('readeranddataaccess'))]",
+            "name" : "[variables('ramappingSiteName')]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingAppInsightsName')), '2018-02-01', 'Full').identity.principalId]",
@@ -218,9 +221,10 @@
             }
         },   
          {
-            "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[concat(variables('apiSitesName'), variables('storageAccountName'),  variables('readeranddataaccess'))]",
+            "name" : "[variables('raprocessSiteName')]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processAppInsightsName')), '2018-02-01', 'Full').identity.principalId]",
