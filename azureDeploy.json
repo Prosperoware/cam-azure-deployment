@@ -67,7 +67,7 @@
     "variables": {
         "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-' ,parameters('TopLevelDomain'))]",
         "resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', parameters('TopLevelDomain'))]",
-        "storageAccountName": "[concat('strg', variables('commonId'))]",
+        "storageAccountName": "[concat('strg', parameters('InstanceUniqueName'), parameters('EnvironmentStage'),parameters('TopLevelDomain'))]",
         "applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
         "encryptedBucket": "[concat(variables('resourcesNamespace'), '-encrypted-bucket')]",
         "mySqlServerName": "[concat('mysql-', variables('resourcesNamespace'))]",
