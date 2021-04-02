@@ -89,9 +89,6 @@
         "renewalAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
         "mappingAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
         "processAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
-<<<<<<< HEAD
-        "Owner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]"
-=======
         "readeranddataaccess": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'c12c1c16-33a1-487b-954d-41c89c60f349')]",
         "strgkeyoperator": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '81a9662b-bebf-436f-a333-f67b29880f12')]",
         "owner" : "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
@@ -112,9 +109,6 @@
         "sbdataownerrenewalSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
         "sbdataownermappingSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
         "sbdataownerprocessSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]"
-
-
->>>>>>> dev
     },
     "resources": [
         {
@@ -1184,11 +1178,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('apiSitesName'))]"
                     ],
                     "properties": {
-<<<<<<< HEAD
                         "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/etl-api.zip",
-=======
-                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/dev/etl-api.zip",
->>>>>>> dev
                         "setParameters": {
                         }
                     }
@@ -1363,11 +1353,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('renewalSiteName'))]"
                     ],
                     "properties": {
-<<<<<<< HEAD
                         "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/etl-renewal.zip",
-=======
-                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/dev/etl-renewal.zip",
->>>>>>> dev
                         "setParameters": {
                         }
                     }
@@ -1542,11 +1528,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('mappingSiteName'))]"
                     ],
                     "properties": {
-<<<<<<< HEAD
                         "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/etl-mapping.zip",
-=======
-                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/dev/etl-mapping.zip",
->>>>>>> dev
                         "setParameters": {
                         }
                     }
@@ -1733,11 +1715,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('processSiteName'))]"
                     ],
                     "properties": {
-<<<<<<< HEAD
                         "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/etl-process.zip",
-=======
-                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/dev/etl-process.zip",
->>>>>>> dev
                         "setParameters": {
                         }
                     }
