@@ -999,7 +999,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('apiSitesName'))]"
                     ],
                     "properties": {
-                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/dev/contentsyncdev-io-etl-api.zip",
+                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/dev/etl-api.zip",
                         "setParameters": {
                         }
                     }
@@ -1174,7 +1174,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('renewalSiteName'))]"
                     ],
                     "properties": {
-                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/dev/contentsyncdev-io-etl-renewal.zip",
+                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/dev/etl-renewal.zip",
                         "setParameters": {
                         }
                     }
@@ -1349,7 +1349,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('mappingSiteName'))]"
                     ],
                     "properties": {
-                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/dev/contentsyncdev-io-etl-mapping.zip",
+                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/dev/etl-mapping.zip",
                         "setParameters": {
                         }
                     }
@@ -1536,7 +1536,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('processSiteName'))]"
                     ],
                     "properties": {
-                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/dev/contentsyncdev-io-etl-process.zip",
+                        "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/dev/etl-process.zip",
                         "setParameters": {
                         }
                     }
