@@ -45,24 +45,7 @@
             "metadata": {
                 "description": "MySQL Database administrator password"
             }
-        },
-        "apiAppOwnerRoleId": {
-            "type": "string",
-            "defaultValue": "[newGuid()]"
-        },
-        "renewalAppOwnerRoleId": {
-            "type": "string",
-            "defaultValue": "[newGuid()]"
-        },
-        "mappingAppOwnerRoleId": {
-            "type": "string",
-            "defaultValue": "[newGuid()]"
-        },
-        "processAppOwnerRoleId": {
-            "type": "string",
-            "defaultValue": "[newGuid()]"
         }
-        
     },
     "variables": {
         "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-' ,parameters('TopLevelDomain'))]",
