@@ -402,7 +402,7 @@
                             ],
                             "properties": {
                                 "resource": {
-                                    "id": "[concat(variables('commonId'),'-tenant')]",
+                                    "id": "[concat(variables('resourcesNamespace'),'-contentsync-tenant')]",
                                     "indexingPolicy": {
                                         "indexingMode": "consistent",
                                         "automatic": true,
