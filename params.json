@@ -1,25 +1,24 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "IsProduction": {
-      "value": false
-    },
-    "EnvironmentStage": {
-      "value": "prod"
-    },
-    "TopLevelDomain": {
-      "value": "io"
-    },
-    "administratorLogin": {
-      "value": "prospadmin"
-    },
-    
-      "InstanceUniqueName":{
-        "value":"contentsync"
+   "$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+   "contentVersion":"1.0.0.0",
+   "parameters":{
+      "IsProduction":{
+         "value":false
       },
-    "administratorLoginPassword": {
-      "value": "s3curity4cam!2020"
-    }
-  }
+      "EnvironmentStage":{
+         "value":"prod"
+      },
+      "TopLevelDomain":{
+         "value":"io"
+      },
+      "administratorLogin":{
+         "value":"prospadmin"
+      },
+      "InstanceUniqueName":{
+         "value":"contentsync"
+      },
+      "administratorLoginPassword":{
+         "value":"s3curity4cam!2020"
+      }
+   }
 }
