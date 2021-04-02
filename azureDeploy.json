@@ -395,14 +395,14 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-tenant')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-contentsync-tenant')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
                                 "resource": {
-                                    "id": "[concat(variables('resourcesNamespace'),'-contentsync-tenant')]",
+                                    "id": "[concat(variables('commonId'),'-contentsync-tenant')]",
                                     "indexingPolicy": {
                                         "indexingMode": "consistent",
                                         "automatic": true,
