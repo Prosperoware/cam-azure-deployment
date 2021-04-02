@@ -382,7 +382,7 @@
                 {
                     "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
                     "apiVersion": "2020-09-01",
-                    "name": "[concat(variables('cosmosName'), '/', variables('commonId'))]",
+                    "name": "[concat(variables('cosmosName'), '/', variables('resourcesNamespace'))]",
                     "dependsOn": [
                         "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('commonId'))]"
                     ],        
