@@ -65,7 +65,7 @@
         
     },
     "variables": {
-        "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), parameters('TopLevelDomain'))]",
+        "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-' ,parameters('TopLevelDomain'))]",
         "resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', parameters('TopLevelDomain'))]",
         "storageAccountName": "[concat('strg', variables('commonId'))]",
         "applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
@@ -310,7 +310,7 @@
                             ],
                             "properties": {
                                 "resource": {
-                                    "id": "[concat(variables('commonId'), '-tenant')]",
+                                    "id": "[concat(variables('commonId'),'-contentsync','-tenant')]",
                                     "indexingPolicy": {
                                         "indexingMode": "consistent",
                                         "automatic": true,
