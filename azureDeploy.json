@@ -48,9 +48,9 @@
         }
     },
     "variables": {
-        "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-' ,parameters('TopLevelDomain'))]",
+        "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'),parameters('TopLevelDomain'))]",
         "resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', parameters('TopLevelDomain'))]",
-        "storageAccountName": "[concat('strg', parameters('InstanceUniqueName'), parameters('EnvironmentStage'),parameters('TopLevelDomain'))]",
+        "storageAccountName": "[concat('strg', parameters('InstanceUniqueName'), variables('commonId'))]",
         "applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
         "encryptedBucket": "[concat(variables('resourcesNamespace'), '-encrypted-bucket')]",
         "mySqlServerName": "[concat('mysql-', variables('resourcesNamespace'))]",
@@ -382,27 +382,27 @@
                 {
                     "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
                     "apiVersion": "2020-09-01",
-                    "name": "[concat(variables('cosmosName'), '/', variables('commonId'))]",
+                    "name": "[concat(variables('cosmosName'), '/', variables('resourcesNamespace'))]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
+                        "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('resourcesNamespace'))]"
                     ],        
                     "properties": {
                         "resource": {
-                            "id": "[variables('commonId')]"
+                            "id": "[variables('resourcesNamespace')]"
                         }
                     },
                     "resources": [
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-tenant')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('resourcesNamespace'), '/', variables('resourcesNamespace'), '-contentsync-tenant')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('resourcesNamespace'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
                                 "resource": {
-                                    "id": "[concat(variables('commonId'),'-contentsync','-tenant')]",
+                                    "id": "[concat(variables('resourcesNamespace'),'-contentsync-tenant')]",
                                     "indexingPolicy": {
                                         "indexingMode": "consistent",
                                         "automatic": true,
@@ -436,14 +436,14 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-etl-auth')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('resourcesNamespace'), '/', variables('resourcesNamespace'), '-etl-auth')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('resourcesNamespace'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
                                 "resource": {
-                                    "id": "[concat(variables('commonId'), '-etl-auth')]",
+                                    "id": "[concat(variables('resourcesNamespace'), '-etl-auth')]",
                                     "indexingPolicy": {
                                         "indexingMode": "consistent",
                                         "automatic": true,
@@ -483,14 +483,14 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-etl-job')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('resourcesNamespace'), '/', variables('resourcesNamespace'), '-etl-job')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('resourcesNamespace'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
                                 "resource": {
-                                    "id": "[concat(variables('commonId'), '-etl-job')]",
+                                    "id": "[concat(variables('resourcesNamespace'), '-etl-job')]",
                                     "indexingPolicy": {
                                         "indexingMode": "consistent",
                                         "automatic": true,
@@ -530,14 +530,14 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-etl-job-items')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('resourcesNamespace'), '/', variables('resourcesNamespace'), '-etl-job-items')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('resourcesNamespace'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
                                 "resource": {
-                                    "id": "[concat(variables('commonId'), '-etl-job-items')]",
+                                    "id": "[concat(variables('resourcesNamespace'), '-etl-job-items')]",
                                     "indexingPolicy": {
                                         "indexingMode": "consistent",
                                         "automatic": true,
@@ -577,14 +577,14 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-etl-mapping')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('resourcesNamespace'), '/', variables('resourcesNamespace'), '-etl-mapping')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('resourcesNamespace'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
                                 "resource": {
-                                    "id": "[concat(variables('commonId'), '-etl-mapping')]",
+                                    "id": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
                                     "indexingPolicy": {
                                         "indexingMode": "consistent",
                                         "automatic": true,
@@ -624,14 +624,14 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-etl-office-subscription')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('resourcesNamespace'), '/', variables('resourcesNamespace'), '-etl-office-subscription')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('resourcesNamespace'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
                                 "resource": {
-                                    "id": "[concat(variables('commonId'), '-etl-office-subscription')]",
+                                    "id": "[concat(variables('resourcesNamespace'), '-etl-office-subscription')]",
                                     "indexingPolicy": {
                                         "indexingMode": "consistent",
                                         "automatic": true,
@@ -671,14 +671,14 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('commonId'), '-systemauth')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('resourcesNamespace'), '/', variables('resourcesNamespace'), '-systemauth')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
+                                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('resourcesNamespace'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
                                 "resource": {
-                                    "id": "[concat(variables('commonId'), '-systemauth')]",
+                                    "id": "[concat(variables('resourcesNamespace'), '-systemauth')]",
                                     "indexingPolicy": {
                                         "indexingMode": "consistent",
                                         "automatic": true,
