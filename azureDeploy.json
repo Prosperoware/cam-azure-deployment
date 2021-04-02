@@ -56,6 +56,7 @@
         "mySqlServerName": "[concat('mysql-', variables('resourcesNamespace'))]",
         "cosmosName": "[concat('cosmos-', variables('resourcesNamespace'))]",
         "serviceBusName": "[concat('servicebus-', variables('resourcesNamespace'))]",
+        "cosmosTenantdb":"[concat(variables('resourcesNamespace'),'-contentsync','tenant')]",
         "queueName": "[concat(variables('resourcesNamespace'), '-etl-process-v1')]",
         "renewalTopicName": "[concat(variables('resourcesNamespace'), '-etl_mapping_worker_start')]",
         "mappingTopicName": "[concat(variables('resourcesNamespace'), '-etl_renewal_worker_start')]",
@@ -395,14 +396,14 @@
                         {
                             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
                             "apiVersion": "2020-09-01",
-                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('resourcesNamespace'), '-contentsync-tenant')]",
+                            "name": "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('cosmosTenantdb'))]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('cosmosName'), variables('commonId'))]",
                                 "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
                             ],
                             "properties": {
                                 "resource": {
-                                    "id": "[concat(variables('resourcesNamespace'),'-contentsync-tenant')]",
+                                    "id": "[concat(variables('cosmosTenantdb'))]",
                                     "indexingPolicy": {
                                         "indexingMode": "consistent",
                                         "automatic": true,
