@@ -1727,70 +1727,8 @@
                     }
                 }
             ]
-        },
-        {
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[parameters('apiAppOwnerRoleId')]",
-            "scope": "[concat('Microsoft.Storage/storageAccounts', '/', variables('storageAccountName'))]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('apiSitesName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('apiSitesName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('Owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-11-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[parameters('renewalAppOwnerRoleId')]",
-            "scope": "[concat('Microsoft.Storage/storageAccounts', '/', variables('storageAccountName'))]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('renewalSiteName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('renewalSiteName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('Owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-11-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[parameters('mappingAppOwnerRoleId')]",
-            "scope": "[concat('Microsoft.Storage/storageAccounts', '/', variables('storageAccountName'))]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('mappingSiteName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('mappingSiteName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('Owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), '2018-11-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[parameters('processAppOwnerRoleId')]",
-            "scope": "[concat('Microsoft.Storage/storageAccounts', '/', variables('storageAccountName'))]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('processSiteName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('processSiteName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('Owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processSiteName')), '2018-11-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
         }
+       
+
     ]
 }
