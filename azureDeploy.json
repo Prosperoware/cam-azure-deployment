@@ -48,9 +48,9 @@
         }
     },
     "variables": {
-        "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-' ,parameters('TopLevelDomain'))]",
+        "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'),parameters('TopLevelDomain'))]",
         "resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', parameters('TopLevelDomain'))]",
-        "storageAccountName": "[concat('strg', parameters('InstanceUniqueName'), parameters('EnvironmentStage'),parameters('TopLevelDomain'))]",
+        "storageAccountName": "[concat('strg',variables('commonId'))]",
         "applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
         "encryptedBucket": "[concat(variables('resourcesNamespace'), '-encrypted-bucket')]",
         "mySqlServerName": "[concat('mysql-', variables('resourcesNamespace'))]",
@@ -402,7 +402,7 @@
                             ],
                             "properties": {
                                 "resource": {
-                                    "id": "[concat(variables('commonId'),'-contentsync','-tenant')]",
+                                    "id": "[concat(variables('commonId'),'-tenant')]",
                                     "indexingPolicy": {
                                         "indexingMode": "consistent",
                                         "automatic": true,
