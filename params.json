@@ -3,22 +3,22 @@
    "contentVersion":"1.0.0.0",
    "parameters":{
       "IsProduction":{
-         "value":false
+         "value":true
       },
       "EnvironmentStage":{
-         "value":"prod"
+         "value":"qa"
       },
       "TopLevelDomain":{
-         "value":"io"
+         "value":"com"
       },
       "administratorLogin":{
          "value":"prospadmin"
       },
       "InstanceUniqueName":{
-         "value":"contentsync"
+         "value":"contensynk"
       },
       "administratorLoginPassword":{
-         "value":"s3curity4cam!2020"
+         "value":"CAM@demo1"
       }
    }
 }
