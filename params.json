@@ -19,9 +19,6 @@
       },
       "administratorLoginPassword":{
          "value":"CAM@demo1"
-      }, 
-      "enableADS": {
-         "value": "false"
-       }
+      }
    }
 }
