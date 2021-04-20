@@ -76,7 +76,6 @@
         "strgkeyoperator": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '81a9662b-bebf-436f-a333-f67b29880f12')]",
         "owner" : "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
         "sbdataowner" : "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '090c5cfd-751d-490a-894a-3ce6f1109419')]",
-        "strgBlobDataOwner" :  "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b')]",
         "raApiSitesName" : "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
         "rarenewalSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
         "ramappingSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
@@ -92,11 +91,7 @@
         "sbdataownerapiSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
         "sbdataownerrenewalSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
         "sbdataownermappingSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
-        "sbdataownerprocessSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
-        "strgBlobOwnerApiSite" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
-        "strgBlobOwnerRenewalSite" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
-        "strgBlobOwnerMappingSite" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
-        "strgBlobOwnerProcessSite" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]"
+        "sbdataownerprocessSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]"
     },
     "resources": [
         {
@@ -291,47 +286,7 @@
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processSiteName')), '2018-02-01', 'Full').identity.principalId]",
                  "principalType": "ServicePrincipal"
             }
-        },   {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('strgBlobOwnerApiSite')]",
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-            }
-        },  {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('strgBlobOwnerRenewalSite')]",
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-            }
-        },  {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('strgBlobOwnerMappingSite')]",
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-            }
-        },  {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('strgBlobOwnerProcessSite')]",
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-            }
-        },                  
+        },                   
         {
             "type": "Microsoft.DBforMySQL/servers",
             "apiVersion": "2017-12-01",
