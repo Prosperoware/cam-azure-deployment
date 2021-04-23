@@ -1,0 +1,56 @@
+dbserver:
+  primary:
+    host: [mySQL-server]
+    port: [db-port]
+    username: [mySQL-db-user]@[mySQL-server]
+    password: [admin-login-password]
+    driverClass: com.mysql.cj.jdbc.Driver
+    validationInterval: 3000
+    validationQuery: SELECT 1
+    database: [db-name]
+    connectTimeout: 5000
+    connectionParams: 
+      useSSL: true
+      requireSSL: false
+      serverTimezone: UTC
+  adminDb:
+    host: localhost
+    port: 3306
+    username: xxxx
+    password: xxxx
+    driverClass: com.mysql.cj.jdbc.Driver
+    validationInterval: 3000
+    validationQuery: SELECT 1
+    database: xxxx
+    connectTimeout: 5000
+cacheConfig:
+  enabled: false
+  timeout: 24
+  timeoutUnit: HOURS
+  host: localhost
+  port: 6379
+  password: xxxx
+  readTimeout: 20
+  connectTimeout: 30
+  minIdle: 1
+  maxIdle: 1
+  maxTotal: 10
+  usePooling: true
+  prefix: cam
+  database: 0
+swaggerHost: xxxx
+topics:
+  TEST: xxxx
+queues:
+  CS_JOB_QUEUE: xxxx
+  ETL_JOB_QUEUE: [etl-queue]-etl-process-v1
+azure:
+  storage_accountname: [strg-name]
+  cosmos_accountname: [cosmos-name]
+  cosmos_accesskey: [cosmos-primary-key]
+  cosmos_csdbname: [cosmos-db-name]
+  servicebus_namespace: [servicebus-name]
+elasticsearchConfig:
+  host: localhostxxx
+  port: 9200
+  scheme: http
