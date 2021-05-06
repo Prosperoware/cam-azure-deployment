@@ -1136,6 +1136,10 @@
                             "value": "[concat('Endpoint=sb://', variables('serviceBusName'), '.servicebus.windows.net/;SharedAccessKeyName=', variables('authorizationRulesName') ,';SharedAccessKey=', listKeys(resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName')), '2017-04-01').primaryKey)]"
                         },
                         {
+                            "name": "JAVA_OPTS",
+                            "value":"-Dfile.encoding=UTF-8"
+                        },
+                        {
                             "name": "AzureWebJobsStorage",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
                         },
@@ -1303,6 +1307,10 @@
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
                         },
                         {
+                            "name": "JAVA_OPTS",
+                            "value":"-Dfile.encoding=UTF-8"
+                        },
+                        {
                             "name": "config_basepath",
                             "value": "[concat('az:', variables('applicationConfigBucket'))]"
                         },
@@ -1468,6 +1476,10 @@
                         {
                             "name": "AzureWebJobsDashboard",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "JAVA_OPTS",
+                            "value":"-Dfile.encoding=UTF-8"
                         },
                         {
                             "name": "AzureWebJobsServiceBusConnection",
@@ -1675,6 +1687,10 @@
                         {
                             "name": "FUNCTIONS_WORKER_RUNTIME",
                             "value": "java"
+                        },
+                        {
+                            "name": "JAVA_OPTS",
+                            "value":"-Dfile.encoding=UTF-8"
                         },
                         {
                             "name": "lambda_profile",
