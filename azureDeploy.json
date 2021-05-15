@@ -8,7 +8,6 @@
                 "description": "Is Production?"
             }
         },
-
         "EnvironmentStage": {
             "type": "string",
             "allowedValues": [
@@ -56,7 +55,7 @@
         "mySqlServerName": "[concat('mysql-', variables('resourcesNamespace'))]",
         "cosmosName": "[concat('cosmos-', variables('resourcesNamespace'))]",
         "serviceBusName": "[concat('servicebus-', variables('resourcesNamespace'))]",
-        "cosmosTenantdb":"[concat(variables('resourcesNamespace'),'-contentsync','-tenant')]",
+        "cosmosTenantdb": "[concat(variables('resourcesNamespace'),'-contentsync','-tenant')]",
         "queueName": "[concat(variables('resourcesNamespace'), '-etl-process-v1')]",
         "renewalTopicName": "[concat(variables('resourcesNamespace'), '-etl_renewal_worker_start')]",
         "mappingTopicName": "[concat(variables('resourcesNamespace'), '-etl_mapping_worker_start')]",
@@ -75,31 +74,44 @@
         "processAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
         "readeranddataaccess": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'c12c1c16-33a1-487b-954d-41c89c60f349')]",
         "strgkeyoperator": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '81a9662b-bebf-436f-a333-f67b29880f12')]",
-        "owner" : "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
-        "sbdataowner" : "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '090c5cfd-751d-490a-894a-3ce6f1109419')]",
-        "strgBlobDataOwner" : "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b')]",
-        "raApiSitesName" : "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
-        "rarenewalSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
-        "ramappingSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
-        "raprocessSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
-        "skapiSitesName" : "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgkeyoperator'))]",
-        "skrenewalSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgkeyoperator'))]",
-        "skmappingSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgkeyoperator'))]",
-        "skprocessSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgkeyoperator'))]",
-        "sbapiSitesName" : "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('owner'))]",
-        "sbrenewalSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('owner'))]",
-        "sbmappingSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('owner'))]",
-        "sbprocessSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('owner'))]",
-        "sbdataownerapiSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
-        "sbdataownerrenewalSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
-        "sbdataownermappingSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
-        "sbdataownerprocessSiteName" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
-        "strgBlobOwnerApiSite" : "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
-        "strgBlobOwnerRenewalSite" : "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
-        "strgBlobOwnerMappingSite" : "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
-        "strgBlobOwnerProcessSite" : "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]"
+        "owner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
+        "sbdataowner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '090c5cfd-751d-490a-894a-3ce6f1109419')]",
+        "strgBlobDataOwner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b')]",
+        "raApiSitesName": "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
+        "rarenewalSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
+        "ramappingSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
+        "raprocessSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readeranddataaccess'))]",
+        "skapiSitesName": "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgkeyoperator'))]",
+        "skrenewalSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgkeyoperator'))]",
+        "skmappingSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgkeyoperator'))]",
+        "skprocessSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgkeyoperator'))]",
+        "sbapiSitesName": "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('owner'))]",
+        "sbrenewalSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('owner'))]",
+        "sbmappingSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('owner'))]",
+        "sbprocessSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('owner'))]",
+        "sbdataownerapiSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
+        "sbdataownerrenewalSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
+        "sbdataownermappingSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
+        "sbdataownerprocessSiteName": "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('sbdataowner'))]",
+        "strgBlobOwnerApiSite": "[guid(resourceId('Microsoft.Web/sites', variables('apiSitesName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
+        "strgBlobOwnerRenewalSite": "[guid(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
+        "strgBlobOwnerMappingSite": "[guid(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
+        "strgBlobOwnerProcessSite": "[guid(resourceId('Microsoft.Web/sites', variables('processSiteName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]"
     },
     "resources": [
+        {
+            "apiVersion": "2020-06-01",
+            "name": "pid-83467a33-26f3-4127-a3f1-b8702ef576a7",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": []
+                }
+            }
+        },
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2020-08-01-preview",
@@ -169,7 +181,7 @@
                             "enabled": false
                         }
                     },
-                    "resources": [    
+                    "resources": [
                         {
                             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
                             "apiVersion": "2020-08-01-preview",
@@ -192,7 +204,7 @@
                                 "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storageAccountName'), 'default')]",
                                 "[resourceId('Microsoft.Storage/storageAccounts/encryptionScopes', variables('storageAccountName'), 'DataAtRest')]",
                                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-                                
+
                             ],
                             "properties": {
                                 "defaultEncryptionScope": "DataAtRest",
@@ -204,136 +216,138 @@
                 }
             ]
         },
-
-         {  
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[variables('raApiSitesName')]",
+            "name": "[variables('raApiSitesName')]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-                
+                "principalType": "ServicePrincipal"
+
             }
         },
-         {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('rarenewalSiteName')]",
+            "name": "[variables('rarenewalSiteName')]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]"
             }
         },
-         {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('ramappingSiteName')]",
+            "name": "[variables('ramappingSiteName')]",
             "properties": {
                 "roleDefinitionId": "[variables('readeranddataaccess')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-            }
-        },   
-         {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('raprocessSiteName')]",
-            "properties": {
-                "roleDefinitionId": "[variables('readeranddataaccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-            }
-        }, 
-         {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('skapiSitesName')]",
-            "properties": {
-                "roleDefinitionId": "[variables('strgkeyoperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-            }
-        },      
-         {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('skrenewalSiteName')]",
-            "properties": {
-                "roleDefinitionId": "[variables('strgkeyoperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-            }
-        },      
-         {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('skmappingSiteName')]",
-            "properties": {
-                "roleDefinitionId": "[variables('strgkeyoperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-            }
-        },      
-         {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('skprocessSiteName')]",
-            "properties": {
-                "roleDefinitionId": "[variables('strgkeyoperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
+                "principalType": "ServicePrincipal"
             }
         },
         {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('strgBlobOwnerApiSite')]",
+            "name": "[variables('raprocessSiteName')]",
+            "properties": {
+                "roleDefinitionId": "[variables('readeranddataaccess')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processSiteName')), '2018-02-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skapiSitesName')]",
+            "properties": {
+                "roleDefinitionId": "[variables('strgkeyoperator')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skrenewalSiteName')]",
+            "properties": {
+                "roleDefinitionId": "[variables('strgkeyoperator')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skmappingSiteName')]",
+            "properties": {
+                "roleDefinitionId": "[variables('strgkeyoperator')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), '2018-02-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skprocessSiteName')]",
+            "properties": {
+                "roleDefinitionId": "[variables('strgkeyoperator')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processSiteName')), '2018-02-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('strgBlobOwnerApiSite')]",
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
+                "principalType": "ServicePrincipal"
             }
-        },  {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('strgBlobOwnerRenewalSite')]",
+            "name": "[variables('strgBlobOwnerRenewalSite')]",
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
+                "principalType": "ServicePrincipal"
             }
-        },  {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('strgBlobOwnerMappingSite')]",
+            "name": "[variables('strgBlobOwnerMappingSite')]",
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
+                "principalType": "ServicePrincipal"
             }
-        },  {
-            "scope" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name" : "[variables('strgBlobOwnerProcessSite')]",
+            "name": "[variables('strgBlobOwnerProcessSite')]",
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
+                "principalType": "ServicePrincipal"
             }
-        },                          
+        },
         {
             "type": "Microsoft.DBforMySQL/servers",
             "apiVersion": "2017-12-01",
@@ -411,7 +425,7 @@
                     }
                 ],
                 "cors": [],
-                "capabilities":  [
+                "capabilities": [
                     {
                         "name": "EnableServerless"
                     }
@@ -432,7 +446,7 @@
                     "name": "[concat(variables('cosmosName'), '/', variables('commonId'))]",
                     "dependsOn": [
                         "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]"
-                    ],        
+                    ],
                     "properties": {
                         "resource": {
                             "id": "[variables('commonId')]"
@@ -947,111 +961,102 @@
                 }
             ]
         },
-        
-         {  
-            "scope" : "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[variables('sbapiSitesName')]",
+            "name": "[variables('sbapiSitesName')]",
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-                
+                "principalType": "ServicePrincipal"
+
             }
         },
-
-         {  
-            "scope" : "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[variables('sbrenewalSiteName')]",
+            "name": "[variables('sbrenewalSiteName')]",
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-                
+                "principalType": "ServicePrincipal"
+
             }
         },
-
-         {  
-            "scope" : "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[variables('sbmappingSiteName')]",
+            "name": "[variables('sbmappingSiteName')]",
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-                
+                "principalType": "ServicePrincipal"
+
             }
         },
-
-         {  
-            "scope" : "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[variables('sbprocessSiteName')]",
+            "name": "[variables('sbprocessSiteName')]",
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-                
+                "principalType": "ServicePrincipal"
+
             }
         },
-
-         {  
-            "scope" : "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[variables('sbdataownerapiSiteName')]",
+            "name": "[variables('sbdataownerapiSiteName')]",
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-                
+                "principalType": "ServicePrincipal"
+
             }
         },
-
-         {  
-            "scope" : "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[variables('sbdataownerrenewalSiteName')]",
+            "name": "[variables('sbdataownerrenewalSiteName')]",
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-                
+                "principalType": "ServicePrincipal"
+
             }
         },
-
-         {  
-            "scope" : "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[variables('sbdataownermappingSiteName')]",
+            "name": "[variables('sbdataownermappingSiteName')]",
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-                
+                "principalType": "ServicePrincipal"
+
             }
         },
-
-         {  
-            "scope" : "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-           "name" : "[variables('sbdataownerprocessSiteName')]",
+            "name": "[variables('sbdataownerprocessSiteName')]",
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processSiteName')), '2018-02-01', 'Full').identity.principalId]",
-                 "principalType": "ServicePrincipal"
-                
+                "principalType": "ServicePrincipal"
+
             }
         },
-
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2018-02-01",
@@ -1125,7 +1130,7 @@
                     "appSettings": [
                         {
                             "name": "application_group",
-                            "value":"[variables('resourcesNamespace')]"
+                            "value": "[variables('resourcesNamespace')]"
                         },
                         {
                             "name": "AzureWebJobsDashboard",
@@ -1137,7 +1142,7 @@
                         },
                         {
                             "name": "JAVA_OPTS",
-                            "value":"-Dfile.encoding=UTF-8"
+                            "value": "-Dfile.encoding=UTF-8"
                         },
                         {
                             "name": "AzureWebJobsStorage",
@@ -1148,8 +1153,8 @@
                             "value": "[concat('az:', variables('applicationConfigBucket'))]"
                         },
                         {
-                            "name":"cs_ddt_prefix",
-                            "value":"[variables('resourcesNamespace')]"
+                            "name": "cs_ddt_prefix",
+                            "value": "[variables('resourcesNamespace')]"
                         },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -1217,18 +1222,18 @@
                         }
                     }
                 },
-                {  
-                    "type":"Microsoft.Web/sites/providers/diagnosticsettings",
+                {
+                    "type": "Microsoft.Web/sites/providers/diagnosticsettings",
                     "apiVersion": "2017-05-01-preview",
                     "location": "[variables('location')]",
-                    "name":"[concat(variables('apiSitesName'), '/Microsoft.Insights/function-logs')]",
-                    "dependsOn":[  
+                    "name": "[concat(variables('apiSitesName'), '/Microsoft.Insights/function-logs')]",
+                    "dependsOn": [
                         "[resourceId('Microsoft.Web/sites', variables('apiSitesName'))]",
                         "[concat('Microsoft.Web/Sites/', variables('apiSitesName'), '/Extensions/MSDeploy')]"
                     ],
-                    "properties":{
+                    "properties": {
                         "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                        "logs":[
+                        "logs": [
                             {
                                 "category": "FunctionAppLogs",
                                 "enabled": true,
@@ -1292,7 +1297,7 @@
                     "appSettings": [
                         {
                             "name": "application_group",
-                            "value":"[variables('resourcesNamespace')]"
+                            "value": "[variables('resourcesNamespace')]"
                         },
                         {
                             "name": "AzureWebJobsDashboard",
@@ -1308,15 +1313,15 @@
                         },
                         {
                             "name": "JAVA_OPTS",
-                            "value":"-Dfile.encoding=UTF-8"
+                            "value": "-Dfile.encoding=UTF-8"
                         },
                         {
                             "name": "config_basepath",
                             "value": "[concat('az:', variables('applicationConfigBucket'))]"
                         },
                         {
-                            "name":"cs_ddt_prefix",
-                            "value":"[variables('resourcesNamespace')]"
+                            "name": "cs_ddt_prefix",
+                            "value": "[variables('resourcesNamespace')]"
                         },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -1396,18 +1401,18 @@
                         }
                     }
                 },
-                {  
-                    "type":"Microsoft.Web/sites/providers/diagnosticsettings",
+                {
+                    "type": "Microsoft.Web/sites/providers/diagnosticsettings",
                     "apiVersion": "2017-05-01-preview",
                     "location": "[variables('location')]",
-                    "name":"[concat(variables('renewalSiteName'), '/Microsoft.Insights/function-logs')]",
-                    "dependsOn":[  
+                    "name": "[concat(variables('renewalSiteName'), '/Microsoft.Insights/function-logs')]",
+                    "dependsOn": [
                         "[resourceId('Microsoft.Web/sites', variables('renewalSiteName'))]",
                         "[concat('Microsoft.Web/Sites/', variables('renewalSiteName'), '/Extensions/MSDeploy')]"
                     ],
-                    "properties":{
+                    "properties": {
                         "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                        "logs":[
+                        "logs": [
                             {
                                 "category": "FunctionAppLogs",
                                 "enabled": true,
@@ -1471,7 +1476,7 @@
                     "appSettings": [
                         {
                             "name": "application_group",
-                            "value":"[variables('resourcesNamespace')]"
+                            "value": "[variables('resourcesNamespace')]"
                         },
                         {
                             "name": "AzureWebJobsDashboard",
@@ -1479,7 +1484,7 @@
                         },
                         {
                             "name": "JAVA_OPTS",
-                            "value":"-Dfile.encoding=UTF-8"
+                            "value": "-Dfile.encoding=UTF-8"
                         },
                         {
                             "name": "AzureWebJobsServiceBusConnection",
@@ -1494,8 +1499,8 @@
                             "value": "[concat('az:', variables('applicationConfigBucket'))]"
                         },
                         {
-                            "name":"cs_ddt_prefix",
-                            "value":"[variables('resourcesNamespace')]"
+                            "name": "cs_ddt_prefix",
+                            "value": "[variables('resourcesNamespace')]"
                         },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -1575,18 +1580,18 @@
                         }
                     }
                 },
-                {  
-                    "type":"Microsoft.Web/sites/providers/diagnosticsettings",
+                {
+                    "type": "Microsoft.Web/sites/providers/diagnosticsettings",
                     "apiVersion": "2017-05-01-preview",
                     "location": "[variables('location')]",
-                    "name":"[concat(variables('mappingSiteName'), '/Microsoft.Insights/function-logs')]",
-                    "dependsOn":[  
+                    "name": "[concat(variables('mappingSiteName'), '/Microsoft.Insights/function-logs')]",
+                    "dependsOn": [
                         "[resourceId('Microsoft.Web/sites', variables('mappingSiteName'))]",
                         "[concat('Microsoft.Web/Sites/', variables('mappingSiteName'), '/Extensions/MSDeploy')]"
                     ],
-                    "properties":{
+                    "properties": {
                         "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                        "logs":[
+                        "logs": [
                             {
                                 "category": "FunctionAppLogs",
                                 "enabled": true,
@@ -1650,7 +1655,7 @@
                     "appSettings": [
                         {
                             "name": "application_group",
-                            "value":"[variables('resourcesNamespace')]"
+                            "value": "[variables('resourcesNamespace')]"
                         },
                         {
                             "name": "AzureWebJobsDashboard",
@@ -1673,8 +1678,8 @@
                             "value": "[concat('az:', variables('applicationConfigBucket'))]"
                         },
                         {
-                            "name":"cs_ddt_prefix",
-                            "value":"[variables('resourcesNamespace')]"
+                            "name": "cs_ddt_prefix",
+                            "value": "[variables('resourcesNamespace')]"
                         },
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -1690,7 +1695,7 @@
                         },
                         {
                             "name": "JAVA_OPTS",
-                            "value":"-Dfile.encoding=UTF-8"
+                            "value": "-Dfile.encoding=UTF-8"
                         },
                         {
                             "name": "lambda_profile",
@@ -1752,7 +1757,7 @@
                 "httpsOnly": false,
                 "redundancyMode": "None"
             },
-            "resources":[
+            "resources": [
                 {
                     "type": "Extensions",
                     "apiVersion": "2018-11-01",
@@ -1762,22 +1767,21 @@
                     ],
                     "properties": {
                         "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/etl-process.zip",
-                        "setParameters": {
-                        }
+                        "setParameters": {}
                     }
                 },
-                {  
-                    "type":"Microsoft.Web/sites/providers/diagnosticsettings",
+                {
+                    "type": "Microsoft.Web/sites/providers/diagnosticsettings",
                     "apiVersion": "2017-05-01-preview",
                     "location": "[variables('location')]",
-                    "name":"[concat(variables('processSiteName'), '/Microsoft.Insights/function-logs')]",
-                    "dependsOn":[  
+                    "name": "[concat(variables('processSiteName'), '/Microsoft.Insights/function-logs')]",
+                    "dependsOn": [
                         "[resourceId('Microsoft.Web/sites', variables('processSiteName'))]",
                         "[concat('Microsoft.Web/Sites/', variables('processSiteName'), '/Extensions/MSDeploy')]"
                     ],
-                    "properties":{
+                    "properties": {
                         "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                        "logs":[
+                        "logs": [
                             {
                                 "category": "FunctionAppLogs",
                                 "enabled": true,
@@ -1791,7 +1795,5 @@
                 }
             ]
         }
-       
-
     ]
 }
