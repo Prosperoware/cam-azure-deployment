@@ -4,6 +4,7 @@
     "parameters": {
         "IsProduction": {
             "type": "bool",
+            "defaultValue": true,
             "metadata": {
                 "description": "Is Production?"
             }
@@ -43,6 +44,13 @@
             "maxLength": 128,
             "metadata": {
                 "description": "MySQL Database administrator password"
+            }
+        },
+        "OptOutOfCUA": {
+            "type": "bool",
+            "defaultValue": false,
+            "metadata": {
+                "description": "By deploying this template, Microsoft can identify the installation of CAM with the deployed Azure resources. Microsoft can correlate these resources used to support the CAM software. Microsoft collects this information to provide the best product experience and for business operations. Data is collected and governed by Microsoft's policies. Such policies are located at https://www.microsoft.com/trustcenter."
             }
         }
     },
@@ -103,6 +111,7 @@
             "apiVersion": "2020-06-01",
             "name": "pid-83467a33-26f3-4127-a3f1-b8702ef576a7",
             "type": "Microsoft.Resources/deployments",
+            "condition": "[not(parameters('OptOutOfCUA'))]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
