@@ -2,6 +2,20 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "ProsperowareSecretKey": {
+            "type": "string",
+            "minLength": 36,
+            "metadata": {
+                "description": "This secret Key will be provided by Prosperoware. Make sure to get the key before starting the installation."
+            }
+        },
+        "ProsperowareTenantId": {
+            "type": "string",
+            "minLength": 36,
+            "metadata": {
+                "description": "Prosperoware Tenant Id will be provided by Prosperoware. Make sure to get the key before starting the installation."
+            }
+        },
         "IsProduction": {
             "type": "bool",
             "defaultValue": true,
@@ -2117,6 +2131,22 @@
                         {
                             "name": "applicationConfigBucket",
                             "value": "[variables('applicationConfigBucket')]"
+                        },
+                        {
+                            "name": "cosmos_tenant_container",
+                            "value": "[variables('cosmosTenantdb')]"
+                        },
+                        {
+                            "name": "etl_api_url",
+                            "value": "[concat(variables('apiSitesName'), '.azurewebsites.net')]"
+                        },
+                        {
+                            "name": "Prosperoware_secretKey",
+                            "value": "[parameters('ProsperowareSecretKey')]"
+                        },
+                        {
+                            "name": "Prosperoware_tenantId",
+                            "value": "[parameters('ProsperowareTenantId')]"
                         }
                     ]
                 },
