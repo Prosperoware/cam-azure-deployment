@@ -2113,6 +2113,10 @@
                         {
                             "name": "storage_accountkey",
                             "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value]"
+                        },
+                        {
+                            "name": "applicationConfigBucket",
+                            "value": "[variables('applicationConfigBucket')]"
                         }
                     ]
                 },
