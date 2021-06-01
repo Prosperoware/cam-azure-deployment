@@ -1,0 +1,11 @@
+{
+  "clientBaseUrl": "{etl_api_url}",
+  "contentSyncEnabled": true,
+  "mappingWorkerStatus": "STOPPED",
+  "otpValidityMinutes": 30,
+  "renewalWorkerStatus": "STOPPED",
+  "secretKey": "{prosperoware_secretKey}",
+  "tenantEnabled": true,
+  "tenantId": "{prosperoware_tenantId}",
+  "tokenValidityMinutes": 1440
+}
