@@ -2,15 +2,6 @@
   "clientBaseUrl": "",
   "contentSyncEnabled": true,
   "mappingWorkerStatus": "STOPPED",
-  "otpTemplates": {
-    "email": {
-      "body": "Welcome <b>{username} !</b> to CAM Business Continuity Application. <br/>Your login OTP is : {otp}<br/><br/><b>CAM Support</b>",
-      "subject": "CAM - Business Continuity Login OTP"
-    },
-    "sms": {
-      "body": "Welcome {username} ! to CAM Business Continuity Application. Your login OTP is : {otp}\n\nCAM Support"
-    }
-  },
   "otpValidityMinutes": 30,
   "renewalWorkerStatus": "STOPPED",
   "secretKey": "",
