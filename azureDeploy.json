@@ -2181,8 +2181,8 @@
             "location": "[variables('Location')]",
             "kind": "AzurePowerShell",
             "dependsOn": [
-                "[concat(variables('cosmosName'), '/', variables('commonId'), '/', variables('cosmosTenantdb'))]",
-                "[concat(variables('storageAccountName'), '/default/', variables('applicationConfigBucket'))]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers', variables('cosmosName'), variables('commonId'), variables('cosmosTenantdb'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', variables('storageAccountName'), 'default', variables('applicationConfigBucket'))]",
                 "[resourceId('Microsoft.Web/sites', variables('configSiteName'))]",
                 "[concat('Microsoft.Web/Sites/', variables('configSiteName'), '/Extensions/MSDeploy')]"
             ],
