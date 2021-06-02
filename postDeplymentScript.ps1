@@ -3,5 +3,5 @@ param(
     [string][Parameter(Mandatory=$true)] $accessKey
 )
 
-$null = az rest --method POST --uri "$($configFunctionUrl)?code=$($accessKey)&clientId=default"
+$null = az rest --method POST --uri "$($configFunctionUrl)?code=$($accessKey)"
 

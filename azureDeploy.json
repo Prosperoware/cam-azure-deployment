@@ -2192,7 +2192,8 @@
                 "timeout": "PT5M",
                 "cleanupPreference": "OnSuccess",
                 "retentionInterval": "P1D",
-                "arguments": "[format(' -configFunctionUrl https://{0}.azurewebsites.net/api/ensureInitialConfig -accessKey {1}', variables('configSiteName'), listKeys(resourceId('Microsoft.Web/sites', variables('configSiteName'), '/host/default/'),'2018-11-01').functionKeys.default)]"
+                "arguments": "[format(' -configFunctionUrl https://{0}.azurewebsites.net/api/ensureInitialConfig -accessKey {1}', variables('configSiteName'), listKeys(resourceId('Microsoft.Web/sites', variables('configSiteName'), '/host/default/'),'2018-11-01').functionKeys.default)]",
+                "primaryScriptUri": "https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/master/postDeplymentScript.ps1"
             }
         }
     ]
