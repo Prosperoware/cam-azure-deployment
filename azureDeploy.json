@@ -25,12 +25,7 @@
         },
         "EnvironmentStage": {
             "type": "string",
-            "allowedValues": [
-                "dev",
-                "qa",
-                "stg",
-                "prod"
-            ]
+            "allowedValues": [ "dev", "qa", "stg", "prod" ]
         },
         "InstanceUniqueName": {
             "type": "string",
@@ -39,11 +34,7 @@
         },
         "TopLevelDomain": {
             "type": "string",
-            "allowedValues": [
-                "io",
-                "eu",
-                "com"
-            ]
+            "allowedValues": [ "io", "eu", "com" ]
         },
         "administratorLogin": {
             "type": "string",
@@ -225,7 +216,6 @@
                                 "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storageAccountName'), 'default')]",
                                 "[resourceId('Microsoft.Storage/storageAccounts/encryptionScopes', variables('storageAccountName'), 'DataAtRest')]",
                                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-
                             ],
                             "properties": {
                                 "defaultEncryptionScope": "DataAtRest",
@@ -607,9 +597,7 @@
                                         ]
                                     },
                                     "partitionKey": {
-                                        "paths": [
-                                            "/tenantId"
-                                        ],
+                                        "paths": [ "/tenantId" ],
                                         "kind": "Hash"
                                     },
                                     "uniqueKeyPolicy": {
@@ -648,17 +636,13 @@
                                         ]
                                     },
                                     "partitionKey": {
-                                        "paths": [
-                                            "/tenantId"
-                                        ],
+                                        "paths": [ "/tenantId" ],
                                         "kind": "Hash"
                                     },
                                     "uniqueKeyPolicy": {
                                         "uniqueKeys": [
                                             {
-                                                "paths": [
-                                                    "/authId"
-                                                ]
+                                                "paths": [ "/authId" ]
                                             }
                                         ]
                                     },
@@ -695,17 +679,13 @@
                                         ]
                                     },
                                     "partitionKey": {
-                                        "paths": [
-                                            "/tenantId"
-                                        ],
+                                        "paths": [ "/tenantId" ],
                                         "kind": "Hash"
                                     },
                                     "uniqueKeyPolicy": {
                                         "uniqueKeys": [
                                             {
-                                                "paths": [
-                                                    "/etlJobId"
-                                                ]
+                                                "paths": [ "/etlJobId" ]
                                             }
                                         ]
                                     },
@@ -742,17 +722,13 @@
                                         ]
                                     },
                                     "partitionKey": {
-                                        "paths": [
-                                            "/jobId"
-                                        ],
+                                        "paths": [ "/jobId" ],
                                         "kind": "Hash"
                                     },
                                     "uniqueKeyPolicy": {
                                         "uniqueKeys": [
                                             {
-                                                "paths": [
-                                                    "/itemId"
-                                                ]
+                                                "paths": [ "/itemId" ]
                                             }
                                         ]
                                     },
@@ -789,17 +765,13 @@
                                         ]
                                     },
                                     "partitionKey": {
-                                        "paths": [
-                                            "/tenantId"
-                                        ],
+                                        "paths": [ "/tenantId" ],
                                         "kind": "Hash"
                                     },
                                     "uniqueKeyPolicy": {
                                         "uniqueKeys": [
                                             {
-                                                "paths": [
-                                                    "/mappingId"
-                                                ]
+                                                "paths": [ "/mappingId" ]
                                             }
                                         ]
                                     },
@@ -836,17 +808,13 @@
                                         ]
                                     },
                                     "partitionKey": {
-                                        "paths": [
-                                            "/subscriptionId"
-                                        ],
+                                        "paths": [ "/subscriptionId" ],
                                         "kind": "Hash"
                                     },
                                     "uniqueKeyPolicy": {
                                         "uniqueKeys": [
                                             {
-                                                "paths": [
-                                                    "/authId"
-                                                ]
+                                                "paths": [ "/authId" ]
                                             }
                                         ]
                                     },
@@ -883,9 +851,7 @@
                                         ]
                                     },
                                     "partitionKey": {
-                                        "paths": [
-                                            "/tenantId"
-                                        ],
+                                        "paths": [ "/tenantId" ],
                                         "kind": "Hash"
                                     },
                                     "uniqueKeyPolicy": {
@@ -924,11 +890,7 @@
                         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                     ],
                     "properties": {
-                        "rights": [
-                            "Listen",
-                            "Manage",
-                            "Send"
-                        ]
+                        "rights": [ "Listen", "Manage", "Send" ]
                     }
                 },
                 {
@@ -1103,7 +1065,6 @@
                 "roleDefinitionId": "[variables('owner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]",
                 "principalType": "ServicePrincipal"
-
             }
         },
         {
@@ -1120,7 +1081,6 @@
                 "roleDefinitionId": "[variables('owner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]",
                 "principalType": "ServicePrincipal"
-
             }
         },
         {
@@ -1137,7 +1097,6 @@
                 "roleDefinitionId": "[variables('owner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), '2018-02-01', 'Full').identity.principalId]",
                 "principalType": "ServicePrincipal"
-
             }
         },
         {
@@ -1154,7 +1113,6 @@
                 "roleDefinitionId": "[variables('owner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processSiteName')), '2018-02-01', 'Full').identity.principalId]",
                 "principalType": "ServicePrincipal"
-
             }
         },
         {
@@ -1171,7 +1129,6 @@
                 "roleDefinitionId": "[variables('owner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('configSiteName')), '2018-02-01', 'Full').identity.principalId]",
                 "principalType": "ServicePrincipal"
-
             }
         },
         {
@@ -1188,7 +1145,6 @@
                 "roleDefinitionId": "[variables('sbdataowner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('apiSitesName')), '2018-02-01', 'Full').identity.principalId]",
                 "principalType": "ServicePrincipal"
-
             }
         },
         {
@@ -1205,7 +1161,6 @@
                 "roleDefinitionId": "[variables('sbdataowner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('renewalSiteName')), '2018-02-01', 'Full').identity.principalId]",
                 "principalType": "ServicePrincipal"
-
             }
         },
         {
@@ -1222,7 +1177,6 @@
                 "roleDefinitionId": "[variables('sbdataowner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('mappingSiteName')), '2018-02-01', 'Full').identity.principalId]",
                 "principalType": "ServicePrincipal"
-
             }
         },
         {
@@ -1239,7 +1193,6 @@
                 "roleDefinitionId": "[variables('sbdataowner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('processSiteName')), '2018-02-01', 'Full').identity.principalId]",
                 "principalType": "ServicePrincipal"
-
             }
         },
         {
@@ -1256,7 +1209,6 @@
                 "roleDefinitionId": "[variables('sbdataowner')]",
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('configSiteName')), '2018-02-01', 'Full').identity.principalId]",
                 "principalType": "ServicePrincipal"
-
             }
         },
         {
@@ -1389,7 +1341,6 @@
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                             "value": "[reference(resourceId('Microsoft.Insights/components', variables('apiAppInsightsName')), '2020-02-02-preview').InstrumentationKey]"
-
                         },
                         {
                             "name": "service_id",
@@ -1420,8 +1371,7 @@
                     ],
                     "properties": {
                         "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/etl-api.zip",
-                        "setParameters": {
-                        }
+                        "setParameters": {}
                     }
                 },
                 {
@@ -1556,7 +1506,6 @@
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                             "value": "[reference(resourceId('Microsoft.Insights/components', variables('renewalAppInsightsName')), '2020-02-02-preview').InstrumentationKey]"
-
                         },
                         {
                             "name": "etl_renewal_manager_schedule",
@@ -1599,8 +1548,7 @@
                     ],
                     "properties": {
                         "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/etl-renewal.zip",
-                        "setParameters": {
-                        }
+                        "setParameters": {}
                     }
                 },
                 {
@@ -1735,7 +1683,6 @@
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                             "value": "[reference(resourceId('Microsoft.Insights/components', variables('mappingAppInsightsName')), '2020-02-02-preview').InstrumentationKey]"
-
                         },
                         {
                             "name": "etl_mapping_worker_subscription",
@@ -1778,8 +1725,7 @@
                     ],
                     "properties": {
                         "packageUri": "https://github.com/Prosperoware/cam-azure-deployment/raw/master/etl-mapping.zip",
-                        "setParameters": {
-                        }
+                        "setParameters": {}
                     }
                 },
                 {
@@ -1918,7 +1864,6 @@
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                             "value": "[reference(resourceId('Microsoft.Insights/components', variables('processAppInsightsName')), '2020-02-02-preview').InstrumentationKey]"
-
                         },
                         {
                             "name": "etl_mapping_worker_subscription",
@@ -2062,7 +2007,6 @@
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                             "value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName')), '2020-02-02-preview').InstrumentationKey]"
-
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
@@ -2178,7 +2122,7 @@
     "outputs": {
         "initializationFunctionUrl": {
             "type": "string",
-            "value": "[format('https://{0}.azurewebsites.net/api/ensureInitialConfig?code={1}', variables('configSiteName'), listKeys(concat(resourceId('Microsoft.Web/sites', variables('configSiteName')), '/host/default/'),'2018-11-01').functionKeys.default))]"
+            "value": "[format('https://{0}.azurewebsites.net/api/ensureInitialConfig?code={1}', variables('configSiteName'), listKeys(concat(resourceId('Microsoft.Web/sites', variables('configSiteName')), '/host/default/'),'2018-11-01').functionKeys.default)]"
         }
     }
 }
