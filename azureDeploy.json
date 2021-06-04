@@ -2123,6 +2123,14 @@
         "initializationFunctionUrl": {
             "type": "string",
             "value": "[format('https://{0}.azurewebsites.net/api/ensureInitialConfig?code={1}', variables('configSiteName'), listKeys(concat(resourceId('Microsoft.Web/sites', variables('configSiteName')), '/host/default/'),'2018-11-01').functionKeys.default)]"
+        },
+        "bucketName":{
+            "type": "string",
+            "value": "[variables('encryptedBucket')]"
+        },
+        "apiEndPointBaseUrl": {
+            "type": "string",
+            "value": "[format('https://{0}.azurewebsites.net/', variables('apiSitesName'))]"
         }
     }
 }
