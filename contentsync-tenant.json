@@ -1,4 +1,5 @@
 {
+    "id": "[id]",
     "clientBaseUrl": "[etl_api_url]",
     "contentSyncEnabled": true,
     "mappingWorkerStatus": "STOPPED",
