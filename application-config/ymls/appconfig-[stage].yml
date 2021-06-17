@@ -1,13 +1,13 @@
 dbserver:
   primary:
-    host: {mySQL_server}.mysql.database.azure.com
-    port: {db_port}
-    username: {mySQL_db_user}@{mySQL_server}
-    password: {admin_login_password}
+    host: [mySQL_server].mysql.database.azure.com
+    port: [db_port]
+    username: [mySQL_db_user]@[mySQL_server]
+    password: [admin_login_password]
     driverClass: com.mysql.cj.jdbc.Driver
     validationInterval: 3000
     validationQuery: SELECT 1
-    database: {db_name}
+    database: [db_name]
     connectTimeout: 5000
     connectionParams: 
       useSSL: true
@@ -43,13 +43,13 @@ topics:
   TEST: xxxx
 queues:
   CS_JOB_QUEUE: xxxx
-  ETL_JOB_QUEUE: {etl_queue}-etl-process-v1
+  ETL_JOB_QUEUE: [etl_queue]-etl-process-v1
 azure:
-  storage_accountname: "{strg_name}"
-  cosmos_accountname: "{cosmos_name}"
-  cosmos_accesskey: "{cosmos_primary_key}"
-  cosmos_csdbname: "{cosmos_db_name}"
-  servicebus_namespace: "{servicebus_name}"
+  storage_accountname: "[strg_name]"
+  cosmos_accountname: "[cosmos_name]"
+  cosmos_accesskey: "[cosmos_primary_key]"
+  cosmos_csdbname: "[cosmos_db_name]"
+  servicebus_namespace: "[servicebus_name]"
 elasticsearchConfig:
   host: localhostxxx
   port: 9200
