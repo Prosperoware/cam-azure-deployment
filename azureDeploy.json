@@ -2297,12 +2297,12 @@
                 "enabled": true,
                 "hostNameSslStates": [
                     {
-                        "name": "[concat(variables('processSiteName'), '.azurewebsites.net')]",
+                        "name": "[concat(variables('configSiteName'), '.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Standard"
                     },
                     {
-                        "name": "[concat(variables('processSiteName'), '.scm.azurewebsites.net')]",
+                        "name": "[concat(variables('configSiteName'), '.scm.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Repository"
                     }
@@ -2320,10 +2320,6 @@
                         {
                             "name": "FUNCTIONS_WORKER_RUNTIME",
                             "value": "node"
-                        },
-                        {
-                            "name": "WEBSITE_USE_PLACEHOLDER",
-                            "value": "0"
                         },
                         {
                             "name": "WEBSITE_NODE_DEFAULT_VERSION",
