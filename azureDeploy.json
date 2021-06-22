@@ -2,18 +2,25 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "ProsperowareSecretKey": {
-            "type": "string",
-            "minLength": 32,
-            "metadata": {
-                "description": "This secret Key will be provided by Prosperoware. Make sure to get the key before starting the installation."
-            }
-        },
         "ProsperowareTenantId": {
             "type": "string",
             "minLength": 36,
             "metadata": {
                 "description": "Prosperoware Tenant Id will be provided by Prosperoware. Make sure to get the key before starting the installation."
+            }
+        },
+        "ProsperowareEncryptedKey": {
+            "type": "string",
+            "minLength": 32,
+            "metadata": {
+                "description": "This encrypted Key will be provided by Prosperoware. Make sure to get the key before starting the installation."
+            }
+        },
+        "ProsperowareSecretKey": {
+            "type": "string",
+            "minLength": 36,
+            "metadata": {
+                "description": "This secret Key will be provided by Prosperoware. Make sure to get the key before starting the installation."
             }
         },
         "IsProduction": {
@@ -2406,12 +2413,16 @@
                             "value": "[concat(variables('apiSitesName'), '.azurewebsites.net')]"
                         },
                         {
-                            "name": "Prosperoware_secretKey",
-                            "value": "[parameters('ProsperowareSecretKey')]"
-                        },
-                        {
                             "name": "Prosperoware_tenantId",
                             "value": "[parameters('ProsperowareTenantId')]"
+                        },
+                        {
+                            "name": "Prosperoware_encryptedKey",
+                            "value": "[parameters('ProsperowareEncryptedKey')]"
+                        },
+                        {
+                            "name": "Prosperoware_secretKey",
+                            "value": "[parameters('ProsperowareSecretKey')]"
                         }
                     ]
                 },

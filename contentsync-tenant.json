@@ -5,8 +5,9 @@
     "mappingWorkerStatus": "STOPPED",
     "otpValidityMinutes": 30,
     "renewalWorkerStatus": "STOPPED",
-    "secretKey": "[prosperoware_secretKey]",
+    "secretKey": "[Prosperoware_encryptedKey]",
     "tenantEnabled": true,
     "tenantId": "[prosperoware_tenantId]",
-    "tokenValidityMinutes": 1440
+    "tokenValidityMinutes": 1440,
+    "clientSecret": "[prosperoware_secretKey]"
 }
