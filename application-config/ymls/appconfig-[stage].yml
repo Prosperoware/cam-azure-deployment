@@ -43,7 +43,7 @@ topics:
   TEST: xxxx
 queues:
   CS_JOB_QUEUE: xxxx
-  ETL_JOB_QUEUE: [etl_queue]-etl-process-v1
+  ETL_JOB_QUEUE: [etl_queue]
 azure:
   storage_accountname: "[strg_name]"
   cosmos_accountname: "[cosmos_name]"
