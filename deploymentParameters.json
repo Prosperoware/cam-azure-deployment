@@ -1,0 +1,33 @@
+{
+   "$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+   "contentVersion":"1.0.0.0",
+   "parameters":{
+      "ProsperowareTenantId":{
+        "value": "#tenant_id#"
+      },
+      "ProsperowareEncryptedKey":{
+        "value": "#encrypted_key#"
+      },
+      "ProsperowareSecretKey":{
+        "value": "#secret_key#"
+      },
+      "IsProduction":{
+         "value": "#is_production#"
+      },
+      "EnvironmentStage":{
+         "value": "#env_stage"
+      },
+      "TopLevelDomain":{
+         "value": "#env_domain#"
+      },
+      "administratorLogin":{
+         "value": "#db_username#"
+      },
+      "InstanceUniqueName":{
+         "value": "#instance_uniquename"
+      },
+      "administratorLoginPassword":{
+         "value": "#db_password#"
+      }
+   }
+}
