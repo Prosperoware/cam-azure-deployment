@@ -12,7 +12,7 @@
         "value": "#sk#"
       },
       "IsProduction":{
-         "value": "#is_production#"
+         "value": #is_production#
       },
       "EnvironmentStage":{
          "value": "#env_stage"
