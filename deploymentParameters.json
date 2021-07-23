@@ -9,7 +9,7 @@
         "value": "#encrypted_key#"
       },
       "ProsperowareSecretKey":{
-        "value": "#secret_key#"
+        "value": "#sk#"
       },
       "IsProduction":{
          "value": "#is_production#"
