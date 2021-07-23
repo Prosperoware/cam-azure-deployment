@@ -15,7 +15,7 @@
          "value": #is_production#
       },
       "EnvironmentStage":{
-         "value": "#env_stage"
+         "value": "#env_stage#"
       },
       "TopLevelDomain":{
          "value": "#env_domain#"
@@ -24,7 +24,7 @@
          "value": "#db_username#"
       },
       "InstanceUniqueName":{
-         "value": "#instance_uniquename"
+         "value": "#instance_uniquename#"
       },
       "administratorLoginPassword":{
          "value": "#db_password#"
