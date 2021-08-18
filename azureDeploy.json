@@ -3049,7 +3049,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
                     "properties": {
-                        "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), 'etl-config.zip')]",
+                        "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-config.zip')]",
                         "setParameters": {}
                     }
                 }
