@@ -42,7 +42,7 @@ swaggerHost: xxxx
 topics:
   TEST: xxxx
 queues:
-  CS_JOB_QUEUE: xxxx
+  CS_JOB_QUEUE: [cs_queue]
   ETL_JOB_QUEUE: [etl_queue]
 azure:
   storage_accountname: "[strg_name]"
