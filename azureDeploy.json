@@ -25,7 +25,7 @@
         },
         "Features": {
             "type": "string",
-            "allowedValues": ["ETL", "Content Sync", "Both"]
+            "allowedValues": [ "ETL", "Content Sync", "Both" ]
         },
         "IsProduction": {
             "type": "bool",
@@ -45,7 +45,7 @@
         },
         "TopLevelDomain": {
             "type": "string",
-            "allowedValues": [ "io", "eu", "com" ]
+            "allowedValues": [ "io", "eu", "com", "co.uk" ]
         },
         "administratorLogin": {
             "type": "string",
@@ -64,8 +64,8 @@
         }
     },
     "variables": {
-        "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'),parameters('TopLevelDomain'))]",
-        "resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', parameters('TopLevelDomain'))]",
+        "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), replace(parameters('TopLevelDomain'), '.', ''))]",
+        "resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', replace(parameters('TopLevelDomain'), '.', ''))]",
         "storageAccountName": "[concat('strg',variables('commonId'))]",
         "applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
         "encryptedBucket": "[concat(variables('resourcesNamespace'), '-encrypted-bucket')]",
@@ -270,461 +270,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('raEtlApiAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('readerAndDataAccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('raEtlRenewalAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('readerAndDataAccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), '2018-02-01', 'Full').identity.principalId]"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('raEtlMappingAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('readerAndDataAccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('raEtlProcessAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('readerAndDataAccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('raEtlActionAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('readerAndDataAccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('raConfigAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('readerAndDataAccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('configAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('raCsApiAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('readerAndDataAccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csApiAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('raCsProcessAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('readerAndDataAccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('raCsRetryAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('readerAndDataAccess')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('skEtlApiAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgKeyOperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('skEtlRenewalAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgKeyOperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('skEtlMappingAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgKeyOperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('skEtlProcessAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgKeyOperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('skEtlActionAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgKeyOperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('skConfigAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgKeyOperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('configAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('skCsApiAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgKeyOperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csApiAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('skCsProcessAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgKeyOperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('skCsRetryAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgKeyOperator')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('strgBlobOwnerEtlApiAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('strgBlobOwnerEtlRenewalAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('strgBlobOwnerEtlMappingAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('strgBlobOwnerEtlProcessAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('strgBlobOwnerEtlActionAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('strgBlobOwnerConfigAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('configAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('strgBlobOwnerCsApiAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csApiAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('strgBlobOwnerCsProcessAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('strgBlobOwnerCsRetryAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
         },
         {
             "condition": "[variables('isETL')]",
@@ -1255,7 +800,7 @@
                                         "kind": "Hash"
                                     },
                                     "uniqueKeyPolicy": {
-                                        "uniqueKeys": [ 
+                                        "uniqueKeys": [
                                             {
                                                 "paths": [
                                                     "/userId"
@@ -1301,7 +846,7 @@
                                         "kind": "Hash"
                                     },
                                     "uniqueKeyPolicy": {
-                                        "uniqueKeys": [ 
+                                        "uniqueKeys": [
                                             {
                                                 "paths": [
                                                     "/userId"
@@ -1347,7 +892,7 @@
                                         "kind": "Hash"
                                     },
                                     "uniqueKeyPolicy": {
-                                        "uniqueKeys": [ 
+                                        "uniqueKeys": [
                                             {
                                                 "paths": [
                                                     "/userId"
@@ -1626,310 +1171,6 @@
             ]
         },
         {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbEtlApiAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbEtlRenewalAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbEtlMappingAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbEtlProcessAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbEtlActionAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbConfigAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('configAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbCsApiAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csApiAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbCsProcessAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbCsRetryAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('owner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbDataOwnerEtlApiAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('sbdataowner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbDataOwnerEtlRenewalAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('sbdataowner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbDataOwnerEtlMappingAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('sbdataowner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbDataOwnerEtlProcessAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('sbdataowner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbDataOwnerEtlActionAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('sbdataowner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbDataOwnerConfigAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('sbdataowner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('configAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbDataOwnerCsApiAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('sbdataowner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csApiAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-                {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbDataOwnerCsProcessAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('sbdataowner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-                {
-            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
-            "condition": "[variables('isCS')]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2020-04-01-preview",
-            "name": "[variables('sbDataOwnerCsRetryAppRoleId')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
-            ],
-            "properties": {
-                "roleDefinitionId": "[variables('sbdataowner')]",
-                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), '2018-02-01', 'Full').identity.principalId]",
-                "principalType": "ServicePrincipal"
-            }
-        },
-        {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2018-02-01",
             "name": "[variables('webServerName')]",
@@ -2140,7 +1381,7 @@
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
-            "resources":[
+            "resources": [
                 {
                     "condition": "[variables('isETL')]",
                     "type": "Microsoft.Web/sites",
@@ -2327,7 +1568,7 @@
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
-            "resources":[
+            "resources": [
                 {
                     "condition": "[variables('isETL')]",
                     "type": "Microsoft.Web/sites",
@@ -2514,7 +1755,7 @@
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
-            "resources":[
+            "resources": [
                 {
                     "condition": "[variables('isETL')]",
                     "type": "Microsoft.Web/sites",
@@ -2709,7 +1950,7 @@
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
-            "resources":[
+            "resources": [
                 {
                     "condition": "[variables('isETL')]",
                     "type": "Microsoft.Web/sites",
@@ -2891,7 +2132,7 @@
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
-            "resources":[
+            "resources": [
                 {
                     "type": "Microsoft.Web/sites",
                     "apiVersion": "2018-11-01",
@@ -3079,7 +2320,7 @@
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
-            "resources":[
+            "resources": [
                 {
                     "condition": "[variables('isCS')]",
                     "type": "Microsoft.Web/sites",
@@ -3253,7 +2494,7 @@
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
-            "resources":[
+            "resources": [
                 {
                     "condition": "[variables('isCS')]",
                     "type": "Microsoft.Web/sites",
@@ -3448,7 +2689,7 @@
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
-            "resources":[
+            "resources": [
                 {
                     "condition": "[variables('isCS')]",
                     "type": "Microsoft.Web/sites",
@@ -3620,6 +2861,765 @@
                     ]
                 }
             ]
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('raEtlApiAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('readerAndDataAccess')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('raEtlRenewalAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('readerAndDataAccess')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), '2018-02-01', 'Full').identity.principalId, '')]"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('raEtlMappingAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('readerAndDataAccess')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('raEtlProcessAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('readerAndDataAccess')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('raEtlActionAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('readerAndDataAccess')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('raConfigAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('readerAndDataAccess')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('configAppName')), '2018-02-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('raCsApiAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('readerAndDataAccess')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csApiAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('raCsProcessAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('readerAndDataAccess')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('raCsRetryAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('readerAndDataAccess')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skEtlApiAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgKeyOperator')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skEtlRenewalAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgKeyOperator')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skEtlMappingAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgKeyOperator')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skEtlProcessAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgKeyOperator')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skEtlActionAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgKeyOperator')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skConfigAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgKeyOperator')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('configAppName')), '2018-02-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skCsApiAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgKeyOperator')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csApiAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skCsProcessAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgKeyOperator')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skCsRetryAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgKeyOperator')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('strgBlobOwnerEtlApiAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('strgBlobOwnerEtlRenewalAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('strgBlobOwnerEtlMappingAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('strgBlobOwnerEtlProcessAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('strgBlobOwnerEtlActionAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('strgBlobOwnerConfigAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('configAppName')), '2018-02-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('strgBlobOwnerCsApiAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csApiAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('strgBlobOwnerCsProcessAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('strgBlobOwnerCsRetryAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbEtlApiAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('owner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbEtlRenewalAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('owner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbEtlMappingAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('owner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbEtlProcessAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('owner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbEtlActionAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('owner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbConfigAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('owner')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('configAppName')), '2018-02-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbCsApiAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('owner')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csApiAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbCsProcessAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('owner')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbCsRetryAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('owner')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbDataOwnerEtlApiAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('sbdataowner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbDataOwnerEtlRenewalAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('sbdataowner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbDataOwnerEtlMappingAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('sbdataowner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbDataOwnerEtlProcessAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('sbdataowner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbDataOwnerEtlActionAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('sbdataowner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbDataOwnerConfigAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('sbdataowner')]",
+                "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('configAppName')), '2018-02-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbDataOwnerCsApiAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('sbdataowner')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csApiAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbDataOwnerCsProcessAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('sbdataowner')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isCS')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbDataOwnerCsRetryAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('sbdataowner')]",
+                "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
         }
     ],
     "outputs": {
@@ -3627,7 +3627,7 @@
             "type": "string",
             "value": "[format('https://{0}.azurewebsites.net/api/ensureInitialConfig?code={1}', variables('configAppName'), listKeys(concat(resourceId('Microsoft.Web/sites', variables('configAppName')), '/host/default/'),'2018-11-01').functionKeys.default)]"
         },
-        "bucketName":{
+        "bucketName": {
             "type": "string",
             "value": "[variables('encryptedBucket')]"
         },
