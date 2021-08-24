@@ -49,7 +49,6 @@
         },
         "administratorLogin": {
             "type": "string",
-            "defaultValue": "[if(equals(parameters('Features'), 'Content Sync'), 'xxxxxxxx', '')]",
             "minLength": 1,
             "metadata": {
                 "description": "MySQL Database administrator login name"
@@ -59,7 +58,6 @@
             "type": "securestring",
             "minLength": 8,
             "maxLength": 128,
-            "defaultValue": "[if(equals(parameters('Features'), 'Content Sync'), 'xxxxxxxx', '')]",
             "metadata": {
                 "description": "MySQL Database administrator password"
             }
