@@ -285,7 +285,7 @@
                             "rules":[
                                 {
                                     "enabled": true,
-                                    "name": "AttachLifecycle",
+                                    "name": "lifecycle",
                                     "type": "Lifecycle",
                                     "definition":{
                                         "actions":{
