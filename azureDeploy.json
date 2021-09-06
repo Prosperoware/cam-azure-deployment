@@ -206,43 +206,7 @@
                 "accessTier": "Hot"
             },
             "resources": [
-                {
-                    "name": "[concat(variables('storageAccountName'), '/lifecycle')]",
-                    "type": "Microsoft.Storage/storageAccounts/managementPolicies",
-                    "apiVersion": "2019-06-01",
-                    "dependsOn": [
-                        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
-                ],
-                    "properties": {
-                        "policy":{
-                            "rules":[
-                                {
-                                    "enabled": true,
-                                    "name": "AttachLifecycle",
-                                    "type": "Lifecycle",
-                                    "definition":{
-                                        "actions":{
-                                            "baseBlob": {
-                                                "delete" :{
-                                                    "daysAfterModificationGreaterThan":30
-                                                }
-                                            }
-                                        },
-                                        "filters":{
-                                            "blobTypes": [
-                                                "blockBlob"
-                                            ],
-                                            "prefixMatch": [
-                                            "[concat(variables('encryptedBucket'), '/etl-actions')]",
-                                            "[concat(variables('encryptedBucket'), '/etl-process')]"
-                                        ]
-                                        } 
-                                    }   
-                                }
-                            ]
-                        }
-                    }
-                },
+               
                 {
                     "type": "Microsoft.Storage/storageAccounts/encryptionScopes",
                     "apiVersion": "2020-08-01-preview",
@@ -309,6 +273,43 @@
                 }
             ]
         },
+        {
+                    "name": "[concat(variables('storageAccountName'), '/lifecycle')]",
+                    "type": "Microsoft.Storage/storageAccounts/managementPolicies",
+                    "apiVersion": "2019-06-01",
+                    "dependsOn": [
+                        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+                ],
+                    "properties": {
+                        "policy":{
+                            "rules":[
+                                {
+                                    "enabled": true,
+                                    "name": "AttachLifecycle",
+                                    "type": "Lifecycle",
+                                    "definition":{
+                                        "actions":{
+                                            "baseBlob": {
+                                                "delete" :{
+                                                    "daysAfterModificationGreaterThan":30
+                                                }
+                                            }
+                                        },
+                                        "filters":{
+                                            "blobTypes": [
+                                                "blockBlob"
+                                            ],
+                                            "prefixMatch": [
+                                            "[concat(variables('encryptedBucket'), '/etl-actions')]",
+                                            "[concat(variables('encryptedBucket'), '/etl-process')]"
+                                        ]
+                                        } 
+                                    }   
+                                }
+                            ]
+                        }
+                    }
+                },
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.DBforMySQL/servers",
