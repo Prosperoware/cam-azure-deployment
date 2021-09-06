@@ -274,11 +274,11 @@
             ]
         },
         {
-                    "name": "[concat(variables('storageAccountName'), '/lifecyclepolicy/lifecycle')]",
+                    "name": "[concat(variables('storageAccountName'), '/lifecycle')]",
                     "type": "Microsoft.Storage/storageAccounts/managementPolicies",
-                    "apiVersion": "2019-06-01",
+                    "apiVersion": "2020-08-01-preview",
                     "dependsOn": [
-                        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+                        "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
                 ],
                     "properties": {
                         "policy":{
