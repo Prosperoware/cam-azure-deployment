@@ -230,7 +230,7 @@
                         "rules":[
                             {
                                 "enabled":"true",
-                                "name": "Attach Lifecycle",
+                                "name": "AttachLifecycle",
                                 "type": "Lifecycle",
                                 "definition":{
                                     "actions":{
