@@ -211,7 +211,7 @@
                     "type": "Microsoft.Storage/storageAccounts/managementPolicies",
                     "apiVersion": "2019-06-01",
                     "dependsOn": [
-                        "[concat('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
                 ],
                     "properties": {
                         "policy":{
