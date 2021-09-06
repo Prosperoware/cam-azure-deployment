@@ -219,6 +219,43 @@
                     }
                 },
                 {
+                "name": "[concat(variables('storageAccountName'), '/default')]",
+                "type": "Microsoft.Storage/storageAccounts/managementPolicies",
+                "apiVersion": "2019-06-01",
+                "dependsOn": [
+                    "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+                ],
+                "properties": {
+                    "policy":{
+                        "rules":[
+                            {
+                                "enabled":"true",
+                                "name": "Attach Lifecycle",
+                                "type": "Lifecycle",
+                                "definition":{
+                                    "actions":{
+                                        "baseblob": {
+                                            "delete" :{
+                                                "daysAfterModificationGreaterThan":30
+                                            }
+                                        }
+                                    },
+                                    "filters":{
+                                        "blobTypes": [
+                                            "blockBlob"
+                                        ],
+                                    "prefixMatch": [
+                                         "[concat(variables('encryptedBucket'), '/etl-actions')]",
+                                         "[concat(variables('encryptedBucket'), '/etl-process')]",
+                                    ]
+                                    } 
+                                }   
+                            }
+                        ]
+                    }
+                }
+                },
+                {
                     "type": "Microsoft.Storage/storageAccounts/blobServices",
                     "apiVersion": "2020-08-01-preview",
                     "name": "[concat(variables('storageAccountName'), '/default')]",
