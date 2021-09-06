@@ -207,6 +207,43 @@
             },
             "resources": [
                 {
+                    "name": "[concat(variables('storageAccountName'), '/lifecycle')]",
+                    "type": "Microsoft.Storage/storageAccounts/managementPolicies",
+                    "apiVersion": "2019-06-01",
+                    "dependsOn": [
+                        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+                ],
+                    "properties": {
+                        "policy":{
+                            "rules":[
+                                {
+                                    "enabled": true,
+                                    "name": "AttachLifecycle",
+                                    "type": "Lifecycle",
+                                    "definition":{
+                                        "actions":{
+                                            "baseBlob": {
+                                                "delete" :{
+                                                    "daysAfterModificationGreaterThan":30
+                                                }
+                                            }
+                                        },
+                                        "filters":{
+                                            "blobTypes": [
+                                                "blockBlob"
+                                            ],
+                                            "prefixMatch": [
+                                            "[concat(variables('encryptedBucket'), '/etl-actions')]",
+                                            "[concat(variables('encryptedBucket'), '/etl-process')]"
+                                        ]
+                                        } 
+                                    }   
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
                     "type": "Microsoft.Storage/storageAccounts/encryptionScopes",
                     "apiVersion": "2020-08-01-preview",
                     "name": "[concat(variables('storageAccountName'), '/DataAtRest')]",
@@ -238,40 +275,7 @@
                         }
                     },
                     "resources": [
-                        {
-                            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-                            "apiVersion": "2020-08-01-preview",
-                            "name": "[concat(variables('storageAccountName'), '/default/', variables('applicationConfigBucket'))]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storageAccountName'), 'default')]",
-                                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-                            ],
-                            "properties": {
-                                "defaultEncryptionScope": "$account-encryption-key",
-                                "denyEncryptionScopeOverride": false,
-                                "publicAccess": "None"
-                            }
-                        },
-                        {
-                            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-                            "apiVersion": "2020-08-01-preview",
-                            "name": "[concat(variables('storageAccountName'), '/default/', variables('encryptedBucket'))]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storageAccountName'), 'default')]",
-                                "[resourceId('Microsoft.Storage/storageAccounts/encryptionScopes', variables('storageAccountName'), 'DataAtRest')]",
-                                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-                            ],
-                            "properties": {
-                                "defaultEncryptionScope": "DataAtRest",
-                                "denyEncryptionScopeOverride": true,
-                                "publicAccess": "None"
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
+                               {
                 "name": "[concat(variables('storageAccountName'), '/lifecycle')]",
                 "type": "Microsoft.Storage/storageAccounts/managementPolicies",
                 "apiVersion": "2019-06-01",
@@ -308,6 +312,40 @@
                     }
                 }
                 },
+                        {
+                            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+                            "apiVersion": "2020-08-01-preview",
+                            "name": "[concat(variables('storageAccountName'), '/default/', variables('applicationConfigBucket'))]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storageAccountName'), 'default')]",
+                                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                            ],
+                            "properties": {
+                                "defaultEncryptionScope": "$account-encryption-key",
+                                "denyEncryptionScopeOverride": false,
+                                "publicAccess": "None"
+                            }
+                        },
+                        
+                        {
+                            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+                            "apiVersion": "2020-08-01-preview",
+                            "name": "[concat(variables('storageAccountName'), '/default/', variables('encryptedBucket'))]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storageAccountName'), 'default')]",
+                                "[resourceId('Microsoft.Storage/storageAccounts/encryptionScopes', variables('storageAccountName'), 'DataAtRest')]",
+                                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                            ],
+                            "properties": {
+                                "defaultEncryptionScope": "DataAtRest",
+                                "denyEncryptionScopeOverride": true,
+                                "publicAccess": "None"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.DBforMySQL/servers",
