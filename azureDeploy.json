@@ -221,7 +221,7 @@
                 {
                 "name": "[concat(variables('storageAccountName'), '/default')]",
                 "type": "Microsoft.Storage/storageAccounts/managementPolicies",
-                "apiVersion": "2019-06-01",
+                "apiVersion": "2020-08-01-preview",
                 "dependsOn": [
                     "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
                 ],
@@ -230,11 +230,11 @@
                         "rules":[
                             {
                                 "enabled":"true",
-                                "name": "AttachLifecycle",
+                                "name": "DefaultRule",
                                 "type": "Lifecycle",
                                 "definition":{
                                     "actions":{
-                                        "baseblob": {
+                                        "baseBlob": {
                                             "delete" :{
                                                 "daysAfterModificationGreaterThan":30
                                             }
