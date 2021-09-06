@@ -231,7 +231,7 @@
                             "rules":[
                                 {
                                     "enabled": true,
-                                    "name": "lifecycle",
+                                    "name": "lifecyclepolicy",
                                     "type": "Lifecycle",
                                     "definition":{
                                         "actions":{
