@@ -1,8 +1,7 @@
 # CAM Azure Stack Deployment Template
 
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/
-bug/AZ/Cloud-10544-1/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2FProsperoware%2Fcam-azure-deployment%2F
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/bug/AZ/Cloud-10544-1/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2FProsperoware%2Fcam-azure-deployment%2F
 bug/AZ/Cloud-10544-1r%2FazureDeploy.json)
 
 ## CAM Azure Stack Architecture
