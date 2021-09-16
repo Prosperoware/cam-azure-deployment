@@ -1,0 +1,234 @@
+{
+	"info": {
+		"_postman_id": "b0de9a84-e104-43de-8066-01624f012de5",
+		"name": "Azure Client Scheduler Status Check and Update",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Auth Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Set Auth Token\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.environment.set(\"auth-token\", jsonData.data);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"tenantId\" : \"{{tenant-id}}\",\n    \"secretKey\" : \"{{tenant-secret}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{azure-host-url}}/api/v1/dms/content-sync/auth/token",
+					"host": [
+						"{{azure-host-url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"dms",
+						"content-sync",
+						"auth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Subscription Renewal Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cs-auth-token",
+						"value": "{{auth-token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{azure-host-url}}/api/v1/dms/content-sync/etl/tenant/renewalworker-status",
+					"host": [
+						"{{azure-host-url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"dms",
+						"content-sync",
+						"etl",
+						"tenant",
+						"renewalworker-status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Jobs Scheduler Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "cs-auth-token",
+						"value": "{{auth-token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{azure-host-url}}/api/v1/dms/content-sync/etl/tenant/jobworker-status",
+					"host": [
+						"{{azure-host-url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"dms",
+						"content-sync",
+						"etl",
+						"tenant",
+						"jobworker-status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Jobs Scheduler Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "cs-auth-token",
+						"value": "{{auth-token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{azure-host-url}}/api/v1/dms/content-sync/etl/tenant/reset-jobworker-status",
+					"host": [
+						"{{azure-host-url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"dms",
+						"content-sync",
+						"etl",
+						"tenant",
+						"reset-jobworker-status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Subscription Renewal Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "cs-auth-token",
+						"value": "{{auth-token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{azure-host-url}}/api/v1/dms/content-sync/etl/tenant/reset-renewalworker-status",
+					"host": [
+						"{{azure-host-url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"dms",
+						"content-sync",
+						"etl",
+						"tenant",
+						"reset-renewalworker-status"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
