@@ -153,7 +153,7 @@
         "strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        "branch": "qatest"
+        "branch": "master"
     },
     "resources": [
         {
@@ -291,7 +291,7 @@
                                         "actions": {
                                             "baseBlob": {
                                                 "delete": {
-                                                    "daysAfterModificationGreaterThan": 1
+                                                    "daysAfterModificationGreaterThan": 30
                                                 }
                                             }
                                         },
