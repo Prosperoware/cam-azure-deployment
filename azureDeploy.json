@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "ProsperowareTenantId": {
@@ -60,6 +60,14 @@
             "maxLength": 128,
             "metadata": {
                 "description": "MySQL Database administrator password"
+            }
+        },
+        {
+        "appSettings": {
+            "type": "object",
+            "defaultValue": {
+                "name": "WEBSITE_RUN_FROM_PACKAGE",
+                "value": "1"
             }
         }
     },
@@ -153,7 +161,7 @@
         "strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        "branch": "gresatest"
+        "branch": "master"
     },
     "resources": [
         {
@@ -2343,10 +2351,6 @@
                                 {
                                     "name": "product_features",
                                     "value": "[parameters('Features')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -2371,6 +2375,13 @@
                                 "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-config.zip')]",
                                 "setParameters": {}
                             }
+                        },
+                        {
+                            "type": "Microsoft.Web/sites/config",
+                            "name": "[concat(variables('configAppName'), '/appsettings')]",
+                            "apiVersion": "2018-11-01",
+                            "properties": "[parameters('appSettings')]",
+                            "dependsOn": "[resourceId('Microsoft.Web/sites/sites', variables('configAppName'))]"
                         }
                     ]
                 }
