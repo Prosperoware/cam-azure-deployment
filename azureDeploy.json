@@ -61,14 +61,6 @@
             "metadata": {
                 "description": "MySQL Database administrator password"
             }
-        },
-        {
-        "appSettings": {
-            "type": "object",
-            "defaultValue": {
-                "name": "WEBSITE_RUN_FROM_PACKAGE",
-                "value": "1"
-            }
         }
     },
     "variables": {
@@ -2380,8 +2372,10 @@
                             "type": "Microsoft.Web/sites/config",
                             "name": "[concat(variables('configAppName'), '/appsettings')]",
                             "apiVersion": "2018-11-01",
-                            "properties": "[parameters('appSettings')]",
-                            "dependsOn": "[resourceId('Microsoft.Web/sites/sites', variables('configAppName'))]"
+                            "properties": {
+                                "WEBSITE_RUN_FROM_PACKAGE": "1"
+                            },
+                            "dependsOn": "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                         }
                     ]
                 }
