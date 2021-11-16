@@ -2361,7 +2361,8 @@
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
                             "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                                "[resourceId('Microsoft.Web/sites/config', [concat(variables('configAppName'), '/appsettings')]]"
                             ],
                             "properties": {
                                 "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-config.zip')]",
