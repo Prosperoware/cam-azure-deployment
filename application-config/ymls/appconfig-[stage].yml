@@ -10,7 +10,7 @@ dbserver:
     database: [db_name]
     connectTimeout: 5000
     connectionParams: 
-      useSSL: true
+      useSSL: false
       requireSSL: false
       serverTimezone: UTC
   adminDb:
