@@ -1,6 +1,13 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "metadata": {
+        "_generator": {
+          "name": "bicep",
+          "version": "0.4.613.9944",
+          "templateHash": "17386612715415396913"
+            }
+        },
     "parameters": {
         "ProsperowareTenantId": {
             "type": "string",
@@ -60,6 +67,55 @@
             "maxLength": 128,
             "metadata": {
                 "description": "MySQL Database administrator password"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "defaultValue": "VNet1",
+            "metadata": {
+              "description": "VNet name"
+            }
+        },
+          "vnetAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+              "description": "Address prefix"
+            }
+        },
+          "subnet1Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/24",
+            "metadata": {
+              "description": "Subnet 1 Prefix"
+            }
+        },
+          "subnet1Name": {
+            "type": "string",
+            "defaultValue": "Subnet1",
+            "metadata": {
+              "description": "Subnet 1 Name"
+            }
+        },
+          "subnet2Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.1.0/24",
+            "metadata": {
+              "description": "Subnet 2 Prefix"
+            }
+        },
+          "subnet2Name": {
+            "type": "string",
+            "defaultValue": "Subnet2",
+            "metadata": {
+              "description": "Subnet 2 Name"
+            }
+        },
+          "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+              "description": "Location for all resources."
             }
         }
     },
@@ -958,8 +1014,8 @@
             "name": "[variables('serviceBusName')]",
             "location": "[variables('location')]",
             "sku": {
-                "name": "Standard",
-                "tier": "Standard"
+                "name": "Premium",
+                "tier": "Premium"
             },
             "properties": {
                 "zoneRedundant": false
@@ -1217,11 +1273,8 @@
             "name": "[variables('webServerName')]",
             "location": "[variables('location')]",
             "sku": {
-                "name": "Y1",
-                "tier": "Dynamic",
-                "size": "Y1",
-                "family": "Y",
-                "capacity": 0
+                "name": "EP1",
+                "tier": "ElasticPremium"
             },
             "kind": "functionapp",
             "properties": {
@@ -1355,10 +1408,6 @@
                                 {
                                     "name": "service_name",
                                     "value": "[variables('etlApiAppName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1376,7 +1425,7 @@
                             "condition": "[variables('isETL')]",
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
+                            "name": "MSDeploy",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]"
                             ],
@@ -1393,7 +1442,7 @@
                             "name": "[concat(variables('etlApiAppName'), '/Microsoft.Insights/function-logs')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
                             ],
                             "properties": {
                                 "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
@@ -1546,10 +1595,6 @@
                                 {
                                     "name": "etl_renewal_worker_topic",
                                     "value": "[variables('etlRenewalTopicName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1567,7 +1612,7 @@
                             "condition": "[variables('isETL')]",
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
+                            "name": "MSDeploy",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
                             ],
@@ -1584,7 +1629,7 @@
                             "name": "[concat(variables('etlRenewalAppName'), '/Microsoft.Insights/function-logs')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
                             ],
                             "properties": {
                                 "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
@@ -1737,10 +1782,6 @@
                                 {
                                     "name": "etl_mapping_worker_topic",
                                     "value": "[variables('etlMappingTopicName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1758,7 +1799,7 @@
                             "condition": "[variables('isETL')]",
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
+                            "name": "MSDeploy",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]"
                             ],
@@ -1775,7 +1816,7 @@
                             "name": "[concat(variables('etlMappingAppName'), '/Microsoft.Insights/function-logs')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
                             ],
                             "properties": {
                                 "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
@@ -1936,10 +1977,6 @@
                                 {
                                     "name": "safe_remaining_time",
                                     "value": "60"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1957,7 +1994,7 @@
                             "condition": "[variables('isETL')]",
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
+                            "name": "MSDeploy",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]"
                             ],
@@ -1974,7 +2011,7 @@
                             "name": "[concat(variables('etlProcessAppName'), '/Microsoft.Insights/function-logs')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
                             ],
                             "properties": {
                                 "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
@@ -2123,10 +2160,6 @@
                                 {
                                     "name": "etl_mapping_action_topic",
                                     "value": "[variables('etlActionTopicName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -2144,7 +2177,7 @@
                             "condition": "[variables('isETL')]",
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
+                            "name": "MSDeploy",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]"
                             ],
@@ -2161,7 +2194,7 @@
                             "name": "[concat(variables('etlActionAppName'), '/Microsoft.Insights/function-logs')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
                             ],
                             "properties": {
                                 "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
@@ -2343,10 +2376,6 @@
                                 {
                                     "name": "product_features",
                                     "value": "[parameters('Features')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -2363,7 +2392,7 @@
                         {
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
+                            "name": "MSDeploy",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                             ],
@@ -2496,10 +2525,6 @@
                                 {
                                     "name": "service_name",
                                     "value": "[variables('csApiAppName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -2517,7 +2542,7 @@
                             "condition": "[variables('isCS')]",
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
+                            "name": "MSDeploy",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]"
                             ],
@@ -2534,7 +2559,7 @@
                             "name": "[concat(variables('csApiAppName'), '/Microsoft.Insights/function-logs')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
                             ],
                             "properties": {
                                 "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
@@ -2695,10 +2720,6 @@
                                 {
                                     "name": "safe_remaining_time",
                                     "value": "60"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -2716,7 +2737,7 @@
                             "condition": "[variables('isCS')]",
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
+                            "name": "MSDeploy",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]"
                             ],
@@ -2733,7 +2754,7 @@
                             "name": "[concat(variables('csProcessAppName'), '/Microsoft.Insights/function-logs')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
                             ],
                             "properties": {
                                 "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
@@ -2885,10 +2906,6 @@
                                 {
                                     "name": "contentSyncRetryHandler_timeout_sec",
                                     "value": "600"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -2906,7 +2923,7 @@
                             "condition": "[variables('isCS')]",
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
+                            "name": "MSDeploy",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
                             ],
@@ -2923,7 +2940,7 @@
                             "name": "[concat(variables('csRetryAppName'), '/Microsoft.Insights/function-logs')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
                             ],
                             "properties": {
                                 "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
@@ -2952,7 +2969,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -2969,7 +2986,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -2985,7 +3002,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -3002,7 +3019,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -3019,7 +3036,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -3035,7 +3052,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -3052,7 +3069,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -3069,7 +3086,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -3086,7 +3103,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -3103,7 +3120,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3120,7 +3137,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3137,7 +3154,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3154,7 +3171,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3171,7 +3188,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3187,7 +3204,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3204,7 +3221,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3221,7 +3238,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3238,7 +3255,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3255,7 +3272,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3272,7 +3289,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3289,7 +3306,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3306,7 +3323,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3323,7 +3340,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3339,7 +3356,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3356,7 +3373,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3373,7 +3390,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3390,7 +3407,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3407,7 +3424,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3424,7 +3441,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3441,7 +3458,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3458,7 +3475,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3475,7 +3492,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3491,7 +3508,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3508,7 +3525,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3525,7 +3542,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3542,7 +3559,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3559,7 +3576,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3576,7 +3593,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3593,7 +3610,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3610,7 +3627,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3627,7 +3644,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3643,7 +3660,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3660,7 +3677,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3677,7 +3694,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3694,12 +3711,39 @@
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
                 "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/MSDeploy')]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
                 "principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
                 "principalType": "ServicePrincipal"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-06-01",
+            "name": "[parameters('vnetName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+              "addressSpace": {
+                "addressPrefixes": [
+                  "[parameters('vnetAddressPrefix')]"
+                ]
+              },
+              "subnets": [
+                {
+                  "name": "[parameters('subnet1Name')]",
+                  "properties": {
+                    "addressPrefix": "[parameters('subnet1Prefix')]"
+                  }
+                },
+                {
+                  "name": "[parameters('subnet2Name')]",
+                  "properties": {
+                    "addressPrefix": "[parameters('subnet2Prefix')]"
+                  }
+                }
+              ]
             }
         }
     ],
