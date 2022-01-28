@@ -257,6 +257,10 @@
                                     "value": "[variables('cosmosName')]"
                                 },
                                 {
+                                    "name": "cosmos_accesskey",
+                                    "value": "[listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName')),'2020-09-01').primaryMasterKey]"
+                                },
+                                {
                                     "name": "cosmos_csdbname",
                                     "value": "[variables('commonId')]"
                                 },
