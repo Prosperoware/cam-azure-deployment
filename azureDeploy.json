@@ -335,7 +335,7 @@
                     "storageAutogrow": "Enabled"
                 },
                 "version": "5.7",
-                "sslEnforcement": "Disabled",
+                "sslEnforcement": "Enabled",
                 "minimalTlsVersion": "TLSEnforcementDisabled",
                 "infrastructureEncryption": "Disabled",
                 "publicNetworkAccess": "Enabled"
@@ -1283,6 +1283,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -1368,7 +1369,7 @@
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": [
@@ -1462,6 +1463,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -1559,7 +1561,7 @@
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": [
@@ -1653,6 +1655,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -1750,7 +1753,7 @@
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": [
@@ -1844,6 +1847,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -1949,7 +1953,7 @@
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": [
@@ -2043,6 +2047,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -2136,7 +2141,7 @@
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": [
@@ -2231,6 +2236,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -2352,7 +2358,7 @@
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     }
                 }
@@ -2406,6 +2412,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -2491,7 +2498,7 @@
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": [
@@ -2585,6 +2592,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -2690,7 +2698,7 @@
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": [
@@ -2783,6 +2791,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -2880,7 +2889,7 @@
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": [
