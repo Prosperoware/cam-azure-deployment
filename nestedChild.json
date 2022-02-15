@@ -187,6 +187,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -312,7 +313,7 @@
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": [
