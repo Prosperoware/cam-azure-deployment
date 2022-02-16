@@ -345,6 +345,10 @@
             "apiVersion": "2021-06-01",
             "name": "[variables('storageAccountName')]",
             "location": "[variables('location')]",
+            "dependsOn":
+                [
+                  "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                ],
             "sku": {
                 "name": "Standard_RAGRS",
                 "tier": "Standard"
