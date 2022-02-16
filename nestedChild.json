@@ -153,7 +153,13 @@
         "strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        "branch": "master"
+        "branch": "master",
+        "vnetName": "Vnet1",
+        "vnetAddressPrefix": "10.0.0.0/16",
+        "subnet1Name": "Subnet1",
+        "subnet1Prefix": "10.0.0.0/24",
+        "subnet2Name": "Subnet2",
+        "subnet2Prefix": "10.0.1.0/24",
     },
     "resources": [
         {
@@ -333,6 +339,214 @@
                     ]
                 }
             ]
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-06-01",
+            "name": "[variables('storageAccountName')]",
+            "location": "[variables('location')]",
+            "sku": {
+                "name": "Standard_RAGRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "defaultToOAuthAuthentication": false,
+                "allowCrossTenantReplication": true,
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": true,
+                "allowSharedKeyAccess": true,
+                "networkAcls": {
+                    "resourceAccessRules": [],
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet1Name'))]",
+                            "action": "Allow"
+                        },
+                        {
+                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]",
+                            "action": "Allow"
+                        }
+                    ],
+                    "ipRules": [],
+                    "defaultAction": "Deny"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
+            },
+            "resources": [
+            ]
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2020-06-01",
+            "name": "file-endpoint",
+            "location": "[variables('location')]",
+            "dependsOn": [
+              "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+              "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+              "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+              "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+              "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+              "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+              "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+              "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+              "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+              "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
+            ],
+            "properties": {
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]"
+              },
+              "privateLinkServiceConnections": [
+                {
+                  "name": "file-endpoint",
+                  "properties": {
+                    "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                    "groupIds": [
+                      "file"
+                    ],
+                    "privateLinkServiceConnectionState": {
+                        "status": "Approved",
+                        "description": "Auto-Approved",
+                        "actionsRequired": "None"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2020-06-01",
+            "name": "blob-endpoint",
+            "location": "[variables('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
+            ],
+            "properties": {
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]"
+              },
+              "privateLinkServiceConnections": [
+                {
+                  "name": "blob-endpoint",
+                  "properties": {
+                    "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                    "groupIds": [
+                      "blob"
+                    ],
+                    "privateLinkServiceConnectionState": {
+                        "status": "Approved",
+                        "description": "Auto-Approved",
+                        "actionsRequired": "None"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2020-06-01",
+            "name": "table-endpoint",
+            "location": "[variables('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
+            ],
+            "properties": {
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]"
+              },
+              "privateLinkServiceConnections": [
+                {
+                  "name": "table-endpoint",
+                  "properties": {
+                    "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                    "groupIds": [
+                      "table"
+                    ],
+                    "privateLinkServiceConnectionState": {
+                        "status": "Approved",
+                        "description": "Auto-Approved",
+                        "actionsRequired": "None"
+                    }
+                  }
+                }
+              ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2020-06-01",
+            "name": "sb-endpoint",
+            "location": "[variables('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+            ],
+            "properties": {
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]"
+              },
+              "privateLinkServiceConnections": [
+                {
+                  "name": "sb-endpoint",
+                  "properties": {
+                    "privateLinkServiceId": "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                    "groupIds": [
+                      "namespace"
+                    ],
+                    "privateLinkServiceConnectionState": {
+                        "status": "Approved",
+                        "description": "Auto-Approved",
+                        "actionsRequired": "None"
+                    }
+                  }
+                }
+              ]
+            }
         }
     ],
     "outputs": {
