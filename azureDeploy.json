@@ -153,6 +153,12 @@
         "strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
+        "vnetName": "Vnet1",
+        "vnetAddressPrefix": "10.0.0.0/16",
+        "subnet1Name": "Subnet1",
+        "subnet1Prefix": "10.0.0.0/24",
+        "subnet2Name": "Subnet2",
+        "subnet2Prefix": "10.0.1.0/24",
         "branch": "defenderrecommendations"
     },
     "resources": [
@@ -311,6 +317,59 @@
                     }
                 }
             ]
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('vnetName')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            ],
+            "location": "[variables('location')]",
+            "properties": {
+              "addressSpace": {
+                "addressPrefixes": [
+                  "[variables('vnetAddressPrefix')]"
+                ]
+              },
+              "subnets": [
+                {
+                  "name": "[variables('subnet1Name')]",
+                  "properties": {
+                    "addressPrefix": "[variables('subnet1Prefix')]",
+                    "delegations": [
+                        {
+                            "name": "delegation",
+                            "properties": {
+                                "serviceName": "Microsoft.Web/serverfarms"
+                            }
+                        }
+                    ],
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "serviceEndpoints": [
+                        {
+                           "service": "Microsoft.ServiceBus"
+                        },
+                        {
+                           "service": "Microsoft.Storage"
+                        }
+                     ]
+                  }
+                },
+                {
+                  "name": "[variables('subnet2Name')]",
+                  "properties": {
+                    "addressPrefix": "[variables('subnet2Prefix')]",
+                    "privateEndpointNetworkPolicies": "Disabled",
+                    "serviceEndpoints": [
+                        {
+                           "service": "Microsoft.Storage"
+                        }
+                     ]
+                  }
+                }
+              ]
+            }
         },
         {
             "condition": "[variables('isETL')]",
@@ -965,6 +1024,33 @@
                 "zoneRedundant": false
             },
             "resources": [
+                /*{
+                    "type": "Microsoft.Insights/diagnosticSettings",
+                    "apiVersion": "2021-05-01-preview",
+                    "name": "default",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+                    ],
+                    "properties": {
+                        "logs": [
+                        {
+                            "category": "OperationalLogs",
+                            "retentionPolicy": {
+                            "enabled": true
+                            }
+                        }
+                        ],
+                        "metrics": [
+                        {
+                            "category": "AllMetrics",
+                            "retentionPolicy": {
+                            "enabled": true
+                            }
+                        }
+                        ],
+                        "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+                    }
+                },*/
                 {
                     "type": "Microsoft.ServiceBus/namespaces/AuthorizationRules",
                     "apiVersion": "2017-04-01",
@@ -1265,7 +1351,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertMode": "Required",
+                        "clientCertMode": "Optional",
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -2400,7 +2486,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertMode": "Required",
+                        "clientCertMode": "Optional",
                         "enabled": true,
                         "hostNameSslStates": [
                             {
