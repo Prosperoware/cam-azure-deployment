@@ -347,7 +347,7 @@
             "location": "[variables('location')]",
             "dependsOn": [
                     "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                    "[resourceId('Microsoft.Web/sites/extensions', variables('configAppName'), concat('/ZipDeploy'))]"
+                    "[concat('Microsoft.Web/sites/extensions', variables('configAppName'), '/ZipDeploy')]"
                 ],
             "sku": {
                 "name": "Standard_RAGRS",
