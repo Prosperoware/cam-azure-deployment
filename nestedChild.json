@@ -346,8 +346,7 @@
             "name": "[variables('storageAccountName')]",
             "location": "[variables('location')]",
             "dependsOn": [
-                    "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                    "[concat('Microsoft.Web/sites/extensions', variables('configAppName'), '/ZipDeploy')]"
+                    "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                 ],
             "sku": {
                 "name": "Standard_RAGRS",
