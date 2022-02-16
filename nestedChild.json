@@ -345,6 +345,10 @@
             "apiVersion": "2021-06-01",
             "name": "[variables('storageAccountName')]",
             "location": "[variables('location')]",
+            "dependsOn": [
+                    "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                    "[resourceId('Microsoft.Web/sites/extensions', concat(variables('configAppName'),'/ZipDeploy'))]"
+                ],
             "sku": {
                 "name": "Standard_RAGRS",
                 "tier": "Standard"
@@ -470,36 +474,6 @@
                     "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                     "groupIds": [
                       "table"
-                    ],
-                    "privateLinkServiceConnectionState": {
-                        "status": "Approved",
-                        "description": "Auto-Approved",
-                        "actionsRequired": "None"
-                    }
-                  }
-                }
-              ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/privateEndpoints",
-            "apiVersion": "2020-06-01",
-            "name": "sb-endpoint",
-            "location": "[variables('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-            ],
-            "properties": {
-              "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]"
-              },
-              "privateLinkServiceConnections": [
-                {
-                  "name": "sb-endpoint",
-                  "properties": {
-                    "privateLinkServiceId": "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                    "groupIds": [
-                      "namespace"
                     ],
                     "privateLinkServiceConnectionState": {
                         "status": "Approved",
