@@ -183,6 +183,7 @@
                     },
                     "properties": {
                         "clientCertEnabled": true,
+                        "clientCertMode": "Required",
                         "enabled": true,
                         "reserved": false,
                         "isXenon": false,
