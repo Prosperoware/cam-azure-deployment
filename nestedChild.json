@@ -182,6 +182,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
+                        "clientCertEnabled": true,
                         "enabled": true,
                         "reserved": false,
                         "isXenon": false,

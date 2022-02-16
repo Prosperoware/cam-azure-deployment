@@ -1265,6 +1265,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
+                        "clientCertEnabled": true,
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -1445,6 +1446,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
+                        "clientCertEnabled": true,
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -1637,6 +1639,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
+                        "clientCertEnabled": true,
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -1829,6 +1832,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
+                        "clientCertEnabled": true,
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -2029,6 +2033,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
+                        "clientCertEnabled": true,
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -2218,6 +2223,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
+                        "clientCertEnabled": true,
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -2394,6 +2400,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
+                        "clientCertEnabled": true,
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -2574,6 +2581,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
+                        "clientCertEnabled": true,
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -2773,6 +2781,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
+                        "clientCertEnabled": true,
                         "enabled": true,
                         "hostNameSslStates": [
                             {
