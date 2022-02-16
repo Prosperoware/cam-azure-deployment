@@ -182,7 +182,6 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertEnabled": true,
                         "clientCertMode": "Required",
                         "enabled": true,
                         "reserved": false,
@@ -311,7 +310,7 @@
                         },
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
-                        "clientCertEnabled": false,
+                        "clientCertEnabled": true,
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
