@@ -3848,7 +3848,7 @@
                 },
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri":"[concat('https://raw.githubusercontent.com/d-manney/cam-azure-deployment/', variables('branch'), '/nestedChild2.json')]"
+                    "uri":"[concat('https://raw.githubusercontent.com/prosperoware/cam-azure-deployment/', variables('branch'), '/nestedChild2.json')]"
                 },
                 "parameters": {
                     "ServiceBusResourceId":{
