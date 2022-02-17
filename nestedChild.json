@@ -153,13 +153,7 @@
         "strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        "branch": "defenderrecommendations",
-        "vnetName": "Vnet1",
-        "vnetAddressPrefix": "10.0.0.0/16",
-        "subnet1Name": "Subnet1",
-        "subnet1Prefix": "10.0.0.0/24",
-        "subnet2Name": "Subnet2",
-        "subnet2Prefix": "10.0.1.0/24"
+        "branch": "master"
     },
     "resources": [
         {
@@ -339,87 +333,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "type": "Microsoft.Network/privateEndpoints",
-            "apiVersion": "2020-06-01",
-            "name": "file-endpoint",
-            "location": "[variables('location')]",
-            "properties": {
-              "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]"
-              },
-              "privateLinkServiceConnections": [
-                {
-                  "name": "file-endpoint",
-                  "properties": {
-                    "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                    "groupIds": [
-                      "file"
-                    ],
-                    "privateLinkServiceConnectionState": {
-                        "status": "Approved",
-                        "description": "Auto-Approved",
-                        "actionsRequired": "None"
-                    }
-                  }
-                }
-              ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/privateEndpoints",
-            "apiVersion": "2020-06-01",
-            "name": "blob-endpoint",
-            "location": "[variables('location')]",
-            "properties": {
-              "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]"
-              },
-              "privateLinkServiceConnections": [
-                {
-                  "name": "blob-endpoint",
-                  "properties": {
-                    "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                    "groupIds": [
-                      "blob"
-                    ],
-                    "privateLinkServiceConnectionState": {
-                        "status": "Approved",
-                        "description": "Auto-Approved",
-                        "actionsRequired": "None"
-                    }
-                  }
-                }
-              ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/privateEndpoints",
-            "apiVersion": "2020-06-01",
-            "name": "table-endpoint",
-            "location": "[variables('location')]",
-            "properties": {
-              "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]"
-              },
-              "privateLinkServiceConnections": [
-                {
-                  "name": "table-endpoint",
-                  "properties": {
-                    "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                    "groupIds": [
-                      "table"
-                    ],
-                    "privateLinkServiceConnectionState": {
-                        "status": "Approved",
-                        "description": "Auto-Approved",
-                        "actionsRequired": "None"
-                    }
-                  }
-                }
-              ]
-            }
         }
     ],
     "outputs": {
