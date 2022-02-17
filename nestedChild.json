@@ -188,7 +188,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertMode": "Required",
+                        "clientCertMode": "Optional",
                         "enabled": true,
                         "reserved": false,
                         "isXenon": false,
