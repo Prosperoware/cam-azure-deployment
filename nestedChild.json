@@ -342,9 +342,6 @@
             "apiVersion": "2020-06-01",
             "name": "file-endpoint",
             "location": "[variables('location')]",
-            "dependsOn": [
-              "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-            ],
             "properties": {
               "subnet": {
                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]"
@@ -372,9 +369,6 @@
             "apiVersion": "2020-06-01",
             "name": "blob-endpoint",
             "location": "[variables('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-            ],
             "properties": {
               "subnet": {
                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]"
@@ -402,9 +396,6 @@
             "apiVersion": "2020-06-01",
             "name": "table-endpoint",
             "location": "[variables('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-            ],
             "properties": {
               "subnet": {
                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]"
