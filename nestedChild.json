@@ -310,7 +310,7 @@
                         },
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
-                        "clientCertEnabled": true,
+                        "clientCertEnabled": false,
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
