@@ -180,6 +180,9 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('configAppName')]",
                     "location": "[variables('Location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]"
+                    ],
                     "kind": "functionapp",
                     "identity": {
                         "type": "SystemAssigned"
