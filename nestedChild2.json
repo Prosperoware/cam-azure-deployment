@@ -240,7 +240,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertMode": "Allowed",
+                        "clientCertMode": "Optional",
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -404,7 +404,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertMode": "Allowed",
+                        "clientCertMode": "Optional",
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -559,7 +559,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertMode": "Allowed",
+                        "clientCertMode": "Optional",
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -726,7 +726,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertMode": "Allowed",
+                        "clientCertMode": "Optional",
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -901,7 +901,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertMode": "Allowed",
+                        "clientCertMode": "Optional",
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -1061,7 +1061,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertMode": "Allowed",
+                        "clientCertMode": "Optional",
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -1256,7 +1256,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertMode": "Allowed",
+                        "clientCertMode": "Optional",
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -1411,7 +1411,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertMode": "Allowed",
+                        "clientCertMode": "Optional",
                         "enabled": true,
                         "hostNameSslStates": [
                             {
@@ -1586,7 +1586,7 @@
                         "type": "SystemAssigned"
                     },
                     "properties": {
-                        "clientCertMode": "Allowed",
+                        "clientCertMode": "Optional",
                         "enabled": true,
                         "hostNameSslStates": [
                             {
