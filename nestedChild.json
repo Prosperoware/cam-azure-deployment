@@ -338,61 +338,6 @@
             ]
         },
         {
-            "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2021-06-01",
-            "name": "[variables('storageAccountName')]",
-            "location": "[variables('location')]",
-            "dependsOn":
-                [
-                  "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
-                ],
-            "sku": {
-                "name": "Standard_RAGRS",
-                "tier": "Standard"
-            },
-            "kind": "StorageV2",
-            "properties": {
-                "defaultToOAuthAuthentication": false,
-                "allowCrossTenantReplication": true,
-                "minimumTlsVersion": "TLS1_2",
-                "allowBlobPublicAccess": true,
-                "allowSharedKeyAccess": true,
-                "networkAcls": {
-                    "resourceAccessRules": [],
-                    "bypass": "AzureServices",
-                    "virtualNetworkRules": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet1Name'))]",
-                            "action": "Allow"
-                        },
-                        {
-                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]",
-                            "action": "Allow"
-                        }
-                    ],
-                    "ipRules": [],
-                    "defaultAction": "Deny"
-                },
-                "supportsHttpsTrafficOnly": true,
-                "encryption": {
-                    "services": {
-                        "file": {
-                            "keyType": "Account",
-                            "enabled": true
-                        },
-                        "blob": {
-                            "keyType": "Account",
-                            "enabled": true
-                        }
-                    },
-                    "keySource": "Microsoft.Storage"
-                },
-                "accessTier": "Hot"
-            },
-            "resources": [
-            ]
-        },
-        {
             "type": "Microsoft.Network/privateEndpoints",
             "apiVersion": "2020-06-01",
             "name": "file-endpoint",
