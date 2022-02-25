@@ -3741,9 +3741,13 @@
             "type": "string",
             "value": "[variables('encryptedBucket')]"
         },
-        "apiEndPointBaseUrl": {
+        "etlapiEndPointBaseUrl": {
             "type": "string",
-            "value": "[format('https://{0}.azurewebsites.net/', if(variables('isETL'), variables('etlApiAppName'), variables('csApiAppName')))]"
+            "value": "[if(variables('isETL'), format('https://{0}.azurewebsites.net/', variables('etlApiAppName')), '')]"
+        },
+        "csapiEndPointBaseUrl": {
+            "type": "string",
+            "value": "[if(variables('isCS'), format('https://{0}.azurewebsites.net/', variables('csApiAppName')), '')]"
         }
     }
 }
