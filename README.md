@@ -1,10 +1,10 @@
 # CAM Azure Stack Deployment Template
 
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/masterpremium/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2FProsperoware%2Fcam-azure-deployment%2Fmasterpremium%2FazureDeploy.json)
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2Fd-manney%2Fcam-azure-deployment%2Fmaster%2FazureDeploy.json)
 
 ## CAM Azure Stack Architecture
-![](https://github.com/Prosperoware/cam-azure-deployment/blob/masterpremium/Archi.png)
+![](https://github.com/d-manney/cam-azure-deployment/blob/master/Archi.png)
 
 
 ## Azure Resources
@@ -68,3 +68,4 @@ When you deploy this Azure Resource Manager template, the following resources wi
     * Renewal Function App: <NS> + "-etl-renewal" (e.g. contentsync-dev-io-etl-renewal)
     * Mapping Function App: <NS> + "-etl-mapping" (e.g. contentsync-dev-io-etl-mapping)
     * Resources Function App: <NS> + "-etl-process" (e.g. contentsync-dev-io-etl-process)
+d
