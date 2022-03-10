@@ -332,7 +332,7 @@
                 "storageProfile": {
                     "storageMB": 30720,
                     "backupRetentionDays": 7,
-                    "geoRedundantBackup": "Enabled",
+                    "geoRedundantBackup": "Disabled",
                     "storageAutogrow": "Enabled"
                 },
                 "version": "5.7",
