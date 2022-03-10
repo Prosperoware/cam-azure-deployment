@@ -154,7 +154,7 @@
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
 
-        "branch": "defenderrecommendations"
+        "branch": "azuresecurity"
     },
     "resources": [
         {
