@@ -309,7 +309,7 @@
                         },
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
-                        "clientCertEnabled": true,
+                        "clientCertEnabled": false,
                         "clientCertMode": "Optional",
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
