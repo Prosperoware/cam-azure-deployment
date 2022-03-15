@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "Branch":{
+            "type": "string",
+            "metadata": {
+                "description": "Git Branch to use"
+            }
+        },
         "ProsperowareTenantId": {
             "type": "string",
             "minLength": 36,
@@ -3695,7 +3701,7 @@
                 },
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri":"[concat('https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/', variables('branch'), '/StandardnestedChild.json')]"
+                    "uri":"[concat('https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/', parameters('branch'), '/StandardnestedChild.json')]"
                 },
                 "parameters": {
                     "ProsperowareTenantId": {

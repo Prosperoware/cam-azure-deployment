@@ -9,6 +9,12 @@
             }
         },
     "parameters": {
+        "Branch":{
+            "type": "string",
+            "metadata": {
+                "description": "Git Branch to use"
+            }
+        },
         "ProsperowareTenantId": {
             "type": "string",
             "minLength": 36,
@@ -209,7 +215,6 @@
         "strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        "branch": "master"
     },
     "resources": [
         {
@@ -3643,7 +3648,7 @@
                 },
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri":"[concat('https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/', variables('branch'), '/PremiumnestedChild1.json')]"
+                    "uri":"[concat('https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/', parameters('branch'), '/PremiumnestedChild1.json')]"
                 },
                 "parameters": {
                     "ServiceBusResourceId":{
@@ -3695,7 +3700,7 @@
                 },
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri":"[concat('https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/', variables('branch'), '/PremiumnestedChild2.json')]"
+                    "uri":"[concat('https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/', parameters('branch'), '/PremiumnestedChild2.json')]"
                 },
                 "parameters": {
                     "ServiceBusResourceId":{
