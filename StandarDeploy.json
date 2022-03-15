@@ -3749,7 +3749,10 @@
         },
         "apiEndPointBaseUrl": {
             "type": "string",
-            "value": "[format('https://{0}.azurewebsites.net/', if(variables('isETL'), variables('etlApiAppName'), variables('csApiAppName')))]"
+            "value": "[format('https://{0}.azurewebsites.net', if(variables('isETL'), variables('etlApiAppName'), variables('csApiAppName')))]",
+            "metadata": {
+                "description": "Prosperoware Tenant Id will be provided by Prosperoware. Make sure to get the key before starting the installation."
+            }
         }
     }
 }
