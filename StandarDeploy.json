@@ -3753,6 +3753,15 @@
             "metadata": {
                 "description": "Prosperoware Tenant Id will be provided by Prosperoware. Make sure to get the key before starting the installation."
             }
+        },
+        "ContentSync": {
+            "type": "string",
+            "condition": "[equals(parameters('Features'), 'Both')]",
+            "value": "[format('https://{0}.azurewebsites.net', variables('csApiAppName'))]",
+            "metadata": {
+                "description": "Prosperoware Tenant Id will be provided by Prosperoware. Make sure to get the key before starting the installation."
+            }
         }
+
     }
 }
