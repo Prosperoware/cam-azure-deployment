@@ -2,6 +2,13 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
      "parameters": {
+         "ServiceBusResourceId":{
+             "type": "string",
+            "minLength": 36,
+            "metadata": {
+                "description": "Prosperoware Tenant Id will be provided by Prosperoware. Make sure to get the key before starting the installation."
+            }
+        },
         "ProsperowareTenantId": {
             "type": "string",
             "minLength": 36,
