@@ -1,10 +1,13 @@
 # CAM Azure Stack Deployment Template
 
 
+
 [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2FProsperoware%2Fcam-azure-deployment%2Fmaster%2FazureDeploy.json)
 
+
+
 ## CAM Azure Stack Architecture
-![](https://github.com/Prosperoware/cam-azure-deployment/blob/qa2test/Archi.png)
+![](https://github.com/Prosperoware/cam-azure-deployment/blob/azuresecurity/Archi.png)
 
 
 ## Azure Resources

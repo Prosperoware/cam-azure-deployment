@@ -187,6 +187,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -309,10 +310,11 @@
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
                         "clientCertEnabled": false,
+                        "clientCertMode": "Optional",
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": [
