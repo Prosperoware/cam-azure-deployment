@@ -5,7 +5,7 @@
 
 ## CAM Azure Stack Architecture
 ![](https://github.com/Prosperoware/cam-azure-deployment/blob/qa2test/Archi.png)
-
+test push
 
 ## Azure Resources
 When you deploy this Azure Resource Manager template, the following resources will be created:
