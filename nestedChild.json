@@ -158,7 +158,7 @@
         "csRetryAppInsightsName": "[concat(variables('resourcesNamespace'), '-contentsync-retry')]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        "branch": "master"
+        "branch": "masterpremium"
     },
     "resources": [
         {
