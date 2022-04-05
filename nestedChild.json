@@ -482,7 +482,7 @@
                                 "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
-                                "packageUri": "[concat('https://github.com/d-manney/cam-azure-deployment/raw/', variables('branch'), '/etl-api.zip')]",
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-api.zip')]",
                                 "setParameters": {}
                             }
                         },
@@ -676,7 +676,7 @@
                                 "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
-                                "packageUri": "[concat('https://github.com/d-manney/cam-azure-deployment/raw/', variables('branch'), '/etl-mapping.zip')]",
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-mapping.zip')]",
                                 "setParameters": {}
                             }
                         },
@@ -879,7 +879,7 @@
                                 "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
-                                "packageUri": "[concat('https://github.com/d-manney/cam-azure-deployment/raw/', variables('branch'), '/etl-process.zip')]",
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-process.zip')]",
                                 "setParameters": {}
                             }
                         },
@@ -1071,7 +1071,7 @@
                                 "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
-                                "packageUri": "[concat('https://github.com/d-manney/cam-azure-deployment/raw/', variables('branch'), '/etl-action.zip')]",
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-action.zip')]",
                                 "setParameters": {}
                             }
                         },
@@ -1287,7 +1287,7 @@
                                 "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                             ],
                             "properties": {
-                                "packageUri": "[concat('https://github.com/d-manney/cam-azure-deployment/raw/', variables('branch'), '/etl-config.zip')]",
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-config.zip')]",
                                 "setParameters": {}
                             }
                         }
@@ -1443,7 +1443,7 @@
                                 "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]"
                             ],
                             "properties": {
-                                "packageUri": "[concat('https://github.com/d-manney/cam-azure-deployment/raw/', variables('branch'), '/contentsync-api.zip')]",
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/contentsync-api.zip')]",
                                 "setParameters": {}
                             }
                         },
@@ -1647,7 +1647,7 @@
                                 "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
-                                "packageUri": "[concat('https://github.com/d-manney/cam-azure-deployment/raw/', variables('branch'), '/contentsync-process.zip')]",
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/contentsync-process.zip')]",
                                 "setParameters": {}
                             }
                         },
@@ -1842,7 +1842,7 @@
                                 "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
-                                "packageUri": "[concat('https://github.com/d-manney/cam-azure-deployment/raw/', variables('branch'), '/contentsync-retry.zip')]",
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/contentsync-retry.zip')]",
                                 "setParameters": {}
                             }
                         },
