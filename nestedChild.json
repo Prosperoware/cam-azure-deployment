@@ -293,10 +293,6 @@
                                 {
                                     "name": "etl_renewal_worker_topic",
                                     "value": "[variables('etlRenewalTopicName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -453,10 +449,6 @@
                                 {
                                     "name": "service_name",
                                     "value": "[variables('etlApiAppName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -646,10 +638,6 @@
                                 {
                                     "name": "etl_mapping_worker_topic",
                                     "value": "[variables('etlMappingTopicName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -848,10 +836,6 @@
                                 {
                                     "name": "safe_remaining_time",
                                     "value": "60"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1039,10 +1023,6 @@
                                 {
                                     "name": "etl_mapping_action_topic",
                                     "value": "[variables('etlActionTopicName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1260,10 +1240,6 @@
                                 {
                                     "name": "product_features",
                                     "value": "[parameters('Features')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1415,10 +1391,6 @@
                                 {
                                     "name": "service_name",
                                     "value": "[variables('csApiAppName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1617,10 +1589,6 @@
                                 {
                                     "name": "safe_remaining_time",
                                     "value": "60"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1813,10 +1781,6 @@
                                 {
                                     "name": "contentSyncRetryHandler_timeout_sec",
                                     "value": "600"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
