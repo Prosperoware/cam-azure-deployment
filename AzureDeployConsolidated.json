@@ -1275,11 +1275,11 @@
             "name": "[variables('webServerName')]",
             "location": "[variables('location')]",
             "sku": {
-                "name": "EP1",
-                "tier": "ElasticPremium",
-                "size": "EP1",
-                "family": "EP",
-                "capacity": 1
+                "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'Y1','EP1')]",
+                "tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'Dynamic','ElasticPremium')]",
+                "size": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard','EP1')]",
+                "family": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard','EP')]",
+                "capacity": "[if(equals(parameters('Deploymenttype'),'Standard'),0,1)]"
             },
             "kind": "functionapp",
             "properties": {
