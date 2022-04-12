@@ -3604,6 +3604,9 @@
                     "uri":"[concat(variables('repo'), variables('branch'), '/PremiumnestedChild2.json')]"
                 },
                 "parameters": {
+                    "Deploymenttype": {
+                        "value": "[parameters('Deploymenttype')]"
+                    },
                     "ServiceBusResourceId":{
                         "value": "[resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName'))]"
                     },

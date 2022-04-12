@@ -2,6 +2,10 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
      "parameters": {
+         "Deploymenttype": {
+            "type": "string",
+            "allowedValues": [ "Standard", "Premium"]
+        },
         "ServiceBusResourceId":{
              "type": "string",
             "minLength": 36,
@@ -162,6 +166,7 @@
     "resources": [
         {
             "type": "Microsoft.Storage/storageAccounts",
+            "condition":"[equals(parameters('Deploymenttype'),'Premium')]",
             "apiVersion": "2021-06-01",
             "name": "[variables('storageAccountName')]",
             "location": "[variables('location')]",
