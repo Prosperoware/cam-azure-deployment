@@ -945,8 +945,6 @@
                     "name": "[variables('etlActionAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        
-                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlActionTopicName'), concat(variables('etlActionTopicName'), '-sub'))]",
                         "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]",
                         "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
