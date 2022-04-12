@@ -3473,11 +3473,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
-                        "[resourceId('Microsoft.Network/privateEndpoints', 'file-endpoint')]",
-                        "[resourceId('Microsoft.Network/privateEndpoints', 'sb-endpoint')]",
-                        "[resourceId('Microsoft.Network/privateEndpoints', 'blob-endpoint')]",
-                        "[resourceId('Microsoft.Network/privateEndpoints', 'table-endpoint')]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
             ],
             "properties": {
                 "expressionEvaluationOptions": {
@@ -3543,10 +3539,8 @@
                         "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
                         "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
-                        "[resourceId('Microsoft.Network/privateEndpoints', 'file-endpoint')]",
-                        "[resourceId('Microsoft.Network/privateEndpoints', 'sb-endpoint')]",
-                        "[resourceId('Microsoft.Network/privateEndpoints', 'blob-endpoint')]",
-                        "[resourceId('Microsoft.Network/privateEndpoints', 'table-endpoint')]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
+                        
             ],
             "properties": {
                 "expressionEvaluationOptions": {
@@ -3599,7 +3593,7 @@
             "apiVersion": "2021-04-01",
             "name": "linkedTemplateC2",
             "dependsOn": [
-                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplate')]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateC1')]"
             ],
             "properties": {
                 "expressionEvaluationOptions": {
