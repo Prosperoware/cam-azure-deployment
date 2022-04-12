@@ -298,9 +298,7 @@
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
-                        "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned"
+                        "redundancyMode": "None"
                     },
                     "resources": [
                         {
@@ -676,8 +674,6 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned"
                     },
                     "resources": [
                         {
@@ -874,9 +870,7 @@
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
-                        "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned"
+                        "redundancyMode": "None"
                     },
                     "resources": [
                         {
@@ -946,7 +940,6 @@
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]",
-                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -1061,9 +1054,7 @@
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
-                        "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned"
+                        "redundancyMode": "None"
                     },
                     "resources": [{
                             "condition": "[variables('isETL')]",
@@ -1273,9 +1264,7 @@
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
-                        "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned"
+                        "redundancyMode": "None"
                     },
                     "resources": [
                         {
@@ -1425,9 +1414,7 @@
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
-                        "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned"
+                        "redundancyMode": "None"
                     },
                     "resources": [
                         {
@@ -1624,9 +1611,7 @@
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
-                        "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned"
+                        "redundancyMode": "None"
                     },
                     "resources": [
                         {
@@ -1817,9 +1802,7 @@
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
-                        "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned"
+                        "redundancyMode": "None"
                     },
                     "resources": [
                         {
