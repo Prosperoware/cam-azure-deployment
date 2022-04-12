@@ -117,6 +117,12 @@
             "metadata": {	
               "description": "Location for all resources."	
             }	
+        },
+        "serverfarmresourceid": {	
+            "type": "string",	
+            "metadata": {	
+              "description": "Server farm resource id"	
+            }	
         }
     },
     "variables": {
@@ -183,7 +189,7 @@
                     "name": "[variables('etlApiAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        
                         "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
@@ -205,7 +211,7 @@
                                 "hostType": "Repository"
                             }
                         ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "serverFarmId": "[parameters('serverfarmresourceid')]",
                         "reserved": false,
                         "isXenon": false,
                         "hyperV": false,
@@ -361,7 +367,7 @@
                     "name": "[variables('etlRenewalAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        
                         "[resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
@@ -383,7 +389,7 @@
                                 "hostType": "Repository"
                             }
                         ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "serverFarmId":  "[parameters('serverfarmresourceid')]",
                         "reserved": false,
                         "isXenon": false,
                         "hyperV": false,
@@ -548,7 +554,7 @@
                     "name": "[variables('etlMappingAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",                        
+                                                
                         "[resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
@@ -570,7 +576,7 @@
                                 "hostType": "Repository"
                             }
                         ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "serverFarmId":  "[parameters('serverfarmresourceid')]",
                         "reserved": false,
                         "isXenon": false,
                         "hyperV": false,
@@ -739,7 +745,7 @@
                     "name": "[variables('etlProcessAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        
                         "[resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
@@ -761,7 +767,7 @@
                                 "hostType": "Repository"
                             }
                         ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "serverFarmId":  "[parameters('serverfarmresourceid')]",
                         "reserved": false,
                         "isXenon": false,
                         "hyperV": false,
@@ -916,7 +922,7 @@
                     ]
                 }
             ]
-        }
+        },
         //etlActionAppInsightsName
         {
             "condition": "[variables('isETL')]",
@@ -939,7 +945,7 @@
                     "name": "[variables('etlActionAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        
                         "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlActionTopicName'), concat(variables('etlActionTopicName'), '-sub'))]",
                         "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]",
                         "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
@@ -962,7 +968,7 @@
                                 "hostType": "Repository"
                             }
                         ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "serverFarmId":  "[parameters('serverfarmresourceid')]",
                         "reserved": false,
                         "isXenon": false,
                         "hyperV": false,
@@ -1121,7 +1127,7 @@
                     "name": "[variables('configAppName')]",
                     "location": "[variables('Location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        
                         "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]"
                     ],
                     "kind": "functionapp",
@@ -1142,7 +1148,7 @@
                                 "hostType": "Repository"
                             }
                         ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "serverFarmId":  "[parameters('serverfarmresourceid')]",
                         "reserved": false,
                         "isXenon": false,
                         "hyperV": false,
@@ -1312,7 +1318,7 @@
                     "name": "[variables('csApiAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        
                         "[resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
@@ -1334,7 +1340,7 @@
                                 "hostType": "Repository"
                             }
                         ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "serverFarmId":  "[parameters('serverfarmresourceid')]",
                         "reserved": false,
                         "isXenon": false,
                         "hyperV": false,
@@ -1491,7 +1497,7 @@
                     "name": "[variables('csProcessAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        
                         "[resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
@@ -1513,7 +1519,7 @@
                                 "hostType": "Repository"
                             }
                         ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "serverFarmId":  "[parameters('serverfarmresourceid')]",
                         "reserved": false,
                         "isXenon": false,
                         "hyperV": false,
@@ -1692,7 +1698,7 @@
                     "name": "[variables('csRetryAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        
                         "[resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
@@ -1714,7 +1720,7 @@
                                 "hostType": "Repository"
                             }
                         ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "serverFarmId":  "[parameters('serverfarmresourceid')]",
                         "reserved": false,
                         "isXenon": false,
                         "hyperV": false,
