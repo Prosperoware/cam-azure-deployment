@@ -3583,7 +3583,11 @@
                     },
                     "administratorLoginPassword": {
                         "value": "[parameters('administratorLoginPassword')]"
+                    },
+                    "serverfarmresourceid": {
+                        "value": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]"
                     }
+                    
                 } 
             }
         },
