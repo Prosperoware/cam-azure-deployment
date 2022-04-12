@@ -164,6 +164,7 @@
         "subnet2Prefix": "10.0.1.0/24"
     },
     "resources": [
+        //STORAGEACCOUNT
         {
             "type": "Microsoft.Storage/storageAccounts",
             "condition":"[equals(parameters('Deploymenttype'),'Premium')]",
@@ -216,6 +217,163 @@
             "resources": [
             ]
         },
+         //etlApiAppInsightsName
+        {
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Insights/components",
+            "apiVersion": "2020-02-02-preview",
+            "name": "[variables('etlApiAppInsightsName')]",
+            "location": "[variables('Location')]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "IngestionMode": "ApplicationInsights",
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            },
+            "resources": [
+                {
+                    "condition": "[variables('isETL')]",
+                    "type": "Microsoft.Web/sites",
+                    "apiVersion": "2018-11-01",
+                    "name": "[variables('etlApiAppName')]",
+                    "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                    ],
+                    "kind": "functionapp",
+                    "identity": {
+                        "type": "SystemAssigned"
+                    },
+                    "properties": {
+                        "clientCertMode": "Optional",
+                        "enabled": true,
+                        "hostNameSslStates": [
+                            {
+                                "name": "[concat(variables('etlApiAppName'), '.azurewebsites.net')]",
+                                "sslState": "Disabled",
+                                "hostType": "Standard"
+                            },
+                            {
+                                "name": "[concat(variables('etlApiAppName'), '.scm.azurewebsites.net')]",
+                                "sslState": "Disabled",
+                                "hostType": "Repository"
+                            }
+                        ],
+                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "reserved": false,
+                        "isXenon": false,
+                        "hyperV": false,
+                        "siteConfig": {
+                            "appSettings": [
+                                {
+                                    "name": "application_group",
+                                    "value": "[variables('resourcesNamespace')]"
+                                },
+                                {
+                                    "name": "AzureWebJobsDashboard",
+                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                                },
+                                {
+                                    "name": "AzureWebJobsServiceBusConnection",
+                                    "value": "[concat('Endpoint=sb://', variables('serviceBusName'), '.servicebus.windows.net/;SharedAccessKeyName=', variables('authorizationRulesName') ,';SharedAccessKey=', listKeys(parameters('ServiceBusResourceId'), '2017-04-01').primaryKey)]"
+                                },
+                                {
+                                    "name": "AzureWebJobsStorage",
+                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                                },
+                                {
+                                    "name": "JAVA_OPTS",
+                                    "value": "-Dfile.encoding=UTF-8"
+                                },
+                                {
+                                    "name": "WEBSITE_USE_PLACEHOLDER",
+                                    "value": "0"
+                                },
+                                {
+                                    "name": "config_basepath",
+                                    "value": "[concat('az:', variables('applicationConfigBucket'))]"
+                                },
+                                {
+                                    "name": "cs_ddt_prefix",
+                                    "value": "[variables('resourcesNamespace')]"
+                                },
+                                {
+                                    "name": "FUNCTIONS_EXTENSION_VERSION",
+                                    "value": "~3"
+                                },
+                                {
+                                    "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
+                                    "value": "1"
+                                },
+                                {
+                                    "name": "FUNCTIONS_WORKER_RUNTIME",
+                                    "value": "java"
+                                },
+                                {
+                                    "name": "lambda_profile",
+                                    "value": "[parameters('EnvironmentStage')]"
+                                },
+                                {
+                                    "name": "storage_accountname",
+                                    "value": "[variables('storageAccountName')]"
+                                },
+                                {
+                                    "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                                },
+                                {
+                                    "name": "api_base_url",
+                                    "value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+                                },
+                                {
+                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                    "value": "[if(variables('isETL'), reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))).InstrumentationKey, '')]"
+                                },
+                                {
+                                    "name": "service_id",
+                                    "value": "[variables('etlApiAppName')]"
+                                },
+                                {
+                                    "name": "service_name",
+                                    "value": "[variables('etlApiAppName')]"
+                                },
+                                {
+                                    "name": "WEBSITE_CONTENTOVERVNET",
+                                    "value": "1"
+                                },
+                                {
+                                    "name": "WEBSITE_VNET_ROUTE_ALL",
+                                    "value": "1"
+                                },
+                                {
+                                    "name": "WEBSITE_DNS_SERVER",
+                                    "value": "168.63.129.16"    
+                                },
+                                {
+                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "scmSiteAlsoStopped": false,
+                        "clientAffinityEnabled": false,
+                        "clientCertEnabled": true,
+                        "hostNamesDisabled": false,
+                        "containerSize": 1536,
+                        "dailyMemoryTimeQuota": 0,
+                        "httpsOnly": false,
+                        "redundancyMode": "None",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
+                        "functionsRuntimeScaleMonitoringEnabled": 1
+                    },
+                    "resources": []
+                }
+            ]
+        },
+        //etlRenewalAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -378,165 +536,14 @@
                         "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
                         "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
-                    }
+                    },
+                    "resources": [
+                        
+                    ]
                 }
             ]
         },
-        {
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Insights/components",
-            "apiVersion": "2020-02-02-preview",
-            "name": "[variables('etlApiAppInsightsName')]",
-            "location": "[variables('Location')]",
-            "kind": "web",
-            "properties": {
-                "Application_Type": "web",
-                "IngestionMode": "ApplicationInsights",
-                "publicNetworkAccessForIngestion": "Enabled",
-                "publicNetworkAccessForQuery": "Enabled"
-            },
-            "resources": [
-                {
-                    "condition": "[variables('isETL')]",
-                    "type": "Microsoft.Web/sites",
-                    "apiVersion": "2018-11-01",
-                    "name": "[variables('etlApiAppName')]",
-                    "location": "[variables('location')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
-                    ],
-                    "kind": "functionapp",
-                    "identity": {
-                        "type": "SystemAssigned"
-                    },
-                    "properties": {
-                        "clientCertMode": "Optional",
-                        "enabled": true,
-                        "hostNameSslStates": [
-                            {
-                                "name": "[concat(variables('etlApiAppName'), '.azurewebsites.net')]",
-                                "sslState": "Disabled",
-                                "hostType": "Standard"
-                            },
-                            {
-                                "name": "[concat(variables('etlApiAppName'), '.scm.azurewebsites.net')]",
-                                "sslState": "Disabled",
-                                "hostType": "Repository"
-                            }
-                        ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                        "reserved": false,
-                        "isXenon": false,
-                        "hyperV": false,
-                        "siteConfig": {
-                            "appSettings": [
-                                {
-                                    "name": "application_group",
-                                    "value": "[variables('resourcesNamespace')]"
-                                },
-                                {
-                                    "name": "AzureWebJobsDashboard",
-                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
-                                },
-                                {
-                                    "name": "AzureWebJobsServiceBusConnection",
-                                    "value": "[concat('Endpoint=sb://', variables('serviceBusName'), '.servicebus.windows.net/;SharedAccessKeyName=', variables('authorizationRulesName') ,';SharedAccessKey=', listKeys(parameters('ServiceBusResourceId'), '2017-04-01').primaryKey)]"
-                                },
-                                {
-                                    "name": "AzureWebJobsStorage",
-                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
-                                },
-                                {
-                                    "name": "JAVA_OPTS",
-                                    "value": "-Dfile.encoding=UTF-8"
-                                },
-                                {
-                                    "name": "WEBSITE_USE_PLACEHOLDER",
-                                    "value": "0"
-                                },
-                                {
-                                    "name": "config_basepath",
-                                    "value": "[concat('az:', variables('applicationConfigBucket'))]"
-                                },
-                                {
-                                    "name": "cs_ddt_prefix",
-                                    "value": "[variables('resourcesNamespace')]"
-                                },
-                                {
-                                    "name": "FUNCTIONS_EXTENSION_VERSION",
-                                    "value": "~3"
-                                },
-                                {
-                                    "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
-                                    "value": "1"
-                                },
-                                {
-                                    "name": "FUNCTIONS_WORKER_RUNTIME",
-                                    "value": "java"
-                                },
-                                {
-                                    "name": "lambda_profile",
-                                    "value": "[parameters('EnvironmentStage')]"
-                                },
-                                {
-                                    "name": "storage_accountname",
-                                    "value": "[variables('storageAccountName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
-                                },
-                                {
-                                    "name": "api_base_url",
-                                    "value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
-                                },
-                                {
-                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[if(variables('isETL'), reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))).InstrumentationKey, '')]"
-                                },
-                                {
-                                    "name": "service_id",
-                                    "value": "[variables('etlApiAppName')]"
-                                },
-                                {
-                                    "name": "service_name",
-                                    "value": "[variables('etlApiAppName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_CONTENTOVERVNET",
-                                    "value": "1"
-                                },
-                                {
-                                    "name": "WEBSITE_VNET_ROUTE_ALL",
-                                    "value": "1"
-                                },
-                                {
-                                    "name": "WEBSITE_DNS_SERVER",
-                                    "value": "168.63.129.16"    
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
-                                }
-                            ]
-                        },
-                        "scmSiteAlsoStopped": false,
-                        "clientAffinityEnabled": false,
-                        "clientCertEnabled": true,
-                        "hostNamesDisabled": false,
-                        "containerSize": 1536,
-                        "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
-                        "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
-                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
-                        "functionsRuntimeScaleMonitoringEnabled": 1
-                    },
-                    "resources": []
-                }
-            ]
-        },
+        //etlMappingAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -704,6 +711,7 @@
                 }
             ]
         },
+        //etlProcessAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -879,6 +887,7 @@
                 }
             ]
         },
+        //etlActionAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -1042,6 +1051,7 @@
                 }
             ]
         },
+        //configAppInsightsName
         {
             "type": "Microsoft.Insights/components",
             "apiVersion": "2020-02-02-preview",
@@ -1234,6 +1244,7 @@
                 }
             ]
         },
+        //csApiAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -1389,6 +1400,7 @@
                 }
             ]
         },
+        //csProcessAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -1564,6 +1576,7 @@
                 }
             ]
         },
+        //csRetryAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
