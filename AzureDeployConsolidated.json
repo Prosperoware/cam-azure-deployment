@@ -1376,7 +1376,7 @@
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
                         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -1516,7 +1516,7 @@
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlRenewalTopicName'), concat(variables('etlRenewalTopicName'), '-sub'))]",
                         "[resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -1668,7 +1668,7 @@
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlMappingTopicName'), concat(variables('etlMappingTopicName'), '-sub'))]",
                         "[resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -1820,7 +1820,7 @@
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -1980,7 +1980,7 @@
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlActionTopicName'), concat(variables('etlActionTopicName'), '-sub'))]",
                         "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -2129,7 +2129,7 @@
                         "[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -2308,7 +2308,7 @@
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -2448,7 +2448,7 @@
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -2607,7 +2607,7 @@
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -3473,7 +3473,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
                         "[resourceId('Microsoft.Network/privateEndpoints', 'file-endpoint')]",
                         "[resourceId('Microsoft.Network/privateEndpoints', 'sb-endpoint')]",
                         "[resourceId('Microsoft.Network/privateEndpoints', 'blob-endpoint')]",
@@ -3542,7 +3542,7 @@
                         "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
                         "[resourceId('Microsoft.Network/privateEndpoints', 'file-endpoint')]",
                         "[resourceId('Microsoft.Network/privateEndpoints', 'sb-endpoint')]",
                         "[resourceId('Microsoft.Network/privateEndpoints', 'blob-endpoint')]",
