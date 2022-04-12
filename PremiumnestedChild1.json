@@ -161,6 +161,7 @@
         "branch": "masterpremium"
     },
     "resources": [
+        //etlRenewalAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -304,7 +305,6 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None"
-                    }
                     },
                     "resources": [
                         {
@@ -369,6 +369,7 @@
                 "targetWorkerSizeId": 0
             }
         },
+        //etlApiAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -546,6 +547,7 @@
                 }
             ]
         },
+        //etlMappingAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -736,6 +738,7 @@
                 }
             ]
         },
+        //etlProcessAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -935,6 +938,7 @@
                 }
             ]
         },
+        //etlActionAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -1123,10 +1127,11 @@
                 }
             ]
         },
+        //etlActionAppInsightsName
         {
             "type": "Microsoft.Insights/components",
             "apiVersion": "2020-02-02-preview",
-            "name": "[variables('configAppInsightsName')]",
+            "name": "[variables('etlActionAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
             "properties": {
@@ -1311,6 +1316,7 @@
                 }
             ]
         },
+        //csApiAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -1489,6 +1495,7 @@
                 }
             ]
         },
+        //csProcessAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -1689,6 +1696,7 @@
                 }
             ]
         },
+        //csRetryAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
