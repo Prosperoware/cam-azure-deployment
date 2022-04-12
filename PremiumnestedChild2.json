@@ -375,6 +375,8 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     }
                 }
@@ -527,8 +529,8 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": []
@@ -694,8 +696,8 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": []
@@ -869,8 +871,8 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": []
@@ -1032,8 +1034,8 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": []
@@ -1224,8 +1226,8 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": []
@@ -1379,8 +1381,8 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": []
@@ -1554,8 +1556,8 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": []
@@ -1721,8 +1723,8 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": []
