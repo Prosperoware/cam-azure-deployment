@@ -206,7 +206,8 @@
         "strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        "branch": "master"
+        "branch": "master",
+        "repo":"https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/"
     },
     "resources": [
         {
@@ -1291,6 +1292,61 @@
                 "hyperV": false,
                 "targetWorkerCount": 0,
                 "targetWorkerSizeId": 0
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "linkedTemplateVNet",
+            "condition":"[equals(parameters('Deploymenttype'),'Premium')]",
+            "dependsOn": [
+                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            ],
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "outer"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri":"[concat(variables('repo'), variables('branch'), '/PremiumnestedChildVnet.json')]"
+                },
+                "parameters": {
+                    "Features": {
+                        "value": "[parameters('Features')]"
+                    },
+                    "EnvironmentStage": {
+                        "value": "[parameters('EnvironmentStage')]"
+                    },
+                    "InstanceUniqueName": {
+                        "value": "[parameters('InstanceUniqueName')]"
+                    },
+                    "TopLevelDomain": {
+                        "value": "[parameters('TopLevelDomain')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "vnetAddressPrefix": {
+                        "value": "[parameters('vnetAddressPrefix')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[parameters('subnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[parameters('subnet1Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[parameters('subnet2Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[parameters('subnet2Name')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                    
+                } 
             }
         },
         //FUNCTIONS
@@ -3394,81 +3450,9 @@
             }
         },
         //PREMIUM TEMPLATE
-        //VIRTUALNETWORK
-       
-        //ENDPOINTS
-        
+        //VIRTUALNETWORK MOVED TO PremiumnestedChildVnet
+        //ENDPOINTS MOVED TO PremiumnestedChildVnetEndpoints
         //LINKED TEMPLATES
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2021-04-01",
-            "name": "linkedTemplateVNet",
-            "condition":"[equals(parameters('Deploymenttype'),'Premium')]",
-            "dependsOn": [
-                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                        "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
-                        "[resourceId('Microsoft.Network/privateEndpoints', 'file-endpoint')]",
-                        "[resourceId('Microsoft.Network/privateEndpoints', 'sb-endpoint')]",
-                        "[resourceId('Microsoft.Network/privateEndpoints', 'blob-endpoint')]",
-                        "[resourceId('Microsoft.Network/privateEndpoints', 'table-endpoint')]"
-            ],
-            "properties": {
-                "expressionEvaluationOptions": {
-                    "scope": "outer"
-                },
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri":"[concat('https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/', variables('branch'), '/PremiumnestedChildVnet.json')]"
-                },
-                "parameters": {
-                    "Features": {
-                        "value": "[parameters('Features')]"
-                    },
-                    "EnvironmentStage": {
-                        "value": "[parameters('EnvironmentStage')]"
-                    },
-                    "InstanceUniqueName": {
-                        "value": "[parameters('InstanceUniqueName')]"
-                    },
-                    "TopLevelDomain": {
-                        "value": "[parameters('TopLevelDomain')]"
-                    },
-                    "vnetName": {
-                        "value": "[parameters('vnetName')]"
-                    },
-                    "vnetAddressPrefix": {
-                        "value": "[parameters('vnetAddressPrefix')]"
-                    },
-                    "subnet1Prefix": {
-                        "value": "[parameters('subnet1Prefix')]"
-                    },
-                    "subnet1Name": {
-                        "value": "[parameters('subnet1Name')]"
-                    },
-                    "subnet2Prefix": {
-                        "value": "[parameters('subnet2Prefix')]"
-                    },
-                    "subnet2Name": {
-                        "value": "[parameters('subnet2Name')]"
-                    },
-                    "location": {
-                        "value": "[parameters('location')]"
-                    }
-                    
-                } 
-            }
-        },
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2021-04-01",
@@ -3498,7 +3482,7 @@
                 },
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri":"[concat('https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/', variables('branch'), '/PremiumnestedChild1.json')]"
+                    "uri":"[concat(variables('repo'), variables('branch'), '/PremiumnestedChild1.json')]"
                 },
                 "parameters": {
                     "ServiceBusResourceId":{
@@ -3550,7 +3534,7 @@
                 },
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri":"[concat('https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/', parameters('branch'), '/PremiumnestedChild2.json')]"
+                    "uri":"[concat(variables('repo'), variables('branch'), '/PremiumnestedChild2.json')]"
                 },
                 "parameters": {
                     "ServiceBusResourceId":{
