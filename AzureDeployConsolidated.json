@@ -208,6 +208,8 @@
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
         "branch": "Options",
         "repo":"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
+        //"branch": "master",
+        //"repo":"https://carlosstgprospero.blob.core.windows.net/armtemplates/"//"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
     },
     "resources": [
         {
