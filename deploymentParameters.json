@@ -3,31 +3,34 @@
    "contentVersion":"1.0.0.0",
    "parameters":{
       "ProsperowareTenantId":{
-        "value": "#tenant_id#"
+        "value": "a18c3ed0-0a26-11eb-a612-27df796658d0"
       },
       "ProsperowareEncryptedKey":{
-        "value": "#encrypted_key#"
+        "value": "d036068b6f8ae7645b409e32eaa44064"
       },
       "ProsperowareSecretKey":{
-        "value": "#sk#"
+        "value": "iXHGnuiTsfuPuyQzSHpjSXfCj5UzDhK41RpmSTnW5CqrNcTGF2"
+      },
+      "Features":{
+         "value": "Both"
       },
       "IsProduction":{
-         "value": #is_production#
+         "value": true
       },
       "EnvironmentStage":{
-         "value": "#env_stage#"
-      },
-      "TopLevelDomain":{
-         "value": "#env_domain#"
-      },
-      "administratorLogin":{
-         "value": "#db_username#"
+         "value": "prod"
       },
       "InstanceUniqueName":{
-         "value": "#instance_uniquename#"
+         "value": "test4sta"
+      },
+      "TopLevelDomain":{
+         "value": "io"
+      },
+      "administratorLogin":{
+         "value": "azureadmin"
       },
       "administratorLoginPassword":{
-         "value": "#db_password#"
+         "value": "Hgijrt89$"
       }
    }
 }

@@ -1,13 +1,6 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "metadata": {
-        "_generator": {
-          "name": "bicep",
-          "version": "0.4.613.9944",
-          "templateHash": "17386612715415396913"
-            }
-        },
     "parameters": {
         "Branch":{
             "type": "string",
@@ -214,7 +207,8 @@
         "strgBlobOwnerCsProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
-        "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]"
+        "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
+        "branch": "master"
     },
     "resources": [
         {
@@ -230,6 +224,7 @@
                 }
             }
         },
+        //CREATION OF STORAGE ACCOUNT
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2020-08-01-preview",
@@ -373,6 +368,7 @@
                 }
             ]
         },
+        //MYSQL SERVER
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.DBforMySQL/servers",
@@ -430,6 +426,7 @@
                 }
             ]
         },
+        //COSMOSDB
         {
             "type": "Microsoft.DocumentDB/databaseAccounts",
             "apiVersion": "2020-09-01",
@@ -1013,6 +1010,7 @@
                 }
             ]
         },
+        //SERVICE BUS
         {
             "type": "Microsoft.ServiceBus/namespaces",
             "apiVersion": "2018-01-01-preview",
@@ -1272,6 +1270,7 @@
                 }
             ]
         },
+        //WEBSERVER FARM
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2018-02-01",
@@ -1279,7 +1278,10 @@
             "location": "[variables('location')]",
             "sku": {
                 "name": "EP1",
-                "tier": "ElasticPremium"
+                "tier": "ElasticPremium",
+                "size": "EP1",
+                "family": "EP",
+                "capacity": 1
             },
             "kind": "functionapp",
             "properties": {
@@ -1293,6 +1295,8 @@
                 "targetWorkerSizeId": 0
             }
         },
+        //FUNCTIONS
+        //etlApiAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -1316,6 +1320,7 @@
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                         "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
                     ],
                     "kind": "functionapp",
@@ -1431,6 +1436,7 @@
                 }
             ]
         },
+        //etlRenewalAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -1582,6 +1588,7 @@
                 }
             ]
         },
+        //etlMappingAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -1733,6 +1740,7 @@
                 }
             ]
         },
+        //etlProcessAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -1892,6 +1900,7 @@
                 }
             ]
         },
+        //etlActionAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -2039,6 +2048,7 @@
                 }
             ]
         },
+        //configAppInsightsName
         {
             "type": "Microsoft.Insights/components",
             "apiVersion": "2020-02-02-preview",
@@ -2219,6 +2229,7 @@
                 }
             ]
         },
+        //csApiAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -2357,6 +2368,7 @@
                 }
             ]
         },
+        //csProcessAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -2516,6 +2528,7 @@
                 }
             ]
         },
+        //csRetryAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -2666,7 +2679,8 @@
                 }
             ]
         },
-        {
+        //STORAGE ACCOUNT ROLEASSIGMENTS
+        {   //SA1
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2682,7 +2696,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA2
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2697,7 +2711,7 @@
                 "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), '2018-02-01', 'Full').identity.principalId, '')]"
             }
         },
-        {
+        {   //SA3
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2713,7 +2727,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA4
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2729,7 +2743,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA5
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2745,7 +2759,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA6
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
@@ -2760,7 +2774,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA7
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2776,7 +2790,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA8
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2792,7 +2806,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA9
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2808,7 +2822,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA10
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2824,7 +2838,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA11
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2840,7 +2854,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA12
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2856,7 +2870,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA13
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2872,7 +2886,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA14
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2888,7 +2902,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA15
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
@@ -2903,7 +2917,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA16
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2919,7 +2933,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA17
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2935,7 +2949,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA18
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2951,7 +2965,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA19
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2967,7 +2981,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA20
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2983,7 +2997,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA21
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2999,7 +3013,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA22
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3015,7 +3029,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA23
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3031,7 +3045,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA24
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
@@ -3046,7 +3060,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA25
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3062,7 +3076,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA26
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3078,7 +3092,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA27
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3094,7 +3108,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB1
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3110,7 +3124,8 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        // SERVICEBUS roleAssignments
+        {   //SB2
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3126,7 +3141,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB3
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3142,7 +3157,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB4
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3158,7 +3173,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB5
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3174,7 +3189,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB6
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
@@ -3189,7 +3204,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB7
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3205,7 +3220,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB8
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3221,7 +3236,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB9
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3237,7 +3252,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB10
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3253,7 +3268,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB11
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3269,7 +3284,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB12
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3285,7 +3300,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB13
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3301,7 +3316,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB14
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3317,7 +3332,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB15
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
@@ -3332,7 +3347,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB16
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3348,7 +3363,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB17
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3364,7 +3379,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB18
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3380,6 +3395,8 @@
                 "principalType": "ServicePrincipal"
             }
         },
+        //PREMIUM TEMPLATE
+        //VIRTUALNETWORK
         {
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2020-06-01",
@@ -3462,6 +3479,7 @@
               "defaultAction": "Deny"
             }
         },
+        //ENDPOINTS
         {
             "type": "Microsoft.Network/privateEndpoints",
             "apiVersion": "2020-06-01",
@@ -3619,6 +3637,7 @@
               ]
             }
         },
+        //LINKED TEMPLATES
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2021-04-01",

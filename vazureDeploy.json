@@ -1,0 +1,250 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Deploymenttype": {
+            "type": "string",
+            "allowedValues": [ "Standard", "Premium"]
+        },
+        "ProsperowareTenantId": {
+            "type": "string",
+            "minLength": 36,
+            "metadata": {
+                "description": "Prosperoware Tenant Id will be provided by Prosperoware. Make sure to get the key before starting the installation."
+            }
+        },
+        "ProsperowareEncryptedKey": {
+            "type": "string",
+            "minLength": 32,
+            "metadata": {
+                "description": "This encrypted Key will be provided by Prosperoware. Make sure to get the key before starting the installation."
+            }
+        },
+        "ProsperowareSecretKey": {
+            "type": "string",
+            "minLength": 32,
+            "metadata": {
+                "description": "This secret Key will be provided by Prosperoware. Make sure to get the key before starting the installation."
+            }
+        },
+        "Features": {
+            "type": "string",
+            "allowedValues": [ "ETL", "Content Sync", "Both" ]
+        },
+        "IsProduction": {
+            "type": "bool",
+            "defaultValue": true,
+            "metadata": {
+                "description": "Is Production?"
+            }
+        },
+        "EnvironmentStage": {
+            "type": "string",
+            "allowedValues": [ "dev", "qa", "stg", "prod" ]
+        },
+        "InstanceUniqueName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 11
+        },
+        "TopLevelDomain": {
+            "type": "string",
+            "allowedValues": [ "io", "eu", "com", "co.uk" ]
+        },
+        "administratorLogin": {
+            "type": "string",
+            "minLength": 1,
+            "metadata": {
+                "description": "MySQL Database administrator login name"
+            }
+        },
+        "administratorLoginPassword": {
+            "type": "securestring",
+            "minLength": 8,
+            "maxLength": 128,
+            "metadata": {
+                "description": "MySQL Database administrator password"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "defaultValue": "VNet1",
+            "metadata": {
+              "description": "VNet name"
+            }
+        },
+          "vnetAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+              "description": "Address prefix"
+            }
+        },
+          "subnet1Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/24",
+            "metadata": {
+              "description": "Subnet 1 Prefix"
+            }
+        },
+          "subnet1Name": {
+            "type": "string",
+            "defaultValue": "Subnet1",
+            "metadata": {
+              "description": "Subnet 1 Name"
+            }
+        },
+          "subnet2Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.1.0/24",
+            "metadata": {
+              "description": "Subnet 2 Prefix"
+            }
+        },
+          "subnet2Name": {
+            "type": "string",
+            "defaultValue": "Subnet2",
+            "metadata": {
+              "description": "Subnet 2 Name"
+            }
+        },
+          "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+              "description": "Location for all resources."
+            }
+        }
+    },
+    "functions": [],
+    "variables": {
+        "branch": "Options",
+        "urlStandard":"[concat('https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/', variables('branch'), '/StandarDeploy.json')]",
+        "urlPremium":"[concat('https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/', variables('branch'), '/PremiumDeploy.json')]",
+        "templateuri":"[if(equals(parameters('Deploymenttype'),'Standard'),variables('urlStandard'),variables('urlPremium'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "TemplateStandard",
+            "condition":"[equals(parameters('Deploymenttype'),'Standard')]",
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "outer"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri":"[variables('templateuri')]"
+                },
+                "parameters": {
+                    "Branch":{
+                        "value": "Options"
+                    },
+                    "ProsperowareTenantId": {
+                        "value": "[parameters('ProsperowareTenantId')]"
+                    },
+                    "ProsperowareEncryptedKey": {
+                        "value": "[parameters('ProsperowareEncryptedKey')]"
+                    },
+                    "ProsperowareSecretKey": {
+                        "value": "[parameters('ProsperowareSecretKey')]"
+                    },
+                    "Features": {
+                        "value": "[parameters('Features')]"
+                    },
+                    "IsProduction": {
+                        "value": "[parameters('IsProduction')]"
+                    },
+                    "EnvironmentStage": {
+                        "value": "[parameters('EnvironmentStage')]"
+                    },
+                    "InstanceUniqueName": {
+                        "value": "[parameters('InstanceUniqueName')]"
+                    },
+                    "TopLevelDomain": {
+                        "value": "[parameters('TopLevelDomain')]"
+                    },
+                    "administratorLogin": {
+                        "value": "[parameters('administratorLogin')]"
+                    },
+                    "administratorLoginPassword": {
+                        "value": "[parameters('administratorLoginPassword')]"
+                    }
+                } 
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "TemplatePremium",
+            "condition":"[equals(parameters('Deploymenttype'),'Premium')]",
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "outer"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri":"[variables('templateuri')]"
+                },
+                "parameters": {
+                    "Branch":{
+                        "value": "Options"
+                    },
+                    "ProsperowareTenantId": {
+                        "value": "[parameters('ProsperowareTenantId')]"
+                    },
+                    "ProsperowareEncryptedKey": {
+                        "value": "[parameters('ProsperowareEncryptedKey')]"
+                    },
+                    "ProsperowareSecretKey": {
+                        "value": "[parameters('ProsperowareSecretKey')]"
+                    },
+                    "Features": {
+                        "value": "[parameters('Features')]"
+                    },
+                    "IsProduction": {
+                        "value": "[parameters('IsProduction')]"
+                    },
+                    "EnvironmentStage": {
+                        "value": "[parameters('EnvironmentStage')]"
+                    },
+                    "InstanceUniqueName": {
+                        "value": "[parameters('InstanceUniqueName')]"
+                    },
+                    "TopLevelDomain": {
+                        "value": "[parameters('TopLevelDomain')]"
+                    },
+                    "administratorLogin": {
+                        "value": "[parameters('administratorLogin')]"
+                    },
+                    "administratorLoginPassword": {
+                        "value": "[parameters('administratorLoginPassword')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "vnetAddressPrefix": {
+                        "value": "[parameters('vnetAddressPrefix')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[parameters('subnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[parameters('subnet1Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[parameters('subnet2Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[parameters('subnet2Name')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                } 
+            }
+        }
+    ],
+    "outputs": {}
+}
