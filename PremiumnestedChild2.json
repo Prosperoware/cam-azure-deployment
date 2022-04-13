@@ -369,7 +369,46 @@
                         "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-api.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('etlApiAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -538,7 +577,43 @@
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": [
-                        
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-renewal.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('etlRenewalAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
                     ]
                 }
             ]
@@ -707,7 +782,47 @@
                         "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-mapping.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('etlMappingAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -883,7 +998,47 @@
                         "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [{
+                            "condition": "[variables('isETL')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-process.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('etlProcessAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -1047,7 +1202,45 @@
                         "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-action.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('etlActionAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -1240,7 +1433,20 @@
                         "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                         {
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-config.zip')]",
+                                "setParameters": {}
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -1396,7 +1602,47 @@
                         "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                        {
+                            "condition": "[variables('isCS')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/contentsync-api.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isCS')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('csApiAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -1572,7 +1818,49 @@
                         "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                        {
+                            "condition": "[variables('isCS')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/contentsync-process.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isCS')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('csProcessAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -1740,7 +2028,48 @@
                         "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                        {
+                            "condition": "[variables('isCS')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/contentsync-retry.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isCS')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('csRetryAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         }

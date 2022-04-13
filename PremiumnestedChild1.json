@@ -1056,7 +1056,8 @@
                         "httpsOnly": false,
                         "redundancyMode": "None"
                     },
-                    "resources": [{
+                    "resources": [
+                        {
                             "condition": "[variables('isETL')]",
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
@@ -1092,7 +1093,8 @@
                                     }
                                 ]
                             }
-                        }]
+                        }
+                    ]
                 }
             ]
         },

@@ -1310,7 +1310,7 @@
                 },
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri":"[concat(variables('repo'), variables('branch'), '/PremiumnestedChildVnet.json')]"
+                    "uri":"[concat(variables('repo'), variables('branch'),  '/PremiumnestedChildVnet.json')]"
                 },
                 "parameters": {
                     "Features": {
@@ -3466,23 +3466,8 @@
                     "uri":"[concat(variables('repo'), variables('branch'), '/PremiumnestedChildVnetEndpoints.json')]"
                 },
                 "parameters": {
-                    "ServiceBusResourceId":{
-                        "value": "[resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName'))]"
-                    },
-                    "ProsperowareTenantId": {
-                        "value": "[parameters('ProsperowareTenantId')]"
-                    },
-                    "ProsperowareEncryptedKey": {
-                        "value": "[parameters('ProsperowareEncryptedKey')]"
-                    },
-                    "ProsperowareSecretKey": {
-                        "value": "[parameters('ProsperowareSecretKey')]"
-                    },
                     "Features": {
                         "value": "[parameters('Features')]"
-                    },
-                    "IsProduction": {
-                        "value": "[parameters('IsProduction')]"
                     },
                     "EnvironmentStage": {
                         "value": "[parameters('EnvironmentStage')]"
@@ -3493,12 +3478,22 @@
                     "TopLevelDomain": {
                         "value": "[parameters('TopLevelDomain')]"
                     },
-                    "administratorLogin": {
-                        "value": "[parameters('administratorLogin')]"
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
                     },
-                    "administratorLoginPassword": {
-                        "value": "[parameters('administratorLoginPassword')]"
+                    "subnet1Prefix": {
+                        "value": "[parameters('subnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[parameters('subnet1Name')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[parameters('subnet2Name')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
                     }
+                    
                 } 
             }
         },
