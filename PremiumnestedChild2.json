@@ -98,7 +98,6 @@
         "resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', replace(parameters('TopLevelDomain'), '.', ''))]",
         "storageAccountName": "[concat('strg',variables('commonId'))]",
         "applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
-        "encryptedBucket": "[concat(variables('resourcesNamespace'), '-encrypted-bucket')]",
         "mySqlServerName": "[concat('mysql-', variables('resourcesNamespace'))]",
         "cosmosName": "[concat('cosmos-', variables('resourcesNamespace'))]",
         "serviceBusName": "[concat('servicebus-', variables('resourcesNamespace'))]",
@@ -132,13 +131,9 @@
         "csRetryAppInsightsName": "[concat(variables('resourcesNamespace'), '-contentsync-retry')]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        "branch": "master",
         "vnetName": "Vnet1",
-        "vnetAddressPrefix": "10.0.0.0/16",
         "subnet1Name": "Subnet1",
-        "subnet1Prefix": "10.0.0.0/24",
         "subnet2Name": "Subnet2",
-        "subnet2Prefix": "10.0.1.0/24"
     },
     "resources": [
         //STORAGEACCOUNT
