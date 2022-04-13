@@ -206,8 +206,8 @@
         "strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        "branch": "master",
-        "repo":"https://carlosstgprospero.blob.core.windows.net/armtemplates/"
+        "branch": "Options",
+        "repo":"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
     },
     "resources": [
         {
@@ -3546,9 +3546,6 @@
                     "Features": {
                         "value": "[parameters('Features')]"
                     },
-                    "IsProduction": {
-                        "value": "[parameters('IsProduction')]"
-                    },
                     "EnvironmentStage": {
                         "value": "[parameters('EnvironmentStage')]"
                     },
@@ -3566,6 +3563,12 @@
                     },
                     "serverfarmresourceid": {
                         "value": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]"
+                    },
+                    "branch": {
+                        "value": "[variables('branch')]"
+                    },
+                    "repo": {
+                        "value": "[variables('repo')]"
                     }
                     
                 } 
@@ -3594,21 +3597,6 @@
                     "ServiceBusResourceId":{
                         "value": "[resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName'))]"
                     },
-                    "ProsperowareTenantId": {
-                        "value": "[parameters('ProsperowareTenantId')]"
-                    },
-                    "ProsperowareEncryptedKey": {
-                        "value": "[parameters('ProsperowareEncryptedKey')]"
-                    },
-                    "ProsperowareSecretKey": {
-                        "value": "[parameters('ProsperowareSecretKey')]"
-                    },
-                    "Features": {
-                        "value": "[parameters('Features')]"
-                    },
-                    "IsProduction": {
-                        "value": "[parameters('IsProduction')]"
-                    },
                     "EnvironmentStage": {
                         "value": "[parameters('EnvironmentStage')]"
                     },
@@ -3623,6 +3611,32 @@
                     },
                     "administratorLoginPassword": {
                         "value": "[parameters('administratorLoginPassword')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[parameters('subnet1Name')]"
+                    },
+                    "Features": {
+                        "value": "[parameters('Features')]"
+                    },
+                    "ProsperowareTenantId": {
+                        "value": "[parameters('ProsperowareTenantId')]"
+                    },
+                    "ProsperowareEncryptedKey": {
+                        "value": "[parameters('ProsperowareEncryptedKey')]"
+                    },
+                    "ProsperowareSecretKey": {
+                        "value": "[parameters('ProsperowareSecretKey')]"
+                    }
+                    ,
+                    "branch": {
+                        "value": "[variables('branch')]"
+                    }
+                    ,
+                    "repo": {
+                        "value": "[variables('repo')]"
                     }
                 } 
             }
