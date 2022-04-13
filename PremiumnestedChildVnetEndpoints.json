@@ -26,42 +26,34 @@
               "description": "VNet name"
             }
         },
-          "vnetAddressPrefix": {
-            "type": "string",
-            "defaultValue": "10.0.0.0/16",
-            "metadata": {
-              "description": "Address prefix"
-            }
-        },
-          "subnet1Prefix": {
+        "subnet1Prefix": {
             "type": "string",
             "defaultValue": "10.0.0.0/24",
             "metadata": {
               "description": "Subnet 1 Prefix"
             }
         },
-          "subnet1Name": {
+        "subnet1Name": {
             "type": "string",
             "defaultValue": "Subnet1",
             "metadata": {
               "description": "Subnet 1 Name"
             }
         },
-          "subnet2Prefix": {
-            "type": "string",
-            "defaultValue": "10.0.1.0/24",
-            "metadata": {
-              "description": "Subnet 2 Prefix"
-            }
-        },
-          "subnet2Name": {
+        "subnet2Name": {
             "type": "string",
             "defaultValue": "Subnet2",
             "metadata": {
               "description": "Subnet 2 Name"
             }
         },
-          "location": {
+        "storageAccountName": {
+            "type": "string",
+            "metadata": {
+              "description": "Storage account name"
+            }
+        },
+        "location": {
             "type": "string",
             "defaultValue": "[resourceGroup().location]",
             "metadata": {
@@ -169,18 +161,6 @@
             "apiVersion": "2020-06-01",
             "name": "file-endpoint",
             "location": "[parameters('location')]",
-            "dependsOn": [
-              "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-              "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-              "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-              "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-              "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-              "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-              "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-              "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-              "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-              "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
-            ],
             "properties": {
               "subnet": {
                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet2Name'))]"
@@ -189,7 +169,7 @@
                 {
                   "name": "file-endpoint",
                   "properties": {
-                    "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                    "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
                     "groupIds": [
                       "file"
                     ],
@@ -208,18 +188,6 @@
             "apiVersion": "2020-06-01",
             "name": "blob-endpoint",
             "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
-            ],
             "properties": {
               "subnet": {
                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet2Name'))]"
@@ -247,18 +215,6 @@
             "apiVersion": "2020-06-01",
             "name": "table-endpoint",
             "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
-            ],
             "properties": {
               "subnet": {
                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet2Name'))]"
@@ -286,19 +242,6 @@
             "apiVersion": "2020-06-01",
             "name": "sb-endpoint",
             "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
-            ],
             "properties": {
               "subnet": {
                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet2Name'))]"
@@ -319,6 +262,30 @@
                   }
                 }
               ]
+            }
+        },
+        {
+            "apiVersion": "2018-01-01-preview",
+            "name": "[concat(variables('serviceBusName'), '/default')]",
+            "type": "Microsoft.ServiceBus/namespaces/networkruleset",
+            "properties": {
+              "virtualNetworkRules": 
+              [
+                {
+                  "subnet": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]"
+                  },
+                  "ignoreMissingVnetServiceEndpoint": false
+                }
+              ],
+              "ipRules":[
+                  {
+                    "action": "Allow",
+                    "ipMask": "[parameters('subnet1Prefix')]"
+                  }
+                ],
+              "trustedServiceAccessEnabled": false,          
+              "defaultAction": "Deny"
             }
         }
     ],

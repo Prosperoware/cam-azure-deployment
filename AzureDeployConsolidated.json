@@ -3492,6 +3492,9 @@
                     },
                     "location": {
                         "value": "[parameters('location')]"
+                    },
+                    "storageAccountName": {
+                        "value": "[variables('storageAccountName')]"
                     }
                     
                 } 
