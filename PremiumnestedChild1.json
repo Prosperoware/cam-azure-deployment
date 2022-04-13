@@ -254,6 +254,9 @@
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                            ],
                             "properties": {
                                 "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-api.zip')]",
                                 "setParameters": {}
