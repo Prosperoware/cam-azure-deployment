@@ -347,10 +347,6 @@
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
-                            ],
                             "properties": {
                                 "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-api.zip')]",
                                 "setParameters": {}
@@ -555,7 +551,7 @@
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
                             "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
+                                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]",
                             ],
                             "properties": {
                                 "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-renewal.zip')]",
@@ -761,9 +757,7 @@
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
                             "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]",
-                                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
+                                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]",
                             ],
                             "properties": {
                                 "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-mapping.zip')]",
@@ -976,10 +970,7 @@
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
                             "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]",
-                                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
+                                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
                                 "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-process.zip')]",
@@ -1181,7 +1172,7 @@
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
                             "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]"
+                                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
                                 "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-action.zip')]",
@@ -1411,7 +1402,7 @@
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
                             "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
                                 "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-config.zip')]",
@@ -1581,7 +1572,7 @@
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
                             "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]"
+                                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
                                 "packageUri": "[concat(parameters('repo'), parameters('branch'), '/contentsync-api.zip')]",
@@ -1796,10 +1787,8 @@
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]",
-                                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                           "dependsOn": [
+                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
                                 "packageUri": "[concat(parameters('repo'), parameters('branch'), '/contentsync-process.zip')]",
@@ -2006,9 +1995,8 @@
                             "type": "Extensions",
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                           "dependsOn": [
+                                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
                                 "packageUri": "[concat(parameters('repo'), parameters('branch'), '/contentsync-retry.zip')]",
