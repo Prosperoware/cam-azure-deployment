@@ -216,35 +216,6 @@
                 }
               ]
             }
-        },
-        {
-            "apiVersion": "2018-01-01-preview",
-            "name": "[concat(variables('serviceBusName'), '/default')]",
-            "type": "Microsoft.ServiceBus/namespaces/networkruleset",
-            "dependsOn": [
-              "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-              "[resourceId('Microsoft.Network/privateEndpoints', 'sb-endpoint')]",
-              "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-            ],
-            "properties": {
-              "virtualNetworkRules": 
-              [
-                {
-                  "subnet": {
-                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]"
-                  },
-                  "ignoreMissingVnetServiceEndpoint": false
-                }
-              ],
-              "ipRules":[
-                  {
-                    "action": "Allow",
-                    "ipMask": "[parameters('subnet1Prefix')]"
-                  }
-                ],
-              "trustedServiceAccessEnabled": false,          
-              "defaultAction": "Deny"
-            }
         }
     ],
     "outputs": {
