@@ -2,35 +2,35 @@
    "$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
    "contentVersion":"1.0.0.0",
    "parameters":{
+      "Deploymenttype":{
+         "value": "#Deploymenttype#"
+      },
       "ProsperowareTenantId":{
-        "value": "a18c3ed0-0a26-11eb-a612-27df796658d0"
+        "value": "#tenant_id#"
       },
       "ProsperowareEncryptedKey":{
-        "value": "d036068b6f8ae7645b409e32eaa44064"
+        "value": "#encrypted_key#"
       },
       "ProsperowareSecretKey":{
-        "value": "iXHGnuiTsfuPuyQzSHpjSXfCj5UzDhK41RpmSTnW5CqrNcTGF2"
-      },
-      "Features":{
-         "value": "Both"
+        "value": "#sk#"
       },
       "IsProduction":{
-         "value": true
+         "value": #is_production#
       },
       "EnvironmentStage":{
-         "value": "prod"
-      },
-      "InstanceUniqueName":{
-         "value": "test4sta"
+         "value": "#env_stage#"
       },
       "TopLevelDomain":{
-         "value": "io"
+         "value": "#env_domain#"
       },
       "administratorLogin":{
-         "value": "azureadmin"
+         "value": "#db_username#"
+      },
+      "InstanceUniqueName":{
+         "value": "#instance_uniquename#"
       },
       "administratorLoginPassword":{
-         "value": "Hgijrt89$"
+         "value": "#db_password#"
       }
    }
 }
