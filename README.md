@@ -9,7 +9,6 @@
 ## CAM Azure Stack Architecture
 ![](https://github.com/Prosperoware/cam-azure-deployment/blob/azuresecurity/Archi.png)
 
-
 ## Azure Resources
 When you deploy this Azure Resource Manager template, the following resources will be created:
 * Storage Account: this is the main storage account that is used to create 2 storage blobs
