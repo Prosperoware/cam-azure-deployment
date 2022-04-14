@@ -10,7 +10,7 @@
             "type": "string",
             "minLength": 36,
             "metadata": {
-                "description": "Prosperoware Tenant Id will be provided by Prosperoware. Make sure to get the key before starting the installation."
+                "description": "Prosperoware Tenant id will be provided by Prosperoware. Make sure to get the key before starting the installation."
             }
         },
         "ProsperowareEncryptedKey": {
@@ -1403,6 +1403,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -1481,10 +1482,11 @@
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
                         "clientCertEnabled": false,
+                        "clientCertMode": "Optional",
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": []
@@ -1541,6 +1543,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -1631,10 +1634,11 @@
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
                         "clientCertEnabled": false,
+                        "clientCertMode": "Optional",
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": []
@@ -1691,6 +1695,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -1781,10 +1786,11 @@
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
                         "clientCertEnabled": false,
+                        "clientCertMode": "Optional",
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": []
@@ -1841,6 +1847,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -1939,10 +1946,11 @@
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
                         "clientCertEnabled": false,
+                        "clientCertMode": "Optional",
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": []
@@ -1999,6 +2007,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -2085,10 +2094,11 @@
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
                         "clientCertEnabled": false,
+                        "clientCertMode": "Optional",
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": []
@@ -2146,6 +2156,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -2264,10 +2275,11 @@
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
                         "clientCertEnabled": false,
+                        "clientCertMode": "Optional",
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": []
@@ -2323,6 +2335,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -2401,10 +2414,11 @@
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
                         "clientCertEnabled": false,
+                        "clientCertMode": "Optional",
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": []
@@ -2461,6 +2475,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -2559,10 +2574,11 @@
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
                         "clientCertEnabled": false,
+                        "clientCertMode": "Optional",
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": []
@@ -2618,6 +2634,7 @@
                         "isXenon": false,
                         "hyperV": false,
                         "siteConfig": {
+                            "ftpsState": "FtpsOnly",
                             "appSettings": [
                                 {
                                     "name": "application_group",
@@ -2708,10 +2725,11 @@
                         "scmSiteAlsoStopped": false,
                         "clientAffinityEnabled": false,
                         "clientCertEnabled": false,
+                        "clientCertMode": "Optional",
                         "hostNamesDisabled": false,
                         "containerSize": 1536,
                         "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
+                        "httpsOnly": true,
                         "redundancyMode": "None"
                     },
                     "resources": []
