@@ -1,11 +1,16 @@
 # CAM Azure Stack Deployment Template
 
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/Options/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2FProsperoware%2Fcam-azure-deployment%2FOptions%2FazureDeploy.json)
+
+
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/qa2test/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2FProsperoware%2Fcam-azure-deployment%2Fqa2test%2FazureDeploy.json)
+
+
 
 ## CAM Azure Stack Architecture
-![](https://github.com/Prosperoware/cam-azure-deployment/blob/qa2test/Archi.png)
-test push
+![](https://github.com/Prosperoware/cam-azure-deployment/blob/azuresecurity/Archi.png)
+
+
 
 ## Azure Resources
 When you deploy this Azure Resource Manager template, the following resources will be created:
