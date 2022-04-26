@@ -8,7 +8,6 @@ on:
       buildNumber:
         description: 'Build no'     
         required: true
-
  jobs:
     deploy:
     name: Deploy Base in DEV environment.
