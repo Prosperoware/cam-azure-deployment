@@ -4,7 +4,7 @@ on:
   push:
     branches: DevOps-4857
   workflow_dispatch:
-  inputs:
+    inputs:
       buildNumber:
         description: 'Build no'     
         required: true
