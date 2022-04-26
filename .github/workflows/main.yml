@@ -9,8 +9,8 @@ on:
         description: 'Build no'     
         required: true
 
-  jobs:
-  build:
+ jobs:
+    deploy:
     name: Deploy Base in DEV environment.
     runs-on: ubuntu-latest
     steps:
