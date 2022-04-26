@@ -1,13 +1,14 @@
-name: test
+ name: test
 
-on:
-  push:
-    branches: DevOps-4857
-  workflow_dispatch:
-    inputs:
-      buildNotest:
-        description: 'Build no'     
-        required: true
+ on:
+    push:
+        branches: 
+            - DevOps-4857
+    workflow_dispatch:
+        inputs:
+            buildNotest:
+                description: 'Build no'     
+                required: true
  jobs:
     deploy:
     name: Deploy Base in DEV environment.
