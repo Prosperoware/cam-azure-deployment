@@ -5,7 +5,7 @@ on:
     branches: DevOps-4857
   workflow_dispatch:
     inputs:
-      buildNumber:
+      buildNotest:
         description: 'Build no'     
         required: true
  jobs:
@@ -26,7 +26,7 @@ on:
           aws-region: eu-west-1
       - name: Move dist to S3 bucket
         run: |
-          aws s3 cp cam.retention.prosperowaredev.eu.jenkins.lambda/contentsync-az/jenkins-cam.contentsync.azure.apis-1.0-${{github.event.inputs.buildNumber }}/contentsync-api-1.0.zip 
+          aws s3 cp cam.retention.prosperowaredev.eu.jenkins.lambda/contentsync-az/jenkins-cam.contentsync.azure.apis-1.0-${{github.event.inputs.buildNotest }}/contentsync-api-1.0.zip 
       - name: push
         run: |
           git config --global user.email "build@github.com"
