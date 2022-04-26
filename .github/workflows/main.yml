@@ -16,9 +16,6 @@
         steps:
           - name: Checkout Repository
             uses: actions/checkout@v2
-            with:
-              submodules: 'true'
-              token: ${{ secrets.DEVOPS_ACCOUNT_TOKEN }}
           - name: Configure AWS Credentials
             uses: aws-actions/configure-aws-credentials@v1
             with:
