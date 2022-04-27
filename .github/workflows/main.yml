@@ -17,7 +17,7 @@
           - name: Checkout Repository
             uses: actions/checkout@v2
           - name: Configure AWS Credentials
-            uses: aws-actions/configure-aws-credentials@v1
+            uses: aws-actions/configure-aws-credentials@b8c74de
             with:
               aws-access-key-id: ${{ secrets.DEVOPS_AWS_ACCESS_KEY_ID }}
               aws-secret-access-key: ${{ secrets.DEVOPS_AWS_SECRET_ACCESS_KEY }}
