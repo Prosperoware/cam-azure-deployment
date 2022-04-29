@@ -5,7 +5,7 @@
          "Deploymenttype": { 
             "type": "string",
             "defaultValue": "Standard",
-            "allowedValues": [ "Standard", "Premium"]
+            "allowedValues": [ "Standard", "Premium"] 
         },
         "ProsperowareTenantId": {
             "type": "string",
