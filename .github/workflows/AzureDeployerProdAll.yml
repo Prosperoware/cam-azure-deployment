@@ -1,6 +1,6 @@
 # this is the workflow that fires the automatic deployment for Azure deployer for the Standard ARM Template
 
-name: AzureDeployerProdUk
+name: AzureDeployerProdAll
 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
