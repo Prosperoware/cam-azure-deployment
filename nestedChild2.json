@@ -338,20 +338,7 @@
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": [
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-api.zip')]",
-                                "setParameters": {}
-                            }
-                        },
-                        {
+                       {
                             "condition": "[variables('isETL')]",
                             "type": "Microsoft.Web/sites/providers/diagnosticsettings",
                             "apiVersion": "2017-05-01-preview",
@@ -540,20 +527,6 @@
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": [
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]",
-                            ],
-                            "properties": {
-                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-renewal.zip')]",
-                                "setParameters": {}
-                            }
-                        },
                         {
                             "condition": "[variables('isETL')]",
                             "type": "Microsoft.Web/sites/providers/diagnosticsettings",
@@ -747,20 +720,6 @@
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": [
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]",
-                            ],
-                            "properties": {
-                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-mapping.zip')]",
-                                "setParameters": {}
-                            }
-                        },
                         {
                             "condition": "[variables('isETL')]",
                             "type": "Microsoft.Web/sites/providers/diagnosticsettings",
@@ -961,20 +920,7 @@
                         "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": [{
-                            "condition": "[variables('isETL')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-process.zip')]",
-                                "setParameters": {}
-                            }
-                        },
+                    "resources": [
                         {
                             "condition": "[variables('isETL')]",
                             "type": "Microsoft.Web/sites/providers/diagnosticsettings",
@@ -1163,20 +1109,6 @@
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": [
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-action.zip')]",
-                                "setParameters": {}
-                            }
-                        },
                         {
                             "condition": "[variables('isETL')]",
                             "type": "Microsoft.Web/sites/providers/diagnosticsettings",
@@ -1393,22 +1325,7 @@
                         "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
                         "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
-                    },
-                    "resources": [
-                         {
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-config.zip')]",
-                                "setParameters": {}
-                            }
-                        }
-                    ]
+                    }
                 }
             ]
         },
@@ -1565,21 +1482,7 @@
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": [
-                        {
-                            "condition": "[variables('isCS')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/contentsync-api.zip')]",
-                                "setParameters": {}
-                            }
-                        },
-                        {
+                       {
                             "condition": "[variables('isCS')]",
                             "type": "Microsoft.Web/sites/providers/diagnosticsettings",
                             "apiVersion": "2017-05-01-preview",
@@ -1784,20 +1687,6 @@
                     "resources": [
                         {
                             "condition": "[variables('isCS')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                           "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/contentsync-process.zip')]",
-                                "setParameters": {}
-                            }
-                        },
-                        {
-                            "condition": "[variables('isCS')]",
                             "type": "Microsoft.Web/sites/providers/diagnosticsettings",
                             "apiVersion": "2017-05-01-preview",
                             "location": "[variables('location')]",
@@ -1987,20 +1876,6 @@
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
                     "resources": [
-                        {
-                            "condition": "[variables('isCS')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                           "dependsOn": [
-                               "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/contentsync-retry.zip')]",
-                                "setParameters": {}
-                            }
-                        },
                         {
                             "condition": "[variables('isCS')]",
                             "type": "Microsoft.Web/sites/providers/diagnosticsettings",
