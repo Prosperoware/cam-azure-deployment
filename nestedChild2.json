@@ -2,6 +2,10 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
      "parameters": {
+         "Deploymenttype": {
+            "type": "string",
+            "allowedValues": [ "Standard", "Premium"]
+        },
         "ServiceBusResourceId":{
              "type": "string",
             "minLength": 36,
@@ -44,20 +48,6 @@
               "description": "VNet name"
             }
         },
-          "vnetAddressPrefix": {
-            "type": "string",
-            "defaultValue": "10.0.0.0/16",
-            "metadata": {
-              "description": "Address prefix"
-            }
-        },
-          "subnet1Prefix": {
-            "type": "string",
-            "defaultValue": "10.0.0.0/24",
-            "metadata": {
-              "description": "Subnet 1 Prefix"
-            }
-        },
           "subnet1Name": {
             "type": "string",
             "defaultValue": "Subnet1",
@@ -65,30 +55,9 @@
               "description": "Subnet 1 Name"
             }
         },
-          "subnet2Prefix": {
-            "type": "string",
-            "defaultValue": "10.0.1.0/24",
-            "metadata": {
-              "description": "Subnet 2 Prefix"
-            }
-        },
-          "subnet2Name": {
-            "type": "string",
-            "defaultValue": "Subnet2",
-            "metadata": {
-              "description": "Subnet 2 Name"
-            }
-        },
         "Features": {
             "type": "string",
             "allowedValues": [ "ETL", "Content Sync", "Both" ]
-        },
-        "IsProduction": {
-            "type": "bool",
-            "defaultValue": true,
-            "metadata": {
-                "description": "Is Production?"
-            }
         },
         "ProsperowareTenantId": {
             "type": "string",
@@ -110,6 +79,18 @@
             "metadata": {
                 "description": "This secret Key will be provided by Prosperoware. Make sure to get the key before starting the installation."
             }
+        },
+        "branch": {	
+            "type": "string",	
+            "metadata": {	
+              "description": "branch"	
+            }	
+        },	
+        "repo": {	
+            "type": "string",	
+            "metadata": {	
+              "description": "repo"	
+            }	
         }
     },
     "variables": {
@@ -117,7 +98,6 @@
         "resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', replace(parameters('TopLevelDomain'), '.', ''))]",
         "storageAccountName": "[concat('strg',variables('commonId'))]",
         "applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
-        "encryptedBucket": "[concat(variables('resourcesNamespace'), '-encrypted-bucket')]",
         "mySqlServerName": "[concat('mysql-', variables('resourcesNamespace'))]",
         "cosmosName": "[concat('cosmos-', variables('resourcesNamespace'))]",
         "serviceBusName": "[concat('servicebus-', variables('resourcesNamespace'))]",
@@ -151,17 +131,15 @@
         "csRetryAppInsightsName": "[concat(variables('resourcesNamespace'), '-contentsync-retry')]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        "branch": "master",
         "vnetName": "Vnet1",
-        "vnetAddressPrefix": "10.0.0.0/16",
         "subnet1Name": "Subnet1",
-        "subnet1Prefix": "10.0.0.0/24",
         "subnet2Name": "Subnet2",
-        "subnet2Prefix": "10.0.1.0/24"
     },
     "resources": [
+        //STORAGEACCOUNT
         {
             "type": "Microsoft.Storage/storageAccounts",
+            "condition":"[equals(parameters('Deploymenttype'),'Premium')]",
             "apiVersion": "2021-06-01",
             "name": "[variables('storageAccountName')]",
             "location": "[variables('location')]",
@@ -211,6 +189,197 @@
             "resources": [
             ]
         },
+         //etlApiAppInsightsName
+        {
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Insights/components",
+            "apiVersion": "2020-02-02-preview",
+            "name": "[variables('etlApiAppInsightsName')]",
+            "location": "[variables('Location')]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "IngestionMode": "ApplicationInsights",
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            },
+            "resources": [
+                {
+                    "condition": "[variables('isETL')]",
+                    "type": "Microsoft.Web/sites",
+                    "apiVersion": "2018-11-01",
+                    "name": "[variables('etlApiAppName')]",
+                    "location": "[variables('location')]",
+                    "kind": "functionapp",
+                    "identity": {
+                        "type": "SystemAssigned"
+                    },
+                    "properties": {
+                        "clientCertMode": "Optional",
+                        "enabled": true,
+                        "hostNameSslStates": [
+                            {
+                                "name": "[concat(variables('etlApiAppName'), '.azurewebsites.net')]",
+                                "sslState": "Disabled",
+                                "hostType": "Standard"
+                            },
+                            {
+                                "name": "[concat(variables('etlApiAppName'), '.scm.azurewebsites.net')]",
+                                "sslState": "Disabled",
+                                "hostType": "Repository"
+                            }
+                        ],
+                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "reserved": false,
+                        "isXenon": false,
+                        "hyperV": false,
+                        "siteConfig": {
+                            "appSettings": [
+                                {
+                                    "name": "application_group",
+                                    "value": "[variables('resourcesNamespace')]"
+                                },
+                                {
+                                    "name": "AzureWebJobsDashboard",
+                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                                },
+                                {
+                                    "name": "AzureWebJobsServiceBusConnection",
+                                    "value": "[concat('Endpoint=sb://', variables('serviceBusName'), '.servicebus.windows.net/;SharedAccessKeyName=', variables('authorizationRulesName') ,';SharedAccessKey=', listKeys(parameters('ServiceBusResourceId'), '2017-04-01').primaryKey)]"
+                                },
+                                {
+                                    "name": "AzureWebJobsStorage",
+                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                                },
+                                {
+                                    "name": "JAVA_OPTS",
+                                    "value": "-Dfile.encoding=UTF-8"
+                                },
+                                {
+                                    "name": "WEBSITE_USE_PLACEHOLDER",
+                                    "value": "0"
+                                },
+                                {
+                                    "name": "config_basepath",
+                                    "value": "[concat('az:', variables('applicationConfigBucket'))]"
+                                },
+                                {
+                                    "name": "cs_ddt_prefix",
+                                    "value": "[variables('resourcesNamespace')]"
+                                },
+                                {
+                                    "name": "FUNCTIONS_EXTENSION_VERSION",
+                                    "value": "~3"
+                                },
+                                {
+                                    "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
+                                    "value": "1"
+                                },
+                                {
+                                    "name": "FUNCTIONS_WORKER_RUNTIME",
+                                    "value": "java"
+                                },
+                                {
+                                    "name": "lambda_profile",
+                                    "value": "[parameters('EnvironmentStage')]"
+                                },
+                                {
+                                    "name": "storage_accountname",
+                                    "value": "[variables('storageAccountName')]"
+                                },
+                                {
+                                    "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                                },
+                                {
+                                    "name": "api_base_url",
+                                    "value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+                                },
+                                {
+                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                    "value": "[if(variables('isETL'), reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))).InstrumentationKey, '')]"
+                                },
+                                {
+                                    "name": "service_id",
+                                    "value": "[variables('etlApiAppName')]"
+                                },
+                                {
+                                    "name": "service_name",
+                                    "value": "[variables('etlApiAppName')]"
+                                },
+                                {
+                                    "name": "WEBSITE_CONTENTOVERVNET",
+                                    "value": "1"
+                                },
+                                {
+                                    "name": "WEBSITE_VNET_ROUTE_ALL",
+                                    "value": "1"
+                                },
+                                {
+                                    "name": "WEBSITE_DNS_SERVER",
+                                    "value": "168.63.129.16"    
+                                },
+                                {
+                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "scmSiteAlsoStopped": false,
+                        "clientAffinityEnabled": false,
+                        "clientCertEnabled": true,
+                        "hostNamesDisabled": false,
+                        "containerSize": 1536,
+                        "dailyMemoryTimeQuota": 0,
+                        "httpsOnly": false,
+                        "redundancyMode": "None",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
+                        "functionsRuntimeScaleMonitoringEnabled": 1
+                    },
+                    "resources": [
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-api.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('etlApiAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        //etlRenewalAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -231,10 +400,6 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlRenewalAppName')]",
                     "location": "[variables('location')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
-                    ],
                     "kind": "functionapp",
                     "identity": {
                         "type": "SystemAssigned"
@@ -370,166 +535,54 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
-                    }
-                }
-            ]
-        },
-        {
-            "condition": "[variables('isETL')]",
-            "type": "Microsoft.Insights/components",
-            "apiVersion": "2020-02-02-preview",
-            "name": "[variables('etlApiAppInsightsName')]",
-            "location": "[variables('Location')]",
-            "kind": "web",
-            "properties": {
-                "Application_Type": "web",
-                "IngestionMode": "ApplicationInsights",
-                "publicNetworkAccessForIngestion": "Enabled",
-                "publicNetworkAccessForQuery": "Enabled"
-            },
-            "resources": [
-                {
-                    "condition": "[variables('isETL')]",
-                    "type": "Microsoft.Web/sites",
-                    "apiVersion": "2018-11-01",
-                    "name": "[variables('etlApiAppName')]",
-                    "location": "[variables('location')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
-                    ],
-                    "kind": "functionapp",
-                    "identity": {
-                        "type": "SystemAssigned"
                     },
-                    "properties": {
-                        "clientCertMode": "Optional",
-                        "enabled": true,
-                        "hostNameSslStates": [
-                            {
-                                "name": "[concat(variables('etlApiAppName'), '.azurewebsites.net')]",
-                                "sslState": "Disabled",
-                                "hostType": "Standard"
-                            },
-                            {
-                                "name": "[concat(variables('etlApiAppName'), '.scm.azurewebsites.net')]",
-                                "sslState": "Disabled",
-                                "hostType": "Repository"
+                    "resources": [
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]",
+                            ],
+                            "properties": {
+                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-renewal.zip')]",
+                                "setParameters": {}
                             }
-                        ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                        "reserved": false,
-                        "isXenon": false,
-                        "hyperV": false,
-                        "siteConfig": {
-                            "appSettings": [
-                                {
-                                    "name": "application_group",
-                                    "value": "[variables('resourcesNamespace')]"
-                                },
-                                {
-                                    "name": "AzureWebJobsDashboard",
-                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
-                                },
-                                {
-                                    "name": "AzureWebJobsServiceBusConnection",
-                                    "value": "[concat('Endpoint=sb://', variables('serviceBusName'), '.servicebus.windows.net/;SharedAccessKeyName=', variables('authorizationRulesName') ,';SharedAccessKey=', listKeys(parameters('ServiceBusResourceId'), '2017-04-01').primaryKey)]"
-                                },
-                                {
-                                    "name": "AzureWebJobsStorage",
-                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
-                                },
-                                {
-                                    "name": "JAVA_OPTS",
-                                    "value": "-Dfile.encoding=UTF-8"
-                                },
-                                {
-                                    "name": "WEBSITE_USE_PLACEHOLDER",
-                                    "value": "0"
-                                },
-                                {
-                                    "name": "config_basepath",
-                                    "value": "[concat('az:', variables('applicationConfigBucket'))]"
-                                },
-                                {
-                                    "name": "cs_ddt_prefix",
-                                    "value": "[variables('resourcesNamespace')]"
-                                },
-                                {
-                                    "name": "FUNCTIONS_EXTENSION_VERSION",
-                                    "value": "~3"
-                                },
-                                {
-                                    "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
-                                    "value": "1"
-                                },
-                                {
-                                    "name": "FUNCTIONS_WORKER_RUNTIME",
-                                    "value": "java"
-                                },
-                                {
-                                    "name": "lambda_profile",
-                                    "value": "[parameters('EnvironmentStage')]"
-                                },
-                                {
-                                    "name": "storage_accountname",
-                                    "value": "[variables('storageAccountName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
-                                },
-                                {
-                                    "name": "api_base_url",
-                                    "value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
-                                },
-                                {
-                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[if(variables('isETL'), reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))).InstrumentationKey, '')]"
-                                },
-                                {
-                                    "name": "service_id",
-                                    "value": "[variables('etlApiAppName')]"
-                                },
-                                {
-                                    "name": "service_name",
-                                    "value": "[variables('etlApiAppName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_CONTENTOVERVNET",
-                                    "value": "1"
-                                },
-                                {
-                                    "name": "WEBSITE_VNET_ROUTE_ALL",
-                                    "value": "1"
-                                },
-                                {
-                                    "name": "WEBSITE_DNS_SERVER",
-                                    "value": "168.63.129.16"    
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
-                                }
-                            ]
                         },
-                        "scmSiteAlsoStopped": false,
-                        "clientAffinityEnabled": false,
-                        "clientCertEnabled": true,
-                        "hostNamesDisabled": false,
-                        "containerSize": 1536,
-                        "dailyMemoryTimeQuota": 0,
-                        "httpsOnly": false,
-                        "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
-                        "functionsRuntimeScaleMonitoringEnabled": 1
-                    },
-                    "resources": []
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('etlRenewalAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
+        //etlMappingAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -689,14 +742,54 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]",
+                            ],
+                            "properties": {
+                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-mapping.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('etlMappingAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
+        //etlProcessAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -864,14 +957,53 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [{
+                            "condition": "[variables('isETL')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-process.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('etlProcessAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
+        //etlActionAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -893,8 +1025,7 @@
                     "name": "[variables('etlActionAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Insights/components', variables('etlActionAppName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                        "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]",
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -1027,14 +1158,54 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-action.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('etlActionAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
+        //configAppInsightsName
         {
             "type": "Microsoft.Insights/components",
             "apiVersion": "2020-02-02-preview",
@@ -1219,14 +1390,29 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                         {
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/etl-config.zip')]",
+                                "setParameters": {}
+                            }
+                        }
+                    ]
                 }
             ]
         },
+        //csApiAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -1374,14 +1560,56 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                        {
+                            "condition": "[variables('isCS')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('configAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/contentsync-api.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isCS')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('csApiAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
+        //csProcessAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -1549,14 +1777,56 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                        {
+                            "condition": "[variables('isCS')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                           "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/contentsync-process.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isCS')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('csProcessAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
+        //csRetryAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -1577,10 +1847,6 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('csRetryAppName')]",
                     "location": "[variables('location')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
-                    ],
                     "kind": "functionapp",
                     "identity": {
                         "type": "SystemAssigned"
@@ -1716,11 +1982,52 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": false,
                         "redundancyMode": "None",
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                        "keyVaultReferenceIdentity": "SystemAssigned",
+                        "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]" ,
+                        "keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
                         "functionsRuntimeScaleMonitoringEnabled": 1
                     },
-                    "resources": []
+                    "resources": [
+                        {
+                            "condition": "[variables('isCS')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                           "dependsOn": [
+                               "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat(parameters('repo'), parameters('branch'), '/contentsync-retry.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isCS')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('csRetryAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]",
+                                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         }

@@ -2,11 +2,16 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+         "Deploymenttype": { 
+            "type": "string",
+            "defaultValue": "Standard",
+            "allowedValues": [ "Standard", "Premium"]
+        },
         "ProsperowareTenantId": {
             "type": "string",
             "minLength": 36,
             "metadata": {
-                "description": "Prosperoware Tenant Id will be provided by Prosperoware. Make sure to get the key before starting the installation."
+                "description": "Prosperoware Tenant id will be provided by Prosperoware. Make sure to get the key before starting the installation."
             }
         },
         "ProsperowareEncryptedKey": {
@@ -60,6 +65,55 @@
             "maxLength": 128,
             "metadata": {
                 "description": "MySQL Database administrator password"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "defaultValue": "VNet1",
+            "metadata": {
+              "description": "VNet name"
+            }
+        },
+          "vnetAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+              "description": "Address prefix"
+            }
+        },
+          "subnet1Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/24",
+            "metadata": {
+              "description": "Subnet 1 Prefix"
+            }
+        },
+          "subnet1Name": {
+            "type": "string",
+            "defaultValue": "Subnet1",
+            "metadata": {
+              "description": "Subnet 1 Name"
+            }
+        },
+          "subnet2Prefix": {
+            "type": "string",
+            "defaultValue": "10.0.1.0/24",
+            "metadata": {
+              "description": "Subnet 2 Prefix"
+            }
+        },
+          "subnet2Name": {
+            "type": "string",
+            "defaultValue": "Subnet2",
+            "metadata": {
+              "description": "Subnet 2 Name"
+            }
+        },
+          "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+              "description": "Location for all resources."
             }
         }
     },
@@ -153,8 +207,10 @@
         "strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-
-        "branch": "master"
+        "branch": "master",
+        "repo":"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
+        //"branch": "qat2test",
+        //"repo":"https://carlosstgprospero.blob.core.windows.net/armtemplates/"//"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
     },
     "resources": [
         {
@@ -170,6 +226,7 @@
                 }
             }
         },
+        //CREATION OF STORAGE ACCOUNT
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2020-08-01-preview",
@@ -313,6 +370,7 @@
                 }
             ]
         },
+        //MYSQL SERVER
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.DBforMySQL/servers",
@@ -320,10 +378,10 @@
             "name": "[variables('mySqlServerName')]",
             "location": "[variables('location')]",
             "sku": {
-                "name": "B_Gen5_1",
-                "tier": "Basic",
+                "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'B_Gen5_1','GP_Gen5_2')]",
+                "tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'Basic','GeneralPurpose')]",
                 "family": "Gen5",
-                "capacity": 1
+                "capacity": "[if(equals(parameters('Deploymenttype'),'Standard'),1,2)]"
             },
             "properties": {
                 "createMode": "Default",
@@ -370,6 +428,7 @@
                 }
             ]
         },
+        //COSMOSDB
         {
             "type": "Microsoft.DocumentDB/databaseAccounts",
             "apiVersion": "2020-09-01",
@@ -953,14 +1012,15 @@
                 }
             ]
         },
+        //SERVICE BUS
         {
             "type": "Microsoft.ServiceBus/namespaces",
             "apiVersion": "2018-01-01-preview",
             "name": "[variables('serviceBusName')]",
             "location": "[variables('location')]",
             "sku": {
-                "name": "Standard",
-                "tier": "Standard"
+                "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard','Premium')]",
+                "tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard','Premium')]"
             },
             "properties": {
                 "zoneRedundant": false
@@ -1212,17 +1272,18 @@
                 }
             ]
         },
+        //WEBSERVER FARM
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2018-02-01",
             "name": "[variables('webServerName')]",
             "location": "[variables('location')]",
             "sku": {
-                "name": "Y1",
-                "tier": "Dynamic",
-                "size": "Y1",
-                "family": "Y",
-                "capacity": 0
+                "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'Y1','EP1')]",
+                "tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'Dynamic','ElasticPremium')]",
+                "size": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard','EP1')]",
+                "family": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard','EP')]",
+                "capacity": "[if(equals(parameters('Deploymenttype'),'Standard'),0,1)]"
             },
             "kind": "functionapp",
             "properties": {
@@ -1236,6 +1297,64 @@
                 "targetWorkerSizeId": 0
             }
         },
+        //LINKED TEMPLATE VNET ONLY PREMIUM
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "linkedTemplateVNet",
+            "condition":"[equals(parameters('Deploymenttype'),'Premium')]",
+            "dependsOn": [
+                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            ],
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "outer"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri":"[concat(variables('repo'), variables('branch'),  '/nestedChildVnet.json')]"
+                },
+                "parameters": {
+                    "Features": {
+                        "value": "[parameters('Features')]"
+                    },
+                    "EnvironmentStage": {
+                        "value": "[parameters('EnvironmentStage')]"
+                    },
+                    "InstanceUniqueName": {
+                        "value": "[parameters('InstanceUniqueName')]"
+                    },
+                    "TopLevelDomain": {
+                        "value": "[parameters('TopLevelDomain')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "vnetAddressPrefix": {
+                        "value": "[parameters('vnetAddressPrefix')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[parameters('subnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[parameters('subnet1Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[parameters('subnet2Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[parameters('subnet2Name')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                    
+                } 
+            }
+        },
+        //FUNCTIONS
+        //etlApiAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -1258,8 +1377,9 @@
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
                         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                        "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]"
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -1357,10 +1477,6 @@
                                 {
                                     "name": "service_name",
                                     "value": "[variables('etlApiAppName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1374,48 +1490,11 @@
                         "httpsOnly": true,
                         "redundancyMode": "None"
                     },
-                    "resources": [
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-api.zip')]",
-                                "setParameters": {}
-                            }
-                        },
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
-                            "apiVersion": "2017-05-01-preview",
-                            "location": "[variables('location')]",
-                            "name": "[concat(variables('etlApiAppName'), '/Microsoft.Insights/function-logs')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                                "logs": [
-                                    {
-                                        "category": "FunctionAppLogs",
-                                        "enabled": true,
-                                        "retentionPolicy": {
-                                            "enabled": true,
-                                            "days": 7
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
+                    "resources": []
                 }
             ]
         },
+        //etlRenewalAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -1438,9 +1517,9 @@
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlRenewalTopicName'), concat(variables('etlRenewalTopicName'), '-sub'))]",
-                        "[resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))]"
+                        "[resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -1550,10 +1629,6 @@
                                 {
                                     "name": "etl_renewal_worker_topic",
                                     "value": "[variables('etlRenewalTopicName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1567,48 +1642,11 @@
                         "httpsOnly": true,
                         "redundancyMode": "None"
                     },
-                    "resources": [
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-renewal.zip')]",
-                                "setParameters": {}
-                            }
-                        },
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
-                            "apiVersion": "2017-05-01-preview",
-                            "location": "[variables('location')]",
-                            "name": "[concat(variables('etlRenewalAppName'), '/Microsoft.Insights/function-logs')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                                "logs": [
-                                    {
-                                        "category": "FunctionAppLogs",
-                                        "enabled": true,
-                                        "retentionPolicy": {
-                                            "enabled": true,
-                                            "days": 7
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
+                    "resources": []
                 }
             ]
         },
+        //etlMappingAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -1631,9 +1669,9 @@
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlMappingTopicName'), concat(variables('etlMappingTopicName'), '-sub'))]",
-                        "[resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName'))]"
+                        "[resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName'))]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -1743,10 +1781,6 @@
                                 {
                                     "name": "etl_mapping_worker_topic",
                                     "value": "[variables('etlMappingTopicName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1760,48 +1794,11 @@
                         "httpsOnly": true,
                         "redundancyMode": "None"
                     },
-                    "resources": [
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-mapping.zip')]",
-                                "setParameters": {}
-                            }
-                        },
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
-                            "apiVersion": "2017-05-01-preview",
-                            "location": "[variables('location')]",
-                            "name": "[concat(variables('etlMappingAppName'), '/Microsoft.Insights/function-logs')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                                "logs": [
-                                    {
-                                        "category": "FunctionAppLogs",
-                                        "enabled": true,
-                                        "retentionPolicy": {
-                                            "enabled": true,
-                                            "days": 7
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
+                    "resources": []
                 }
             ]
         },
+        //etlProcessAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -1824,9 +1821,9 @@
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
-                        "[resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))]"
+                        "[resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -1944,10 +1941,6 @@
                                 {
                                     "name": "safe_remaining_time",
                                     "value": "60"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -1961,48 +1954,11 @@
                         "httpsOnly": true,
                         "redundancyMode": "None"
                     },
-                    "resources": [
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-process.zip')]",
-                                "setParameters": {}
-                            }
-                        },
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
-                            "apiVersion": "2017-05-01-preview",
-                            "location": "[variables('location')]",
-                            "name": "[concat(variables('etlProcessAppName'), '/Microsoft.Insights/function-logs')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                                "logs": [
-                                    {
-                                        "category": "FunctionAppLogs",
-                                        "enabled": true,
-                                        "retentionPolicy": {
-                                            "enabled": true,
-                                            "days": 7
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
+                    "resources": []
                 }
             ]
         },
+        //etlActionAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
@@ -2025,9 +1981,9 @@
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlActionTopicName'), concat(variables('etlActionTopicName'), '-sub'))]",
-                        "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]"
+                        "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -2133,10 +2089,6 @@
                                 {
                                     "name": "etl_mapping_action_topic",
                                     "value": "[variables('etlActionTopicName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -2150,48 +2102,11 @@
                         "httpsOnly": true,
                         "redundancyMode": "None"
                     },
-                    "resources": [
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-action.zip')]",
-                                "setParameters": {}
-                            }
-                        },
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
-                            "apiVersion": "2017-05-01-preview",
-                            "location": "[variables('location')]",
-                            "name": "[concat(variables('etlActionAppName'), '/Microsoft.Insights/function-logs')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                                "logs": [
-                                    {
-                                        "category": "FunctionAppLogs",
-                                        "enabled": true,
-                                        "retentionPolicy": {
-                                            "enabled": true,
-                                            "days": 7
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
+                    "resources": []
                 }
             ]
         },
+        //configAppInsightsName
         {
             "type": "Microsoft.Insights/components",
             "apiVersion": "2020-02-02-preview",
@@ -2212,12 +2127,12 @@
                     "location": "[variables('Location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]",
                         "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]",
                         "[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
-                        "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]"
+                        "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -2367,10 +2282,12 @@
                         "dailyMemoryTimeQuota": 0,
                         "httpsOnly": true,
                         "redundancyMode": "None"
-                    }
+                    },
+                    "resources": []
                 }
             ]
         },
+        //csApiAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -2393,8 +2310,8 @@
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                        "[resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName'))]"
+                        "[resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName'))]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -2492,10 +2409,6 @@
                                 {
                                     "name": "service_name",
                                     "value": "[variables('csApiAppName')]"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -2509,48 +2422,11 @@
                         "httpsOnly": true,
                         "redundancyMode": "None"
                     },
-                    "resources": [
-                        {
-                            "condition": "[variables('isCS')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/contentsync-api.zip')]",
-                                "setParameters": {}
-                            }
-                        },
-                        {
-                            "condition": "[variables('isCS')]",
-                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
-                            "apiVersion": "2017-05-01-preview",
-                            "location": "[variables('location')]",
-                            "name": "[concat(variables('csApiAppName'), '/Microsoft.Insights/function-logs')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                                "logs": [
-                                    {
-                                        "category": "FunctionAppLogs",
-                                        "enabled": true,
-                                        "retentionPolicy": {
-                                            "enabled": true,
-                                            "days": 7
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
+                    "resources": []
                 }
             ]
         },
+        //csProcessAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -2573,9 +2449,9 @@
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
-                        "[resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName'))]"
+                        "[resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName'))]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -2693,10 +2569,6 @@
                                 {
                                     "name": "safe_remaining_time",
                                     "value": "60"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -2710,48 +2582,11 @@
                         "httpsOnly": true,
                         "redundancyMode": "None"
                     },
-                    "resources": [
-                        {
-                            "condition": "[variables('isCS')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/contentsync-process.zip')]",
-                                "setParameters": {}
-                            }
-                        },
-                        {
-                            "condition": "[variables('isCS')]",
-                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
-                            "apiVersion": "2017-05-01-preview",
-                            "location": "[variables('location')]",
-                            "name": "[concat(variables('csProcessAppName'), '/Microsoft.Insights/function-logs')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                                "logs": [
-                                    {
-                                        "category": "FunctionAppLogs",
-                                        "enabled": true,
-                                        "retentionPolicy": {
-                                            "enabled": true,
-                                            "days": 7
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
+                    "resources": []
                 }
             ]
         },
+        //csRetryAppInsightsName
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
@@ -2774,8 +2609,8 @@
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                        "[resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))]"
+                        "[resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -2885,10 +2720,6 @@
                                 {
                                     "name": "contentSyncRetryHandler_timeout_sec",
                                     "value": "600"
-                                },
-                                {
-                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
-                                    "value": "1"
                                 }
                             ]
                         },
@@ -2902,49 +2733,12 @@
                         "httpsOnly": true,
                         "redundancyMode": "None"
                     },
-                    "resources": [
-                        {
-                            "condition": "[variables('isCS')]",
-                            "type": "Extensions",
-                            "apiVersion": "2018-11-01",
-                            "name": "ZipDeploy",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
-                            ],
-                            "properties": {
-                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/contentsync-retry.zip')]",
-                                "setParameters": {}
-                            }
-                        },
-                        {
-                            "condition": "[variables('isCS')]",
-                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
-                            "apiVersion": "2017-05-01-preview",
-                            "location": "[variables('location')]",
-                            "name": "[concat(variables('csRetryAppName'), '/Microsoft.Insights/function-logs')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
-                            ],
-                            "properties": {
-                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                                "logs": [
-                                    {
-                                        "category": "FunctionAppLogs",
-                                        "enabled": true,
-                                        "retentionPolicy": {
-                                            "enabled": true,
-                                            "days": 7
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
+                    "resources": []
                 }
             ]
         },
-        {
+        //STORAGE ACCOUNT ROLEASSIGMENTS
+        {   //SA1
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2952,8 +2746,7 @@
             "name": "[variables('raEtlApiAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -2961,7 +2754,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA2
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2969,15 +2762,14 @@
             "name": "[variables('raEtlRenewalAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
                 "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), '2018-02-01', 'Full').identity.principalId, '')]"
             }
         },
-        {
+        {   //SA3
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -2985,8 +2777,7 @@
             "name": "[variables('raEtlMappingAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -2994,7 +2785,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA4
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3002,8 +2793,7 @@
             "name": "[variables('raEtlProcessAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -3011,7 +2801,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA5
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3019,8 +2809,7 @@
             "name": "[variables('raEtlActionAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -3028,7 +2817,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA6
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
@@ -3043,7 +2832,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA7
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3051,8 +2840,7 @@
             "name": "[variables('raCsApiAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -3060,7 +2848,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA8
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3068,8 +2856,7 @@
             "name": "[variables('raCsProcessAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -3077,7 +2864,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA9
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3085,8 +2872,7 @@
             "name": "[variables('raCsRetryAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('readerAndDataAccess')]",
@@ -3094,7 +2880,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA10
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3102,8 +2888,7 @@
             "name": "[variables('skEtlApiAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3111,7 +2896,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA11
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3119,8 +2904,7 @@
             "name": "[variables('skEtlRenewalAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3128,7 +2912,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA12
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3136,8 +2920,7 @@
             "name": "[variables('skEtlMappingAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3145,7 +2928,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA13
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3153,8 +2936,7 @@
             "name": "[variables('skEtlProcessAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3162,7 +2944,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA14
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3170,8 +2952,7 @@
             "name": "[variables('skEtlActionAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3179,7 +2960,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA15
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
@@ -3194,7 +2975,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA16
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3202,8 +2983,7 @@
             "name": "[variables('skCsApiAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3211,7 +2991,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA17
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3219,8 +2999,7 @@
             "name": "[variables('skCsProcessAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3228,7 +3007,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA18
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3236,8 +3015,7 @@
             "name": "[variables('skCsRetryAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgKeyOperator')]",
@@ -3245,7 +3023,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA19
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3253,8 +3031,7 @@
             "name": "[variables('strgBlobOwnerEtlApiAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3262,7 +3039,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA20
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3270,8 +3047,7 @@
             "name": "[variables('strgBlobOwnerEtlRenewalAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3279,7 +3055,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA21
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3287,8 +3063,7 @@
             "name": "[variables('strgBlobOwnerEtlMappingAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3296,7 +3071,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA22
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3304,8 +3079,7 @@
             "name": "[variables('strgBlobOwnerEtlProcessAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3313,7 +3087,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA23
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3321,8 +3095,7 @@
             "name": "[variables('strgBlobOwnerEtlActionAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3330,7 +3103,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA24
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
@@ -3345,7 +3118,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA25
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3353,8 +3126,7 @@
             "name": "[variables('strgBlobOwnerCsApiAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3362,7 +3134,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA26
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3370,8 +3142,7 @@
             "name": "[variables('strgBlobOwnerCsProcessAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3379,7 +3150,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SA27
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3387,8 +3158,7 @@
             "name": "[variables('strgBlobOwnerCsRetryAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('strgBlobDataOwner')]",
@@ -3396,7 +3166,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB1
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3404,8 +3174,7 @@
             "name": "[variables('sbEtlApiAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3413,7 +3182,8 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        // SERVICEBUS roleAssignments
+        {   //SB2
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3421,8 +3191,7 @@
             "name": "[variables('sbEtlRenewalAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3430,7 +3199,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB3
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3438,8 +3207,7 @@
             "name": "[variables('sbEtlMappingAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3447,7 +3215,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB4
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3455,8 +3223,7 @@
             "name": "[variables('sbEtlProcessAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3464,7 +3231,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB5
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3472,8 +3239,7 @@
             "name": "[variables('sbEtlActionAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3481,7 +3247,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB6
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
@@ -3496,7 +3262,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB7
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3504,8 +3270,7 @@
             "name": "[variables('sbCsApiAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3513,7 +3278,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB8
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3521,8 +3286,7 @@
             "name": "[variables('sbCsProcessAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3530,7 +3294,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB9
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3538,8 +3302,7 @@
             "name": "[variables('sbCsRetryAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('owner')]",
@@ -3547,7 +3310,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB10
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3555,8 +3318,7 @@
             "name": "[variables('sbDataOwnerEtlApiAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlApiAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3564,7 +3326,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB11
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3572,8 +3334,7 @@
             "name": "[variables('sbDataOwnerEtlRenewalAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3581,7 +3342,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB12
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3589,8 +3350,7 @@
             "name": "[variables('sbDataOwnerEtlMappingAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlMappingAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3598,7 +3358,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB13
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3606,8 +3366,7 @@
             "name": "[variables('sbDataOwnerEtlProcessAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3615,7 +3374,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB14
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3623,8 +3382,7 @@
             "name": "[variables('sbDataOwnerEtlActionAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('etlActionAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3632,7 +3390,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB15
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2020-04-01-preview",
@@ -3647,7 +3405,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB16
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3655,8 +3413,7 @@
             "name": "[variables('sbDataOwnerCsApiAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3664,7 +3421,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB17
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3672,8 +3429,7 @@
             "name": "[variables('sbDataOwnerCsProcessAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csProcessAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3681,7 +3437,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
-        {
+        {   //SB18
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3689,8 +3445,7 @@
             "name": "[variables('sbDataOwnerCsRetryAppRoleId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
-                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-                "[concat('Microsoft.Web/Sites/', variables('csRetryAppName'), '/Extensions/ZipDeploy')]"
+                "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]"
             ],
             "properties": {
                 "roleDefinitionId": "[variables('sbdataowner')]",
@@ -3698,15 +3453,30 @@
                 "principalType": "ServicePrincipal"
             }
         },
+        //PREMIUM TEMPLATE
+        //VIRTUALNETWORK MOVED TO PremiumnestedChildVnet
+        //ENDPOINTS MOVED TO PremiumnestedChildVnetEndpoints
+        //LINKED TEMPLATES
+        //VNET ENDPOINT
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2021-04-01",
-            "name": "linkedTemplate",
+            "name": "linkedTemplateEndpoints",
+            "condition":"[equals(parameters('Deploymenttype'),'Premium')]",
             "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
             ],
             "properties": {
                 "expressionEvaluationOptions": {
@@ -3714,9 +3484,77 @@
                 },
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri":"[concat('https://raw.githubusercontent.com/Prosperoware/cam-azure-deployment/', variables('branch'), '/nestedChild.json')]"
+                    "uri":"[concat(variables('repo'), variables('branch'), '/nestedChildVnetEndpoints.json')]"
                 },
                 "parameters": {
+                    "Features": {
+                        "value": "[parameters('Features')]"
+                    },
+                    "EnvironmentStage": {
+                        "value": "[parameters('EnvironmentStage')]"
+                    },
+                    "InstanceUniqueName": {
+                        "value": "[parameters('InstanceUniqueName')]"
+                    },
+                    "TopLevelDomain": {
+                        "value": "[parameters('TopLevelDomain')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[parameters('subnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[parameters('subnet1Name')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[parameters('subnet2Name')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "storageAccountName": {
+                        "value": "[variables('storageAccountName')]"
+                    }
+                    
+                } 
+            }
+        },
+        // CHILD1
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "linkedTemplateC1",
+            "dependsOn": [
+                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                        "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
+                        
+            ],
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "outer"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri":"[concat(variables('repo'), variables('branch'), '/nestedChild.json')]"
+                },
+                "parameters": {
+                    "ServiceBusResourceId":{
+                        "value": "[resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName'))]"
+                    },
                     "ProsperowareTenantId": {
                         "value": "[parameters('ProsperowareTenantId')]"
                     },
@@ -3728,9 +3566,6 @@
                     },
                     "Features": {
                         "value": "[parameters('Features')]"
-                    },
-                    "IsProduction": {
-                        "value": "[parameters('IsProduction')]"
                     },
                     "EnvironmentStage": {
                         "value": "[parameters('EnvironmentStage')]"
@@ -3746,6 +3581,83 @@
                     },
                     "administratorLoginPassword": {
                         "value": "[parameters('administratorLoginPassword')]"
+                    },
+                    "serverfarmresourceid": {
+                        "value": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]"
+                    },
+                    "branch": {
+                        "value": "[variables('branch')]"
+                    },
+                    "repo": {
+                        "value": "[variables('repo')]"
+                    }
+                    
+                } 
+            }
+        },
+        //CHILD2
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "linkedTemplateC2",
+            "dependsOn": [
+                        "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateC1')]"
+            ],
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "outer"
+                },
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri":"[concat(variables('repo'), variables('branch'), '/nestedChild2.json')]"
+                },
+                "parameters": {
+                    "Deploymenttype": {
+                        "value": "[parameters('Deploymenttype')]"
+                    },
+                    "ServiceBusResourceId":{
+                        "value": "[resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName'))]"
+                    },
+                    "EnvironmentStage": {
+                        "value": "[parameters('EnvironmentStage')]"
+                    },
+                    "InstanceUniqueName": {
+                        "value": "[parameters('InstanceUniqueName')]"
+                    },
+                    "TopLevelDomain": {
+                        "value": "[parameters('TopLevelDomain')]"
+                    },
+                    "administratorLogin": {
+                        "value": "[parameters('administratorLogin')]"
+                    },
+                    "administratorLoginPassword": {
+                        "value": "[parameters('administratorLoginPassword')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[parameters('subnet1Name')]"
+                    },
+                    "Features": {
+                        "value": "[parameters('Features')]"
+                    },
+                    "ProsperowareTenantId": {
+                        "value": "[parameters('ProsperowareTenantId')]"
+                    },
+                    "ProsperowareEncryptedKey": {
+                        "value": "[parameters('ProsperowareEncryptedKey')]"
+                    },
+                    "ProsperowareSecretKey": {
+                        "value": "[parameters('ProsperowareSecretKey')]"
+                    }
+                    ,
+                    "branch": {
+                        "value": "[variables('branch')]"
+                    }
+                    ,
+                    "repo": {
+                        "value": "[variables('repo')]"
                     }
                 } 
             }
