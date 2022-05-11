@@ -17,14 +17,14 @@
             }
         },
         "ProsperowareEncryptedKey": {
-            "type": "string",
+            "type": "securestring",
             "minLength": 32,
             "metadata": {
                 "description": "This encrypted Key will be provided by Prosperoware. Make sure to get the key before starting the installation."
             }
         },
         "ProsperowareSecretKey": {
-            "type": "string",
+            "type": "securestring",
             "minLength": 32,
             "metadata": {
                 "description": "This secret Key will be provided by Prosperoware. Make sure to get the key before starting the installation."
