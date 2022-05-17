@@ -38,7 +38,6 @@ jobs:
           # Request Method
           method: 'POST'
           data: '{"type":"standard"}'
-          timeout: 15000
           
       - name: Show Response
         run: echo ${{ steps.InvokeAWSApiGw.outputs.response }}
