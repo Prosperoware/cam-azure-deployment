@@ -210,6 +210,10 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlApiAppName')]",
                     "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                    ],
                     "kind": "functionapp",
                     "identity": {
                         "type": "SystemAssigned"
@@ -400,6 +404,10 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlRenewalAppName')]",
                     "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                    ],
                     "kind": "functionapp",
                     "identity": {
                         "type": "SystemAssigned"
@@ -1025,7 +1033,8 @@
                     "name": "[variables('etlActionAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]",
+                        "[resourceId('Microsoft.Insights/components', variables('etlActionAppName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -1788,7 +1797,7 @@
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+                               "[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
                                 "[concat('Microsoft.Web/Sites/', variables('csApiAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
@@ -1847,6 +1856,10 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('csRetryAppName')]",
                     "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))]",
+                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                    ],
                     "kind": "functionapp",
                     "identity": {
                         "type": "SystemAssigned"
