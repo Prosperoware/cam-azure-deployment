@@ -1449,8 +1449,25 @@
 						{
 							"name": "service_name",
 							"value": "[variables('etlApiAppName')]"
+						},
+						{
+							"name": "WEBSITE_CONTENTOVERVNET",
+							"value": "1"
+						},
+						{
+							"name": "WEBSITE_VNET_ROUTE_ALL",
+							"value": "1"
+						},
+						{
+							"name": "WEBSITE_DNS_SERVER",
+							"value": "168.63.129.16"
+						},
+						{
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
 						}
-					]
+					],
+                    "vnetRouteAllEnabled": true
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -1462,7 +1479,31 @@
 				"httpsOnly": true,
 				"redundancyMode": "None"
 			},
-			"resources": []
+			"resources": [
+				{
+					"condition": "[variables('isETL')]",
+					"type": "Microsoft.Web/sites/providers/diagnosticsettings",
+					"apiVersion": "2017-05-01-preview",
+					"location": "[variables('location')]",
+					"name": "[concat(variables('etlApiAppName'), '/Microsoft.Insights/function-logs')]",
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]"
+					],
+					"properties": {
+						"storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+						"logs": [
+							{
+								"category": "FunctionAppLogs",
+								"enabled": true,
+								"retentionPolicy": {
+									"enabled": true,
+									"days": 7
+								}
+							}
+						]
+					}
+				}
+			]
 		},
 		//etlRenewalAppInsightsName
 		{
@@ -1827,7 +1868,7 @@
 							"name": "api_base_url",
 							"value": "[concat('https://', variables('etlProcessAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
-                        {
+						{
 							"name": "service_id",
 							"value": "[variables('etlProcessAppName')]"
 						},
