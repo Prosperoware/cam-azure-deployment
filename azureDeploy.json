@@ -2049,7 +2049,6 @@
 				"isXenon": false,
 				"hyperV": false,
 				"siteConfig": {
-					"ftpsState": "FtpsOnly",
 					"appSettings": [
 						{
 							"name": "application_group",
@@ -2126,8 +2125,26 @@
 						{
 							"name": "etl_mapping_action_topic",
 							"value": "[variables('etlActionTopicName')]"
+						},
+						{
+							"name": "WEBSITE_CONTENTOVERVNET",
+							"value": "1"
+						},
+						{
+							"name": "WEBSITE_VNET_ROUTE_ALL",
+							"value": "1"
+						},
+						{
+							"name": "WEBSITE_DNS_SERVER",
+							"value": "168.63.129.16"
+						},
+						{
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
 						}
-					]
+					],
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -2137,7 +2154,9 @@
 				"containerSize": 1536,
 				"dailyMemoryTimeQuota": 0,
 				"httpsOnly": true,
-				"redundancyMode": "None"
+				"redundancyMode": "None",
+				"virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]",
+				"keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]"
 			},
 			"resources": []
 		},
