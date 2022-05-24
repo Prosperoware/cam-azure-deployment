@@ -1380,7 +1380,7 @@
 				"isXenon": false,
 				"hyperV": false,
 				"siteConfig": {
-					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]",//"FtpsOnly",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]", //"FtpsOnly",
 					"appSettings": [
 						{
 							"name": "application_group",
@@ -1467,7 +1467,7 @@
 							"value": "1"
 						}
 					],
-                    "vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -1478,7 +1478,7 @@
 				"dailyMemoryTimeQuota": 0,
 				"httpsOnly": true,
 				"redundancyMode": "None",
-                "virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]",
+				"virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]",
 				"keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]",
 				"functionsRuntimeScaleMonitoringEnabled": 1
 			},
@@ -1642,7 +1642,7 @@
 							"value": "1"
 						}
 					],
-                    "vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
