@@ -1543,7 +1543,7 @@
 				"isXenon": false,
 				"hyperV": false,
 				"siteConfig": {
-					"ftpsState": "FtpsOnly",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]",
 					"appSettings": [
 						{
 							"name": "application_group",
@@ -1624,8 +1624,25 @@
 						{
 							"name": "etl_renewal_worker_topic",
 							"value": "[variables('etlRenewalTopicName')]"
+						},
+						{
+							"name": "WEBSITE_CONTENTOVERVNET",
+							"value": "1"
+						},
+						{
+							"name": "WEBSITE_VNET_ROUTE_ALL",
+							"value": "1"
+						},
+						{
+							"name": "WEBSITE_DNS_SERVER",
+							"value": "168.63.129.16"
+						},
+						{
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
 						}
-					]
+					],
+                    "vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -1635,9 +1652,35 @@
 				"containerSize": 1536,
 				"dailyMemoryTimeQuota": 0,
 				"httpsOnly": true,
-				"redundancyMode": "None"
+				"redundancyMode": "None",
+				"virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]",
+				"keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]"
 			},
-			"resources": []
+			"resources": [
+				{
+					"condition": "[variables('isETL')]",
+					"type": "Microsoft.Web/sites/providers/diagnosticsettings",
+					"apiVersion": "2017-05-01-preview",
+					"location": "[variables('location')]",
+					"name": "[concat(variables('etlRenewalAppName'), '/Microsoft.Insights/function-logs')]",
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
+					],
+					"properties": {
+						"storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+						"logs": [
+							{
+								"category": "FunctionAppLogs",
+								"enabled": true,
+								"retentionPolicy": {
+									"enabled": true,
+									"days": 7
+								}
+							}
+						]
+					}
+				}
+			]
 		},
 		//etlMappingAppInsightsName
 		{
@@ -1674,7 +1717,7 @@
 				"isXenon": false,
 				"hyperV": false,
 				"siteConfig": {
-					"ftpsState": "FtpsOnly",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]",
 					"appSettings": [
 						{
 							"name": "application_group",
