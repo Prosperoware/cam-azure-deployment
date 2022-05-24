@@ -2012,9 +2012,33 @@
 				"virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]",
 				"keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]"
 			},
-			"resources": []
+			"resources": [
+				{
+					"condition": "[variables('isETL')]",
+					"type": "Microsoft.Web/sites/providers/diagnosticsettings",
+					"apiVersion": "2017-05-01-preview",
+					"location": "[variables('location')]",
+					"name": "[concat(variables('etlProcessAppName'), '/Microsoft.Insights/function-logs')]",
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]"
+					],
+					"properties": {
+						"storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+						"logs": [
+							{
+								"category": "FunctionAppLogs",
+								"enabled": true,
+								"retentionPolicy": {
+									"enabled": true,
+									"days": 7
+								}
+							}
+						]
+					}
+				}
+			]
 		},
-		//etlActionAppInsightsName
+		//etlActionAppInsightsName READY
 		{
 			"condition": "[variables('isETL')]",
 			"type": "Microsoft.Web/sites",
@@ -2158,9 +2182,33 @@
 				"virtualNetworkSubnetId": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name')))]",
 				"keyVaultReferenceIdentity": "[if(equals(parameters('Deploymenttype'),'Standard'),null(),'SystemAssigned')]"
 			},
-			"resources": []
+			"resources": [
+				{
+					"condition": "[variables('isETL')]",
+					"type": "Microsoft.Web/sites/providers/diagnosticsettings",
+					"apiVersion": "2017-05-01-preview",
+					"location": "[variables('location')]",
+					"name": "[concat(variables('etlActionAppName'), '/Microsoft.Insights/function-logs')]",
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]"
+					],
+					"properties": {
+						"storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+						"logs": [
+							{
+								"category": "FunctionAppLogs",
+								"enabled": true,
+								"retentionPolicy": {
+									"enabled": true,
+									"days": 7
+								}
+							}
+						]
+					}
+				}
+			]
 		},
-		//configAppInsightsName
+		//configAppInsightsName READY
 		{
 			"type": "Microsoft.Web/sites",
 			"apiVersion": "2018-11-01",
