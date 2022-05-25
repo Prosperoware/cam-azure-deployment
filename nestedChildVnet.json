@@ -200,10 +200,13 @@
                             },
 							"serviceEndpoints": [
 								{
-									"service": "Microsoft.ServiceBus"
+									"service": "Microsoft.AzureCosmosDB"
 								},
 								{
 									"service": "Microsoft.Storage"
+								},
+								{
+									"service": "Microsoft.ServiceBus"
 								}
 							],
 							"delegations": [
@@ -222,7 +225,6 @@
 						"name": "[parameters('subnet2Name')]",
 						"properties": {
 							"addressPrefix": "[parameters('subnet2Prefix')]",
-							"privateEndpointNetworkPolicies": "Disabled",
 							"serviceEndpoints": [
 								{
 									"service": "Microsoft.Storage"
