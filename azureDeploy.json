@@ -122,8 +122,20 @@
 			"metadata": {
 				"description": "Public ip for nat"
 			}
+		},
+		"empyArray": {
+			"type": "array",
+			"defaultValue": []
+		},
+		"comosArray": {
+			"type": "array",
+			"defaultValue": [
+				{
+					"id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), 'Subnet1')]",
+					"ignoreMissingVNetServiceEndpoint": true
+				}
+			]
 		}
-		
 	},
 	"variables": {
 		"commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), replace(parameters('TopLevelDomain'), '.', ''))]",
@@ -450,8 +462,8 @@
 				"publicNetworkAccess": "Enabled",
 				"enableAutomaticFailover": false,
 				"enableMultipleWriteLocations": false,
-				"isVirtualNetworkFilterEnabled": false,
-				"virtualNetworkRules": [],
+				"isVirtualNetworkFilterEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+				"virtualNetworkRules": "[if(equals(parameters('Deploymenttype'),'Standard'),parameters('empyArray'),parameters('comosArray'))]",
 				"disableKeyBasedMetadataWriteAccess": false,
 				"enableFreeTier": false,
 				"enableAnalyticalStorage": false,
@@ -3756,9 +3768,9 @@
 					"uri": "[concat(variables('repo'), variables('branch'), '/nestedChild.json')]"
 				},
 				"parameters": {
-					 "Deploymenttype":{
-           				"value": "Standard"
-         			},
+					"Deploymenttype": {
+						"value": "Standard"
+					},
 					"ServiceBusResourceId": {
 						"value": "[resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName'))]"
 					},
