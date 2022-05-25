@@ -1363,7 +1363,8 @@
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
 			"kind": "functionapp",
 			"identity": {
@@ -1526,7 +1527,8 @@
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlRenewalTopicName'), concat(variables('etlRenewalTopicName'), '-sub'))]",
-				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
 			"kind": "functionapp",
 			"identity": {
@@ -1700,7 +1702,8 @@
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlMappingTopicName'), concat(variables('etlMappingTopicName'), '-sub'))]",
-				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
 			"kind": "functionapp",
 			"identity": {
@@ -1874,7 +1877,8 @@
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
-				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
 			"kind": "functionapp",
 			"identity": {
@@ -2056,7 +2060,8 @@
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlActionTopicName'), concat(variables('etlActionTopicName'), '-sub'))]",
-				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
 			"kind": "functionapp",
 			"identity": {
@@ -2228,7 +2233,8 @@
 				"[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
-				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
 			"kind": "functionapp",
 			"identity": {
@@ -2389,7 +2395,8 @@
 			"location": "[variables('location')]",
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
 			"kind": "functionapp",
 			"identity": {
@@ -2551,7 +2558,8 @@
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
-				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
 			"kind": "functionapp",
 			"identity": {
@@ -2732,7 +2740,8 @@
 			"location": "[variables('location')]",
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
 			"kind": "functionapp",
 			"identity": {
@@ -3670,16 +3679,8 @@
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
-				"[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
-				"[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
-				"[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-				"[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
-				"[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
-				"[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
-				"[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
-				"[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
-				"[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
-				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+				"[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
 			],
 			"properties": {
 				"expressionEvaluationOptions": {
