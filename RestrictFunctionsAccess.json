@@ -55,6 +55,13 @@
               "description": "Subnet 1 Name"
             }
         },
+          "subnet2Name": {
+            "type": "string",
+            "defaultValue": "Subnet2",
+            "metadata": {
+              "description": "Subnet 2 Name"
+            }
+        },
         "Features": {
             "type": "string",
             "allowedValues": [ "ETL", "Content Sync", "Both" ]
@@ -136,10 +143,7 @@
         "csProcessAppInsightsName": "[concat(variables('resourcesNamespace'), '-contentsync-process')]",
         "csRetryAppInsightsName": "[concat(variables('resourcesNamespace'), '-contentsync-retry')]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
-        "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        "vnetName": "Vnet1",
-        "subnet1Name": "Subnet1",
-        "subnet2Name": "Subnet2",
+        "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]"
     },
     "resources": [
          //etlApiAppInsightsName
@@ -1596,6 +1600,57 @@
                 "functionsRuntimeScaleMonitoringEnabled": false,
                 "minimumElasticInstanceCount": 1,
                 "azureStorageAccounts": {}
+            }
+        },
+		//STORAGEACCOUNT SET VNET ONLY IN PREMIUM DEPLOYMENT
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-06-01",
+            "name": "[variables('storageAccountName')]",
+			"condition": "[equals(parameters('Deploymenttype'),'Premium')]",
+            "location": "[variables('location')]",
+            "sku": {
+                "name": "Standard_RAGRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": true,
+                "allowSharedKeyAccess": true,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
+                            "action": "Allow"
+                        },
+                        {
+                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet2Name'))]",
+                            "action": "Allow"
+                        }
+                    ],
+                    "ipRules": [],
+                    "resourceAccessRules": [],
+                    "defaultAction": "Deny"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "defaultToOAuthAuthentication": false,
+                "allowCrossTenantReplication": true,
+                "accessTier": "Hot"
             }
         }
     ],
