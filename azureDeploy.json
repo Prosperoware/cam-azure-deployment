@@ -115,7 +115,15 @@
 			"metadata": {
 				"description": "Location for all resources."
 			}
+		},
+		"publicIPAddresses_NatPublicIP_name": {
+			"type": "string",
+			"defaultValue": "NatPublicIP",
+			"metadata": {
+				"description": "Public ip for nat"
+			}
 		}
+		
 	},
 	"variables": {
 		"commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), replace(parameters('TopLevelDomain'), '.', ''))]",
@@ -3682,6 +3690,9 @@
 					"uri": "[concat(variables('repo'), variables('branch'), '/nestedChildVnetEndpoints.json')]"
 				},
 				"parameters": {
+					"publicIPAddresses_NatPublicIP_name": {
+						"value": "[parameters('publicIPAddresses_NatPublicIP_name')]"
+					},
 					"Features": {
 						"value": "[parameters('Features')]"
 					},
