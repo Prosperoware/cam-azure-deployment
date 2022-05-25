@@ -198,6 +198,14 @@
 							"natGateway": {
                                 "id": "[resourceId('Microsoft.Network/natGateways', parameters('natGateways_PwNATgateway_name'))]"
                             },
+							"serviceEndpoints": [
+								{
+									"service": "Microsoft.ServiceBus"
+								},
+								{
+									"service": "Microsoft.Storage"
+								}
+							],
 							"delegations": [
 								{
 									"name": "delegation",
@@ -207,14 +215,7 @@
 								}
 							],
 							"privateEndpointNetworkPolicies": "Disabled",
-							"serviceEndpoints": [
-								{
-									"service": "Microsoft.ServiceBus"
-								},
-								{
-									"service": "Microsoft.Storage"
-								}
-							]
+							"privateLinkServiceNetworkPolicies": "Enabled"
 						}
 					},
 					{
@@ -226,7 +227,9 @@
 								{
 									"service": "Microsoft.Storage"
 								}
-							]
+							],
+							"privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
 						}
 					}
 				]
