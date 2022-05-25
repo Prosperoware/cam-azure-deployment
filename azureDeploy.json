@@ -3809,6 +3809,12 @@
 					},
 					"repo": {
 						"value": "[variables('repo')]"
+					},
+					"vnetName": {
+						"value": "[parameters('vnetName')]"
+					},
+					"subnet1Name": {
+						"value": "[parameters('subnet1Name')]"
 					}
 				}
 			}
