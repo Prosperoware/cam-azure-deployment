@@ -218,6 +218,9 @@
 						"name": "[parameters('subnet2Name')]",
 						"properties": {
 							"addressPrefix": "[parameters('subnet2Prefix')]",
+							"natGateway": {
+                                "id": "[resourceId('Microsoft.Network/natGateways', parameters('natGateways_PwNATgateway_name'))]"
+                            },
 							"privateEndpointNetworkPolicies": "Disabled",
 							"serviceEndpoints": [
 								{
