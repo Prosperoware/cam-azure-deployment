@@ -813,9 +813,119 @@
                 "minimumElasticInstanceCount": 1,
                 "azureStorageAccounts": {}
             }
-        }
+        },
         //etlMappingAppInsightsName
-        
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(variables('etlMappingAppName'), '/web')]",
+            "location": "[variables('location')]",
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "remoteDebuggingVersion": "VS2019",
+                "httpLoggingEnabled": false,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": false,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": false
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetRouteAllEnabled": true,
+                "vnetPrivatePortsCount": 0,
+                "localMySqlEnabled": false,
+                "managedServiceIdentityId": 18913,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "3.9.236.119/32",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 100,
+                        "name": "IP cam1"
+                    },
+                    {
+                        "ipAddress": "18.130.49.85/32",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 100,
+                        "name": "IP cam2"
+                    },
+                    {
+                        "ipAddress": "18.205.167.41/32",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 100,
+                        "name": "IP cam3"
+                    },
+                    {
+                        "ipAddress": "34.198.68.230/32",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 100,
+                        "name": "IP cam4"
+                    },
+                    {
+                        "ipAddress": "20.124.180.227/32",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 100,
+                        "name": "NatGWIp"
+                    },
+                    {
+                        "ipAddress": "Any",
+                        "action": "Deny",
+                        "priority": 2147483647,
+                        "name": "Deny all",
+                        "description": "Deny all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.0",
+                "ftpsState": "Disabled",
+                "preWarmedInstanceCount": 1,
+                "functionAppScaleLimit": 0,
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 1,
+                "azureStorageAccounts": {}
+            }
+        }
         //etlProcessAppInsightsName
         
         //etlActionAppInsightsName
