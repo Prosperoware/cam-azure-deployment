@@ -3769,7 +3769,7 @@
 				},
 				"parameters": {
 					"Deploymenttype": {
-						"value": "Standard"
+						"value": "[parameters('Deploymenttype')]"
 					},
 					"ServiceBusResourceId": {
 						"value": "[resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName'))]"
