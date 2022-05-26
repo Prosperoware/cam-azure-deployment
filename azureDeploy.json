@@ -3870,6 +3870,91 @@
 					}
 				}
 			}
+		},
+		// CHILD3 - RESTRICT STORAGE
+		{
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2021-04-01",
+			"name": "RestrictStorage",
+			"dependsOn": [
+				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+				"[resourceId('Microsoft.Web/sites', variables('configAppName'))]",
+				"[resourceId('Microsoft.Web/sites', variables('etlApiAppName'))]",
+				"[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+				"[resourceId('Microsoft.Web/sites', variables('etlMappingAppName'))]",
+				"[resourceId('Microsoft.Web/sites', variables('etlProcessAppName'))]",
+				"[resourceId('Microsoft.Web/sites', variables('etlActionAppName'))]",
+				"[resourceId('Microsoft.Web/sites', variables('csApiAppName'))]",
+				"[resourceId('Microsoft.Web/sites', variables('csProcessAppName'))]",
+				"[resourceId('Microsoft.Web/sites', variables('csRetryAppName'))]",
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]",
+				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateC1')]",
+				"[resourceId('Microsoft.Resources/deployments', 'RestrictFunctionsAccess')]"
+			],
+			"properties": {
+				"expressionEvaluationOptions": {
+					"scope": "outer"
+				},
+				"mode": "Incremental",
+				"templateLink": {
+					"uri": "[concat(variables('repo'), variables('branch'), '/NestedRestrictStorage.json')]"
+				},
+				"parameters": {
+					"Deploymenttype": {
+						"value": "[parameters('Deploymenttype')]"
+					},
+					"ServiceBusResourceId": {
+						"value": "[resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName'))]"
+					},
+					"ProsperowareTenantId": {
+						"value": "[parameters('ProsperowareTenantId')]"
+					},
+					"ProsperowareEncryptedKey": {
+						"value": "[parameters('ProsperowareEncryptedKey')]"
+					},
+					"ProsperowareSecretKey": {
+						"value": "[parameters('ProsperowareSecretKey')]"
+					},
+					"Features": {
+						"value": "[parameters('Features')]"
+					},
+					"EnvironmentStage": {
+						"value": "[parameters('EnvironmentStage')]"
+					},
+					"InstanceUniqueName": {
+						"value": "[parameters('InstanceUniqueName')]"
+					},
+					"TopLevelDomain": {
+						"value": "[parameters('TopLevelDomain')]"
+					},
+					"administratorLogin": {
+						"value": "[parameters('administratorLogin')]"
+					},
+					"administratorLoginPassword": {
+						"value": "[parameters('administratorLoginPassword')]"
+					},
+					"serverfarmresourceid": {
+						"value": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]"
+					},
+					"branch": {
+						"value": "[variables('branch')]"
+					},
+					"repo": {
+						"value": "[variables('repo')]"
+					},
+					"vnetName": {
+						"value": "[parameters('vnetName')]"
+					},
+					"subnet1Name": {
+						"value": "[parameters('subnet1Name')]"
+					},
+					"subnet2Name": {
+						"value": "[parameters('subnet2Name')]"
+					}
+				}
+			}
 		}
 	],
 	"outputs": {

@@ -1601,57 +1601,6 @@
                 "minimumElasticInstanceCount": 1,
                 "azureStorageAccounts": {}
             }
-        },
-		//STORAGEACCOUNT SET VNET ONLY IN PREMIUM DEPLOYMENT
-        {
-            "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2021-06-01",
-            "name": "[variables('storageAccountName')]",
-			"condition": "[equals(parameters('Deploymenttype'),'Premium')]",
-            "location": "[variables('location')]",
-            "sku": {
-                "name": "Standard_RAGRS",
-                "tier": "Standard"
-            },
-            "kind": "StorageV2",
-            "properties": {
-                "minimumTlsVersion": "TLS1_2",
-                "allowBlobPublicAccess": true,
-                "allowSharedKeyAccess": true,
-                "networkAcls": {
-                    "bypass": "AzureServices",
-                    "virtualNetworkRules": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                            "action": "Allow"
-                        },
-                        {
-                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet2Name'))]",
-                            "action": "Allow"
-                        }
-                    ],
-                    "ipRules": [],
-                    "resourceAccessRules": [],
-                    "defaultAction": "Deny"
-                },
-                "supportsHttpsTrafficOnly": true,
-                "encryption": {
-                    "services": {
-                        "file": {
-                            "keyType": "Account",
-                            "enabled": true
-                        },
-                        "blob": {
-                            "keyType": "Account",
-                            "enabled": true
-                        }
-                    },
-                    "keySource": "Microsoft.Storage"
-                },
-                "defaultToOAuthAuthentication": false,
-                "allowCrossTenantReplication": true,
-                "accessTier": "Hot"
-            }
         }
     ],
     "outputs": {
