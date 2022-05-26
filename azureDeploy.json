@@ -3814,7 +3814,7 @@
 				},
 				"mode": "Incremental",
 				"templateLink": {
-					"uri": "[concat(variables('repo'), variables('branch'), '/RestrictFunctionsAccess.json')]"
+					"uri": "[concat(variables('repo'), variables('branch'), '/NestedRestrictFunctionsAccess.json')]"
 				},
 				"parameters": {
 					"Deploymenttype": {
