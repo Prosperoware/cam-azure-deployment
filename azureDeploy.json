@@ -1472,10 +1472,6 @@
 							"value": "[variables('etlApiAppName')]"
 						},
 						{
-							"name": "WEBSITE_CONTENTOVERVNET",
-							"value": "1"
-						},
-						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
 						},
@@ -1644,10 +1640,6 @@
 							"value": "[variables('etlRenewalTopicName')]"
 						},
 						{
-							"name": "WEBSITE_CONTENTOVERVNET",
-							"value": "1"
-						},
-						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
 						},
@@ -1813,10 +1805,6 @@
 						{
 							"name": "etl_mapping_worker_topic",
 							"value": "[variables('etlMappingTopicName')]"
-						},
-						{
-							"name": "WEBSITE_CONTENTOVERVNET",
-							"value": "1"
 						},
 						{
 							"name": "WEBSITE_DNS_SERVER",
@@ -1993,10 +1981,6 @@
 							"value": "60"
 						},
 						{
-							"name": "WEBSITE_CONTENTOVERVNET",
-							"value": "1"
-						},
-						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
 						},
@@ -2158,10 +2142,6 @@
 						{
 							"name": "etl_mapping_action_topic",
 							"value": "[variables('etlActionTopicName')]"
-						},
-						{
-							"name": "WEBSITE_CONTENTOVERVNET",
-							"value": "1"
 						},
 						{
 							"name": "WEBSITE_DNS_SERVER",
@@ -2483,10 +2463,6 @@
 							"value": "[variables('csApiAppName')]"
 						},
 						{
-							"name": "WEBSITE_CONTENTOVERVNET",
-							"value": "1"
-						},
-						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
 						},
@@ -2662,10 +2638,6 @@
 							"value": "60"
 						},
 						{
-							"name": "WEBSITE_CONTENTOVERVNET",
-							"value": "1"
-						},
-						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
 						},
@@ -2830,10 +2802,6 @@
 						{
 							"name": "contentSyncRetryHandler_timeout_sec",
 							"value": "600"
-						},
-						{
-							"name": "WEBSITE_CONTENTOVERVNET",
-							"value": "1"
 						},
 						{
 							"name": "WEBSITE_DNS_SERVER",
