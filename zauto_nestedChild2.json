@@ -281,10 +281,6 @@
 							"value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
 						{
-							"name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[if(variables('isETL'), reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))).InstrumentationKey, '')]"
-						},
-						{
 							"name": "service_id",
 							"value": "[variables('etlApiAppName')]"
 						},
@@ -441,10 +437,6 @@
 							"value": "[concat('https://', variables('etlRenewalAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
 						{
-							"name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[if(variables('isETL'), reference(resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))).InstrumentationKey, '')]"
-						},
-						{
 							"name": "service_id",
 							"value": "[variables('etlRenewalAppName')]"
 						},
@@ -528,7 +520,6 @@
 			"name": "[variables('etlMappingAppName')]",
 			"location": "[variables('location')]",
 			"dependsOn": [
-				"[resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName'))]",
 				"[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
 			],
 			"kind": "functionapp",
@@ -617,10 +608,6 @@
 							"value": "[concat('https://', variables('etlMappingAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
 						{
-							"name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[if(variables('isETL'), reference(resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName'))).InstrumentationKey, '')]"
-						},
-						{
 							"name": "service_id",
 							"value": "[variables('etlMappingAppName')]"
 						},
@@ -704,7 +691,6 @@
 			"name": "[variables('etlProcessAppName')]",
 			"location": "[variables('location')]",
 			"dependsOn": [
-				"[resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))]",
 				"[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
 			],
 			"kind": "functionapp",
@@ -797,10 +783,6 @@
 							"value": "[concat('https://', variables('etlProcessAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
 						{
-							"name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[if(variables('isETL'), reference(resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))).InstrumentationKey, '')]"
-						},
-						{
 							"name": "service_id",
 							"value": "[variables('etlProcessAppName')]"
 						},
@@ -887,9 +869,6 @@
 			"apiVersion": "2018-11-01",
 			"name": "[variables('etlActionAppName')]",
 			"location": "[variables('location')]",
-			"dependsOn": [
-				"[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]"
-			],
 			"kind": "functionapp",
 			"identity": {
 				"type": "SystemAssigned"
@@ -976,10 +955,6 @@
 							"value": "[concat('https://', variables('etlActionAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
 						{
-							"name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[if(variables('isETL'), reference(resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))).InstrumentationKey, '')]"
-						},
-						{
 							"name": "service_id",
 							"value": "[variables('etlActionAppName')]"
 						},
@@ -1057,9 +1032,6 @@
 			"apiVersion": "2018-11-01",
 			"name": "[variables('configAppName')]",
 			"location": "[variables('Location')]",
-			"dependsOn": [
-				"[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]"
-			],
 			"kind": "functionapp",
 			"identity": {
 				"type": "SystemAssigned"
@@ -1096,14 +1068,6 @@
 						{
 							"name": "WEBSITE_NODE_DEFAULT_VERSION",
 							"value": "~14"
-						},
-						{
-							"name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName')), '2020-02-02-preview').InstrumentationKey]"
-						},
-						{
-							"name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName')), '2020-02-02-preview').ConnectionString]"
 						},
 						{
 							"name": "AzureWebJobsStorage",
@@ -1236,7 +1200,6 @@
 			"name": "[variables('csApiAppName')]",
 			"location": "[variables('location')]",
 			"dependsOn": [
-				"[resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName'))]",
 				"[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
 			],
 			"kind": "functionapp",
@@ -1325,10 +1288,6 @@
 							"value": "[concat('https://', variables('csApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
 						{
-							"name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[if(variables('isCS'), reference(resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName'))).InstrumentationKey, '')]"
-						},
-						{
 							"name": "service_id",
 							"value": "[variables('csApiAppName')]"
 						},
@@ -1400,7 +1359,6 @@
 			"name": "[variables('csProcessAppName')]",
 			"location": "[variables('location')]",
 			"dependsOn": [
-				"[resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName'))]",
 				"[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
 			],
 			"kind": "functionapp",
@@ -1491,10 +1449,6 @@
 						{
 							"name": "api_base_url",
 							"value": "[concat('https://', variables('csProcessAppName'), '.azurewebsites.net', variables('apiVersion'))]"
-						},
-						{
-							"name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[if(variables('isCS'), reference(resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName'))).InstrumentationKey, '')]"
 						},
 						{
 							"name": "service_id",
@@ -1671,10 +1625,6 @@
 						{
 							"name": "api_base_url",
 							"value": "[concat('https://', variables('csRetryAppName'), '.azurewebsites.net', variables('apiVersion'))]"
-						},
-						{
-							"name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[if(variables('isCS'), reference(resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))).InstrumentationKey, '')]"
 						},
 						{
 							"name": "service_id",
