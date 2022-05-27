@@ -3843,7 +3843,7 @@
 		{
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2021-04-01",
-			"name": "RestrictStorage",
+			"name": "SetFunctionsVnetAccess",
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
