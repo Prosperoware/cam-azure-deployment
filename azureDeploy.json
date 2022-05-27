@@ -3867,7 +3867,7 @@
 				},
 				"mode": "Incremental",
 				"templateLink": {
-					"uri": "[concat(variables('repo'), variables('branch'), '/NestedRestrictStorage.json')]"
+					"uri": "[concat(variables('repo'), variables('branch'), '/nestedChild2.json')]"
 				},
 				"parameters": {
 					"Deploymenttype": {
@@ -3903,9 +3903,6 @@
 					"administratorLoginPassword": {
 						"value": "[parameters('administratorLoginPassword')]"
 					},
-					"serverfarmresourceid": {
-						"value": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]"
-					},
 					"branch": {
 						"value": "[variables('branch')]"
 					},
@@ -3917,9 +3914,6 @@
 					},
 					"subnet1Name": {
 						"value": "[parameters('subnet1Name')]"
-					},
-					"subnet2Name": {
-						"value": "[parameters('subnet2Name')]"
 					}
 				}
 			}
