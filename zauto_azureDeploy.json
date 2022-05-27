@@ -3760,6 +3760,7 @@
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2021-04-01",
 			"name": "RestrictFunctionsAccess",
+			"condition": "[equals(parameters('Deploymenttype'),'Premium')]",
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
@@ -3844,6 +3845,7 @@
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2021-04-01",
 			"name": "SetFunctionsVnetAccess",
+			"condition": "[equals(parameters('Deploymenttype'),'Premium')]",
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
