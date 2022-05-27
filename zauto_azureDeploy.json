@@ -1325,7 +1325,7 @@
 				},
 				"mode": "Incremental",
 				"templateLink": {
-					"uri": "[concat(variables('repo'), variables('branch'),  '/zauto_nestedChildVnet.json')]"
+					"uri": "[concat(variables('repo'), variables('branch'),'/zauto_nestedChildVnet.json')]"
 				},
 				"parameters": {
 					"Features": {
@@ -3636,7 +3636,7 @@
 				},
 				"mode": "Incremental",
 				"templateLink": {
-					"uri": "[concat(variables('repo'), variables('branch'), '/zauto_nestedChildVnetEndpoints.json')]"
+					"uri": "[concat(variables('repo'), variables('branch'),'/zauto_nestedChildVnetEndpoints.json')]"
 				},
 				"parameters": {
 					"publicIPAddresses_NatPublicIP_name": {
@@ -3701,7 +3701,7 @@
 				},
 				"mode": "Incremental",
 				"templateLink": {
-					"uri": "[concat(variables('repo'), variables('branch'), '/zauto_nestedChild.json')]"
+					"uri": "[concat(variables('repo'), variables('branch'),'/zauto_nestedChild.json')]"
 				},
 				"parameters": {
 					"Deploymenttype": {
@@ -3782,7 +3782,7 @@
 				},
 				"mode": "Incremental",
 				"templateLink": {
-					"uri": "[concat(variables('repo'), variables('branch'), '/zauto_nestedRestrictFunctionsAccess.json')]"
+					"uri": "[concat(variables('repo'), variables('branch'),'/zauto_nestedRestrictFunctionsAccess.json')]"
 				},
 				"parameters": {
 					"Deploymenttype": {
@@ -3867,7 +3867,7 @@
 				},
 				"mode": "Incremental",
 				"templateLink": {
-					"uri": "[concat(variables('repo'), variables('branch'), '/zauto_nestedChild2.json')]"
+					"uri": "[concat(variables('repo'), variables('branch'),'/zauto_nestedChild2.json')]"
 				},
 				"parameters": {
 					"Deploymenttype": {
