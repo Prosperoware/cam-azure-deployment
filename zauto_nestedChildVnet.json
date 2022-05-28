@@ -277,5 +277,10 @@
 			}
 		}
 	],
-	"outputs": {}
+	"outputs": {
+		"publicip": {
+			"type": "string",
+			"value": "[reference(parameters('publicIPAddresses_NatPublicIP_name')).ipAddress]"
+		}
+	}
 }

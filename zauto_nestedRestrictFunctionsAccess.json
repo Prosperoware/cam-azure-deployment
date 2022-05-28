@@ -48,14 +48,14 @@
               "description": "VNet name"
             }
         },
-          "subnet1Name": {
+        "subnet1Name": {
             "type": "string",
             "defaultValue": "Subnet1",
             "metadata": {
               "description": "Subnet 1 Name"
             }
         },
-          "subnet2Name": {
+        "subnet2Name": {
             "type": "string",
             "defaultValue": "Subnet2",
             "metadata": {
@@ -103,6 +103,12 @@
 			"type": "string",
 			"metadata": {
 				"description": "Server farm resource id"
+			}
+		},
+		"publicip": { //
+			"type": "securestring",
+			"metadata": {
+				"description": "Natipaddress"
 			}
 		}
     },
@@ -223,7 +229,7 @@
                         "name": "IP cam4"
                     },
                     {
-                        "ipAddress": "20.124.180.227/32",
+                        "ipAddress": "[concat(parameters('publicip'),'/32')]",
                         "action": "Allow",
                         "tag": "Default",
                         "priority": 100,
@@ -783,7 +789,7 @@
                         "name": "IP cam4"
                     },
                     {
-                        "ipAddress": "20.124.180.227/32",
+                        "ipAddress": "[concat(parameters('publicip'),'/32')]",
                         "action": "Allow",
                         "tag": "Default",
                         "priority": 100,
@@ -895,7 +901,7 @@
                         "name": "IP cam4"
                     },
                     {
-                        "ipAddress": "20.124.180.227/32",
+                        "ipAddress": "[concat(parameters('publicip'),'/32')]",
                         "action": "Allow",
                         "tag": "Default",
                         "priority": 100,
@@ -1007,7 +1013,7 @@
                         "name": "IP cam4"
                     },
                     {
-                        "ipAddress": "20.124.180.227/32",
+                        "ipAddress": "[concat(parameters('publicip'),'/32')]",
                         "action": "Allow",
                         "tag": "Default",
                         "priority": 100,
@@ -1119,7 +1125,7 @@
                         "name": "IP cam4"
                     },
                     {
-                        "ipAddress": "20.124.180.227/32",
+                        "ipAddress": "[concat(parameters('publicip'),'/32')]",
                         "action": "Allow",
                         "tag": "Default",
                         "priority": 100,
@@ -1231,7 +1237,7 @@
                         "name": "IP cam4"
                     },
                     {
-                        "ipAddress": "20.124.180.227/32",
+                        "ipAddress": "[concat(parameters('publicip'),'/32')]",
                         "action": "Allow",
                         "tag": "Default",
                         "priority": 100,
@@ -1343,7 +1349,7 @@
                         "name": "IP cam4"
                     },
                     {
-                        "ipAddress": "20.124.180.227/32",
+                        "ipAddress": "[concat(parameters('publicip'),'/32')]",
                         "action": "Allow",
                         "tag": "Default",
                         "priority": 100,
@@ -1455,7 +1461,7 @@
                         "name": "IP cam4"
                     },
                     {
-                        "ipAddress": "20.124.180.227/32",
+                        "ipAddress": "[concat(parameters('publicip'),'/32')]",
                         "action": "Allow",
                         "tag": "Default",
                         "priority": 100,
@@ -1567,7 +1573,7 @@
                         "name": "IP cam4"
                     },
                     {
-                        "ipAddress": "20.124.180.227/32",
+                        "ipAddress": "[concat(parameters('publicip'),'/32')]",
                         "action": "Allow",
                         "tag": "Default",
                         "priority": 100,
