@@ -1,0 +1,286 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"Features": {
+			"type": "string",
+			"allowedValues": ["ETL", "Content Sync", "Both"]
+		},
+		"EnvironmentStage": {
+			"type": "string",
+			"allowedValues": ["dev", "qa", "stg", "prod"]
+		},
+		"InstanceUniqueName": {
+			"type": "string",
+			"minLength": 3,
+			"maxLength": 11
+		},
+		"TopLevelDomain": {
+			"type": "string",
+			"allowedValues": ["io", "eu", "com", "co.uk"]
+		},
+		"vnetName": {
+			"type": "string",
+			"defaultValue": "VNet1",
+			"metadata": {
+				"description": "VNet name"
+			}
+		},
+		"vnetAddressPrefix": {
+			"type": "string",
+			"defaultValue": "10.0.0.0/16",
+			"metadata": {
+				"description": "Address prefix"
+			}
+		},
+		"subnet1Prefix": {
+			"type": "string",
+			"defaultValue": "10.0.0.0/24",
+			"metadata": {
+				"description": "Subnet 1 Prefix"
+			}
+		},
+		"subnet1Name": {
+			"type": "string",
+			"defaultValue": "Subnet1",
+			"metadata": {
+				"description": "Subnet 1 Name"
+			}
+		},
+		"subnet2Prefix": {
+			"type": "string",
+			"defaultValue": "10.0.1.0/24",
+			"metadata": {
+				"description": "Subnet 2 Prefix"
+			}
+		},
+		"subnet2Name": {
+			"type": "string",
+			"defaultValue": "Subnet2",
+			"metadata": {
+				"description": "Subnet 2 Name"
+			}
+		},
+		"location": {
+			"type": "string",
+			"defaultValue": "[resourceGroup().location]",
+			"metadata": {
+				"description": "Location for all resources."
+			}
+		},
+		"publicIPAddresses_NatPublicIP_name": {
+			"type": "string",
+			"defaultValue": "NatPublicIP",
+			"metadata": {
+				"description": "Nat public ip address"
+			}
+		},
+		"natGateways_PwNATgateway_name": {
+			"type": "string",
+			"defaultValue": "PwNATgateway",
+			"metadata": {
+				"description": "Nat GW name"
+			}
+		}
+	},
+	"variables": {
+		"commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), replace(parameters('TopLevelDomain'), '.', ''))]",
+		"resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', replace(parameters('TopLevelDomain'), '.', ''))]",
+		"storageAccountName": "[concat('strg',variables('commonId'))]",
+		"applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
+		"encryptedBucket": "[concat(variables('resourcesNamespace'), '-encrypted-bucket')]",
+		"mySqlServerName": "[concat('mysql-', variables('resourcesNamespace'))]",
+		"cosmosName": "[concat('cosmos-', variables('resourcesNamespace'))]",
+		"serviceBusName": "[concat('servicebus-', variables('resourcesNamespace'))]",
+		"cosmosTenantdb": "[concat(variables('resourcesNamespace'),'-contentsync-tenant')]",
+		"etlQueueName": "[concat(variables('resourcesNamespace'), '-etl-process-v1')]",
+		"csQueueName": "[concat(variables('resourcesNamespace'), '-job-process-v1')]",
+		"etlRenewalTopicName": "[concat(variables('resourcesNamespace'), '-etl_renewal_worker_start')]",
+		"etlMappingTopicName": "[concat(variables('resourcesNamespace'), '-etl_mapping_worker_start')]",
+		"reloadTopicName": "[concat(variables('resourcesNamespace'), '-systemauth_reload')]",
+		"etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
+		"webServerName": "[concat(variables('resourcesNamespace'), '-api-app-srvr')]",
+		"etlApiAppName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
+		"etlRenewalAppName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
+		"etlMappingAppName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
+		"etlProcessAppName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
+		"etlActionAppName": "[concat(variables('resourcesNamespace'), '-etl-action')]",
+		"configAppName": "[concat(variables('resourcesNamespace'), '-etl-config')]",
+		"csApiAppName": "[concat(variables('resourcesNamespace'), '-contentsync-api')]",
+		"csProcessAppName": "[concat(variables('resourcesNamespace'), '-contentsync-process')]",
+		"csRetryAppName": "[concat(variables('resourcesNamespace'), '-contentsync-retry')]",
+		"Location": "[resourceGroup().location]",
+		"apiVersion": "/api/v1",
+		"authorizationRulesName": "RootManageSharedAccessKey",
+		"etlApiAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
+		"etlRenewalAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
+		"etlMappingAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
+		"etlProcessAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
+		"etlActionAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-action')]",
+		"configAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-config')]",
+		"csApiAppInsightsName": "[concat(variables('resourcesNamespace'), '-contentsync-api')]",
+		"csProcessAppInsightsName": "[concat(variables('resourcesNamespace'), '-contentsync-process')]",
+		"csRetryAppInsightsName": "[concat(variables('resourcesNamespace'), '-contentsync-retry')]",
+		"readerAndDataAccess": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'c12c1c16-33a1-487b-954d-41c89c60f349')]",
+		"strgKeyOperator": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '81a9662b-bebf-436f-a333-f67b29880f12')]",
+		"owner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
+		"sbDataOwner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '090c5cfd-751d-490a-894a-3ce6f1109419')]",
+		"strgBlobDataOwner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b')]",
+		"raEtlApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
+		"raEtlRenewalAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
+		"raEtlMappingAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
+		"raEtlProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
+		"raEtlActionAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
+		"raConfigAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('configAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
+		"raCsApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csApiAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
+		"raCsProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
+		"raCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
+		"skEtlApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
+		"skEtlRenewalAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
+		"skEtlMappingAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
+		"skEtlProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
+		"skEtlActionAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
+		"skConfigAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('configAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
+		"skCsApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csApiAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
+		"skCsProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
+		"skCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
+		"sbEtlApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
+		"sbEtlRenewalAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
+		"sbEtlMappingAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
+		"sbEtlProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
+		"sbEtlActionAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
+		"sbConfigAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('configAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
+		"sbCsApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csApiAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
+		"sbCsProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
+		"sbCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
+		"sbDataOwnerEtlApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
+		"sbDataOwnerEtlRenewalAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
+		"sbDataOwnerEtlMappingAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
+		"sbDataOwnerEtlProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
+		"sbDataOwnerEtlActionAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
+		"sbDataOwnerConfigAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('configAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
+		"sbDataOwnerCsApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csApiAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
+		"sbDataOwnerCsProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
+		"sbDataOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
+		"strgBlobOwnerEtlApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlApiAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('strgBlobDataOwner'))]",
+		"strgBlobOwnerEtlRenewalAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlRenewalAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
+		"strgBlobOwnerEtlMappingAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
+		"strgBlobOwnerEtlProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
+		"strgBlobOwnerEtlActionAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
+		"strgBlobOwnerConfigAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('configAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
+		"strgBlobOwnerCsApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csApiAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
+		"strgBlobOwnerCsProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
+		"strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
+		"isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
+		"isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
+		"branch": "SeparateIacFromCode"
+	},
+	"resources": [
+		//PREMIUM TEMPLATE
+		// PUBLIC IP
+		{
+			"type": "Microsoft.Network/publicIPAddresses",
+			"apiVersion": "2020-11-01",
+			"name": "[parameters('publicIPAddresses_NatPublicIP_name')]",
+			"location": "[parameters('location')]",
+			"sku": {
+				"name": "Standard",
+				"tier": "Regional"
+			},
+			"properties": {
+				"publicIPAddressVersion": "IPv4",
+				"publicIPAllocationMethod": "Static",
+				"idleTimeoutInMinutes": 4,
+				"ipTags": []
+			}
+		},
+		//NAT GATEWAY
+        {
+            "type": "Microsoft.Network/natGateways",
+            "apiVersion": "2020-11-01",
+            "name": "PwNATgateway",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_NatPublicIP_name'))]"
+            ],
+            "sku": {
+                "name": "Standard",
+                "tier": "Regional"
+            },
+            "properties": {
+                "idleTimeoutInMinutes": 10,
+                "publicIpAddresses": [
+                    {
+                        "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_NatPublicIP_name'))]"
+                    }
+                ]
+            }
+        },
+		//VIRTUALNETWORK
+		{
+			"type": "Microsoft.Network/virtualNetworks",
+			"apiVersion": "2020-06-01",
+			"name": "[parameters('vnetName')]",
+			"location": "[parameters('location')]",
+			"dependsOn": [
+                "[resourceId('Microsoft.Network/natGateways', parameters('natGateways_PwNATgateway_name'))]"
+            ],
+			"properties": {
+				"addressSpace": {
+					"addressPrefixes": ["[parameters('vnetAddressPrefix')]"]
+				},
+				"subnets": [
+					{
+						"name": "[parameters('subnet1Name')]",
+						"properties": {
+							"addressPrefix": "[parameters('subnet1Prefix')]",
+							"natGateway": {
+                                "id": "[resourceId('Microsoft.Network/natGateways', parameters('natGateways_PwNATgateway_name'))]"
+                            },
+							"serviceEndpoints": [
+								{
+									"service": "Microsoft.AzureCosmosDB"
+								},
+								{
+									"service": "Microsoft.Storage"
+								},
+								{
+									"service": "Microsoft.ServiceBus"
+								}
+							],
+							"delegations": [
+								{
+									"name": "delegation",
+									"properties": {
+										"serviceName": "Microsoft.Web/serverfarms"
+									}
+								}
+							],
+							"privateEndpointNetworkPolicies": "Disabled",
+							"privateLinkServiceNetworkPolicies": "Enabled"
+						}
+					},
+					{
+						"name": "[parameters('subnet2Name')]",
+						"properties": {
+							"addressPrefix": "[parameters('subnet2Prefix')]",
+							"serviceEndpoints": [
+								{
+									"service": "Microsoft.Storage"
+								}
+							],
+							"privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+						}
+					}
+				]
+			}
+		}
+	],
+	"outputs": {
+		"publicip": {
+			"type": "string",
+			"value": "[reference(parameters('publicIPAddresses_NatPublicIP_name')).ipAddress]"
+		}
+	}
+}
