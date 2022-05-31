@@ -2461,7 +2461,7 @@
                                 "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
                             ],
                             "properties": {
-                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-renewal.zip')]",
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-office-audit.zip')]",
                                 "setParameters": {}
                             }
                         },
