@@ -412,10 +412,10 @@
 					"storageAutogrow": "Enabled"
 				},
 				"version": "5.7",
-				"sslEnforcement": "Disabled",
+				"sslEnforcement": "[if(equals(parameters('Deploymenttype'),'Standard'),'Disabled','Enabled')]",
 				"minimalTlsVersion": "TLSEnforcementDisabled",
 				"infrastructureEncryption": "Disabled",
-				"publicNetworkAccess": "Enabled"
+				"publicNetworkAccess": "[if(equals(parameters('Deploymenttype'),'Standard'),'Enabled','Disabled')]",
 			},
 			"resources": [
 				{
@@ -446,6 +446,20 @@
 				}
 			]
 		},
+		{
+            "type": "Microsoft.DBforMySQL/servers/virtualNetworkRules",
+            "apiVersion": "2017-12-01",
+            "name": "[concat(variables('mySqlServerName'), '/vnetrule')]",
+			"condition": "[equals(parameters('Deploymenttype'),'Premium')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), 'Subnet1')]"
+            ],
+            "properties": {
+                "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('mySqlServerName'), 'Subnet1')]",
+                "ignoreMissingVnetServiceEndpoint": false
+            }
+        }
 		//COSMOSDB
 		{
 			"type": "Microsoft.DocumentDB/databaseAccounts",

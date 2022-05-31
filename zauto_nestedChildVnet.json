@@ -246,6 +246,9 @@
 								},
 								{
 									"service": "Microsoft.ServiceBus"
+								},
+								{
+									"service": "Microsoft.SQL"
 								}
 							],
 							"delegations": [
