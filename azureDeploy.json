@@ -79,12 +79,15 @@
         "etlMappingTopicName": "[concat(variables('resourcesNamespace'), '-etl_mapping_worker_start')]",
         "reloadTopicName": "[concat(variables('resourcesNamespace'), '-systemauth_reload')]",
         "etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
+        "etlOfficeAuditDownloadTopicName": "[concat(variables('resourcesNamespace'), '-etl_audit_download_worker_start')]",
+        "etlOfficeAuditJobUpdateTopicName": "[concat(variables('resourcesNamespace'), '-etl_audit_job_update_worker_start')]",
         "webServerName": "[concat(variables('resourcesNamespace'), '-api-app-srvr')]",
         "etlApiAppName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
         "etlRenewalAppName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
         "etlMappingAppName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
         "etlProcessAppName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
         "etlActionAppName": "[concat(variables('resourcesNamespace'), '-etl-action')]",
+        "etlOfficeAuditAppName": "[concat(variables('resourcesNamespace'), '-etl-office-audit')]",
         "configAppName": "[concat(variables('resourcesNamespace'), '-etl-config')]",
         "csApiAppName": "[concat(variables('resourcesNamespace'), '-contentsync-api')]",
         "csProcessAppName": "[concat(variables('resourcesNamespace'), '-contentsync-process')]",
@@ -97,6 +100,7 @@
         "etlMappingAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
         "etlProcessAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-process')]",
         "etlActionAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-action')]",
+        "etlOfficeAuditAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-office-audit')]",
         "configAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-config')]",
         "csApiAppInsightsName": "[concat(variables('resourcesNamespace'), '-contentsync-api')]",
         "csProcessAppInsightsName": "[concat(variables('resourcesNamespace'), '-contentsync-process')]",
@@ -111,6 +115,7 @@
         "raEtlMappingAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
         "raEtlProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
         "raEtlActionAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
+        "raEtlOfficeAuditAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
         "raConfigAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('configAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
         "raCsApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csApiAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
         "raCsProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
@@ -120,6 +125,7 @@
         "skEtlMappingAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
         "skEtlProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
         "skEtlActionAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
+        "skEtlOfficeAuditAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
         "skConfigAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('configAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
         "skCsApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csApiAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
         "skCsProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgKeyOperator'))]",
@@ -129,6 +135,7 @@
         "sbEtlMappingAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
         "sbEtlProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
         "sbEtlActionAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
+        "sbEtlOfficeAuditAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
         "sbConfigAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('configAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
         "sbCsApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csApiAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
         "sbCsProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('owner'))]",
@@ -138,6 +145,7 @@
         "sbDataOwnerEtlMappingAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
         "sbDataOwnerEtlProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
         "sbDataOwnerEtlActionAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
+        "sbDataOwnerEtlOfficeAuditAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
         "sbDataOwnerConfigAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('configAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
         "sbDataOwnerCsApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csApiAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
         "sbDataOwnerCsProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName')), variables('sbdataowner'))]",
@@ -147,6 +155,7 @@
         "strgBlobOwnerEtlMappingAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlMappingAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "strgBlobOwnerEtlProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "strgBlobOwnerEtlActionAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlActionAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
+        "strgBlobOwnerEtlOfficeAuditAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "strgBlobOwnerConfigAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('configAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "strgBlobOwnerCsApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csApiAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "strgBlobOwnerCsProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
@@ -1208,6 +1217,98 @@
                             }
                         }
                     ]
+                },
+                {
+                    "condition": "[variables('isETL')]",
+                    "type": "Microsoft.ServiceBus/namespaces/topics",
+                    "apiVersion": "2018-01-01-preview",
+                    "name": "[concat(variables('serviceBusName'), '/', variables('etlOfficeAuditDownloadTopicName'))]",
+                    "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+                    ],
+                    "properties": {
+                        "defaultMessageTimeToLive": "P14D",
+                        "maxSizeInMegabytes": 1024,
+                        "requiresDuplicateDetection": false,
+                        "duplicateDetectionHistoryTimeWindow": "PT10M",
+                        "enableBatchedOperations": true,
+                        "status": "Active",
+                        "supportOrdering": true,
+                        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                        "enablePartitioning": false,
+                        "enableExpress": false
+                    },
+                    "resources": [
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+                            "apiVersion": "2018-01-01-preview",
+                            "name": "[concat(variables('serviceBusName'), '/', variables('etlOfficeAuditDownloadTopicName'), '/', variables('etlOfficeAuditDownloadTopicName'), '-sub')]",
+                            "location": "[variables('location')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('etlOfficeAuditDownloadTopicName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+                            ],
+                            "properties": {
+                                "lockDuration": "PT5M",
+                                "requiresSession": false,
+                                "defaultMessageTimeToLive": "P14D",
+                                "deadLetteringOnMessageExpiration": false,
+                                "deadLetteringOnFilterEvaluationExceptions": false,
+                                "maxDeliveryCount": 1,
+                                "status": "Active",
+                                "enableBatchedOperations": true,
+                                "autoDeleteOnIdle": "P14D"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "condition": "[variables('isETL')]",
+                    "type": "Microsoft.ServiceBus/namespaces/topics",
+                    "apiVersion": "2018-01-01-preview",
+                    "name": "[concat(variables('serviceBusName'), '/', variables('etlOfficeAuditJobUpdateTopicName'))]",
+                    "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+                    ],
+                    "properties": {
+                        "defaultMessageTimeToLive": "P14D",
+                        "maxSizeInMegabytes": 1024,
+                        "requiresDuplicateDetection": false,
+                        "duplicateDetectionHistoryTimeWindow": "PT10M",
+                        "enableBatchedOperations": true,
+                        "status": "Active",
+                        "supportOrdering": true,
+                        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                        "enablePartitioning": false,
+                        "enableExpress": false
+                    },
+                    "resources": [
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+                            "apiVersion": "2018-01-01-preview",
+                            "name": "[concat(variables('serviceBusName'), '/', variables('etlOfficeAuditJobUpdateTopicName'), '/', variables('etlOfficeAuditJobUpdateTopicName'), '-sub')]",
+                            "location": "[variables('location')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('etlOfficeAuditJobUpdateTopicName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+                            ],
+                            "properties": {
+                                "lockDuration": "PT5M",
+                                "requiresSession": false,
+                                "defaultMessageTimeToLive": "P14D",
+                                "deadLetteringOnMessageExpiration": false,
+                                "deadLetteringOnFilterEvaluationExceptions": false,
+                                "maxDeliveryCount": 1,
+                                "status": "Active",
+                                "enableBatchedOperations": true,
+                                "autoDeleteOnIdle": "P14D"
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -1521,7 +1622,7 @@
                                 },
                                 {
                                     "name": "api_base_url",
-                                    "value": "[concat('https://', variables('etlRenewalAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+                                    "value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -1712,7 +1813,7 @@
                                 },
                                 {
                                     "name": "api_base_url",
-                                    "value": "[concat('https://', variables('etlMappingAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+                                    "value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -1907,7 +2008,7 @@
                                 },
                                 {
                                     "name": "api_base_url",
-                                    "value": "[concat('https://', variables('etlProcessAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+                                    "value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -2102,7 +2203,7 @@
                                 },
                                 {
                                     "name": "api_base_url",
-                                    "value": "[concat('https://', variables('etlActionAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+                                    "value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -2181,6 +2282,220 @@
                 }
             ]
         },
+
+
+        
+        {
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Insights/components",
+            "apiVersion": "2020-02-02-preview",
+            "name": "[variables('etlOfficeAuditAppInsightsName')]",
+            "location": "[variables('Location')]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "IngestionMode": "ApplicationInsights",
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            },
+            "resources": [
+                {
+                    "condition": "[variables('isETL')]",
+                    "type": "Microsoft.Web/sites",
+                    "apiVersion": "2018-11-01",
+                    "name": "[variables('etlOfficeAuditAppName')]",
+                    "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlOfficeAuditDownloadTopicName'), concat(variables('etlOfficeAuditDownloadTopicName'), '-sub'))]",
+                        "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlOfficeAuditJobUpdateTopicName'), concat(variables('etlOfficeAuditJobUpdateTopicName'), '-sub'))]",
+                        "[resourceId('Microsoft.Insights/components', variables('etlOfficeAuditAppInsightsName'))]"
+                    ],
+                    "kind": "functionapp",
+                    "identity": {
+                        "type": "SystemAssigned"
+                    },
+                    "properties": {
+                        "enabled": true,
+                        "hostNameSslStates": [
+                            {
+                                "name": "[concat(variables('etlOfficeAuditAppName'), '.azurewebsites.net')]",
+                                "sslState": "Disabled",
+                                "hostType": "Standard"
+                            },
+                            {
+                                "name": "[concat(variables('etlOfficeAuditAppName'), '.scm.azurewebsites.net')]",
+                                "sslState": "Disabled",
+                                "hostType": "Repository"
+                            }
+                        ],
+                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "reserved": false,
+                        "isXenon": false,
+                        "hyperV": false,
+                        "siteConfig": {
+                            "appSettings": [
+                                {
+                                    "name": "application_group",
+                                    "value": "[variables('resourcesNamespace')]"
+                                },
+                                {
+                                    "name": "AzureWebJobsDashboard",
+                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                                },
+                                {
+                                    "name": "AzureWebJobsServiceBusConnection",
+                                    "value": "[concat('Endpoint=sb://', variables('serviceBusName'), '.servicebus.windows.net/;SharedAccessKeyName=', variables('authorizationRulesName') ,';SharedAccessKey=', listKeys(resourceId('Microsoft.ServiceBus/namespaces/AuthorizationRules', variables('serviceBusName'), variables('authorizationRulesName')), '2017-04-01').primaryKey)]"
+                                },
+                                {
+                                    "name": "AzureWebJobsStorage",
+                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value)]"
+                                },
+                                {
+                                    "name": "JAVA_OPTS",
+                                    "value": "-Dfile.encoding=UTF-8"
+                                },
+                                {
+                                    "name": "WEBSITE_USE_PLACEHOLDER",
+                                    "value": "0"
+                                },
+                                {
+                                    "name": "config_basepath",
+                                    "value": "[concat('az:', variables('applicationConfigBucket'))]"
+                                },
+                                {
+                                    "name": "cs_ddt_prefix",
+                                    "value": "[variables('resourcesNamespace')]"
+                                },
+                                {
+                                    "name": "FUNCTIONS_EXTENSION_VERSION",
+                                    "value": "~3"
+                                },
+                                {
+                                    "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
+                                    "value": "1"
+                                },
+                                {
+                                    "name": "FUNCTIONS_WORKER_RUNTIME",
+                                    "value": "java"
+                                },
+                                {
+                                    "name": "lambda_profile",
+                                    "value": "[parameters('EnvironmentStage')]"
+                                },
+                                {
+                                    "name": "storage_accountname",
+                                    "value": "[variables('storageAccountName')]"
+                                },
+                                {
+                                    "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')),'2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                                },
+                                {
+                                    "name": "api_base_url",
+                                    "value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+                                },
+                                {
+                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                    "value": "[if(variables('isETL'), reference(resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))).InstrumentationKey, '')]"
+                                },
+                                {
+                                    "name": "service_id",
+                                    "value": "[variables('etlOfficeAuditAppName')]"
+                                },
+                                {
+                                    "name": "service_name",
+                                    "value": "[variables('etlOfficeAuditAppName')]"
+                                },
+                                {
+                                    "name": "etl_office_audit_download_manager_schedule",
+                                    "value": "0 1 */8 * * *"
+                                },
+                                {
+                                    "name": "etl_audit_job_update_manager_schedule",
+                                    "value": "0 1 */8 * * *"
+                                },
+                                {
+                                    "name": "etl_office_audit_subscription_manager_schedule",
+                                    "value": "0 1 */8 * * *"
+                                },
+                                {
+                                    "name": "etl_office_audit_download_worker_subscription",
+                                    "value": "[concat(variables('etlOfficeAuditDownloadTopicName'), '-sub')]"
+                                },
+                                {
+                                    "name": "etl_audit_job_update_worker_subscription",
+                                    "value": "[concat(variables('etlOfficeAuditJobUpdateTopicName'), '-sub')]"
+                                },
+                                {
+                                    "name": "etl_office_audit_download_worker_topic",
+                                    "value": "[variables('etlOfficeAuditDownloadTopicName')]"
+                                },
+                                {
+                                    "name": "etl_audit_job_update_worker_topic",
+                                    "value": "[variables('etlOfficeAuditJobUpdateTopicName')]"
+                                },
+                                {
+                                    "name": "WEBSITE_RUN_FROM_PACKAGE",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "scmSiteAlsoStopped": false,
+                        "clientAffinityEnabled": false,
+                        "clientCertEnabled": false,
+                        "hostNamesDisabled": false,
+                        "containerSize": 1536,
+                        "dailyMemoryTimeQuota": 0,
+                        "httpsOnly": false,
+                        "redundancyMode": "None"
+                    },
+                    "resources": [
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Extensions",
+                            "apiVersion": "2018-11-01",
+                            "name": "ZipDeploy",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
+                            ],
+                            "properties": {
+                                "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-renewal.zip')]",
+                                "setParameters": {}
+                            }
+                        },
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.Web/sites/providers/diagnosticsettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "location": "[variables('location')]",
+                            "name": "[concat(variables('etlRenewalAppName'), '/Microsoft.Insights/function-logs')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                            ],
+                            "properties": {
+                                "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                                "logs": [
+                                    {
+                                        "category": "FunctionAppLogs",
+                                        "enabled": true,
+                                        "retentionPolicy": {
+                                            "enabled": true,
+                                            "days": 7
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },   
+
+
+
         {
             "type": "Microsoft.Insights/components",
             "apiVersion": "2020-02-02-preview",
@@ -2666,7 +2981,7 @@
                                 },
                                 {
                                     "name": "api_base_url",
-                                    "value": "[concat('https://', variables('csProcessAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+                                    "value": "[concat('https://', variables('csApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -2864,7 +3179,7 @@
                                 },
                                 {
                                     "name": "api_base_url",
-                                    "value": "[concat('https://', variables('csRetryAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+                                    "value": "[concat('https://', variables('csApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -3027,6 +3342,27 @@
                 "principalType": "ServicePrincipal"
             }
         },
+
+
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('raEtlOfficeAuditAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlOfficeAuditAppName'), '/Extensions/ZipDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('readerAndDataAccess')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+
+
         {
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3179,6 +3515,27 @@
                 "principalType": "ServicePrincipal"
             }
         },
+
+
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skEtlOfficeAuditAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlOfficeAuditAppName'), '/Extensions/ZipDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgKeyOperator')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+
+
         {
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3331,6 +3688,25 @@
                 "principalType": "ServicePrincipal"
             }
         },
+
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('strgBlobOwnerEtlOfficeAuditAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlOfficeAuditAppName'), '/Extensions/ZipDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        
         {
             "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3483,6 +3859,25 @@
                 "principalType": "ServicePrincipal"
             }
         },
+
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbEtlOfficeAuditAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlOfficeAuditAppName'), '/Extensions/ZipDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('owner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+
         {
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -3635,6 +4030,25 @@
                 "principalType": "ServicePrincipal"
             }
         },
+
+        {
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbDataOwnerEtlOfficeAuditAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlOfficeAuditAppName'), '/Extensions/ZipDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('sbdataowner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+
         {
             "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
             "type": "Microsoft.Authorization/roleAssignments",
