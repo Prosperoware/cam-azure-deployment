@@ -2458,7 +2458,7 @@
                             "apiVersion": "2018-11-01",
                             "name": "ZipDeploy",
                             "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]"
+                                "[resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName'))]"
                             ],
                             "properties": {
                                 "packageUri": "[concat('https://github.com/Prosperoware/cam-azure-deployment/raw/', variables('branch'), '/etl-office-audit.zip')]",
@@ -2470,10 +2470,10 @@
                             "type": "Microsoft.Web/sites/providers/diagnosticsettings",
                             "apiVersion": "2017-05-01-preview",
                             "location": "[variables('location')]",
-                            "name": "[concat(variables('etlRenewalAppName'), '/Microsoft.Insights/function-logs')]",
+                            "name": "[concat(variables('etlOfficeAuditAppName'), '/Microsoft.Insights/function-logs')]",
                             "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites', variables('etlRenewalAppName'))]",
-                                "[concat('Microsoft.Web/Sites/', variables('etlRenewalAppName'), '/Extensions/ZipDeploy')]"
+                                "[resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName'))]",
+                                "[concat('Microsoft.Web/Sites/', variables('etlOfficeAuditAppName'), '/Extensions/ZipDeploy')]"
                             ],
                             "properties": {
                                 "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
