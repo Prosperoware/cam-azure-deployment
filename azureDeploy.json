@@ -2410,15 +2410,15 @@
                                 },
                                 {
                                     "name": "etl_office_audit_download_manager_schedule",
-                                    "value": "0 1 */8 * * *"
+                                    "value": "0 */2 * * * *"
                                 },
                                 {
                                     "name": "etl_audit_job_update_manager_schedule",
-                                    "value": "0 1 */8 * * *"
+                                    "value": "0 */2 * * * *"
                                 },
                                 {
                                     "name": "etl_office_audit_subscription_manager_schedule",
-                                    "value": "0 1 */8 * * *"
+                                    "value": "0 */15 * * * *"
                                 },
                                 {
                                     "name": "etl_office_audit_download_worker_subscription",
