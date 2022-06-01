@@ -1488,10 +1488,6 @@
 						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
-						},
-						{
-							"name": "WEBSITE_RUN_FROM_PACKAGE",
-							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
@@ -1656,10 +1652,6 @@
 						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
-						},
-						{
-							"name": "WEBSITE_RUN_FROM_PACKAGE",
-							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
@@ -1823,10 +1815,6 @@
 						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
-						},
-						{
-							"name": "WEBSITE_RUN_FROM_PACKAGE",
-							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
@@ -1997,10 +1985,6 @@
 						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
-						},
-						{
-							"name": "WEBSITE_RUN_FROM_PACKAGE",
-							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
@@ -2160,10 +2144,6 @@
 						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
-						},
-						{
-							"name": "WEBSITE_RUN_FROM_PACKAGE",
-							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
@@ -2479,10 +2459,6 @@
 						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
-						},
-						{
-							"name": "WEBSITE_RUN_FROM_PACKAGE",
-							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
@@ -2654,10 +2630,6 @@
 						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
-						},
-						{
-							"name": "WEBSITE_RUN_FROM_PACKAGE",
-							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
@@ -2820,10 +2792,6 @@
 						{
 							"name": "WEBSITE_DNS_SERVER",
 							"value": "168.63.129.16"
-						},
-						{
-							"name": "WEBSITE_RUN_FROM_PACKAGE",
-							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
