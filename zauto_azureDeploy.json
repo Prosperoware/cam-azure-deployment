@@ -415,13 +415,13 @@
 				},
 				"version": "5.7",
 				"sslEnforcement": "Disabled",
-				"minimalTlsVersion": "TLSEnforcementDisabled",
+				"minimalTlsVersion": "TLSEnforcementDisabled",//"TLSEnforcementDisabled",
 				"infrastructureEncryption": "Disabled",
 				"publicNetworkAccess": "Enabled"
 			},
 			"resources": [
 				{
-					"condition": "[variables('isETL')]",
+					"condition": "[and(variables('isETL'),equals(parameters('Deploymenttype'),'Standard'))]",
 					"type": "Microsoft.DBforMySQL/servers/firewallRules",
 					"apiVersion": "2017-12-01",
 					"name": "[concat(variables('mySqlServerName'), '/AllowAllWindowsAzureIps')]",
@@ -448,6 +448,20 @@
 				}
 			]
 		},
+		{
+            "type": "Microsoft.DBforMySQL/servers/virtualNetworkRules",
+            "apiVersion": "2017-12-01",
+            "name": "[concat(variables('mySqlServerName'), '/vnetrule')]",
+			"condition": "[equals(parameters('Deploymenttype'),'Premium')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
+                "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
+            ],
+            "properties": {
+				"virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), 'Subnet1')]",
+                "ignoreMissingVnetServiceEndpoint": false
+            }
+        },
 		//COSMOSDB
 		{
 			"type": "Microsoft.DocumentDB/databaseAccounts",

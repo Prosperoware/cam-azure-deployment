@@ -194,6 +194,64 @@
 			},
 			"resources": []
 		},
+		//MYSQL
+		{
+			"condition": "[variables('isETL')]",
+			"type": "Microsoft.DBforMySQL/servers",
+			"apiVersion": "2017-12-01",
+			"name": "[variables('mySqlServerName')]",
+			"location": "[variables('location')]",
+			"sku": {
+				"name": "[if(equals(parameters('Deploymenttype'),'Standard'),'B_Gen5_1','GP_Gen5_2')]",
+				"tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'Basic','GeneralPurpose')]",
+				"family": "Gen5",
+				"capacity": "[if(equals(parameters('Deploymenttype'),'Standard'),1,2)]"
+			},
+			"properties": {
+				"createMode": "Default",
+				"administratorLogin": "[parameters('administratorLogin')]",
+				"administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+				"storageProfile": {
+					"storageMB": 30720,
+					"backupRetentionDays": 7,
+					"geoRedundantBackup": "Disabled",
+					"storageAutogrow": "Enabled"
+				},
+				"version": "5.7",
+				"sslEnforcement": "[if(equals(parameters('Deploymenttype'),'Standard'),'Disabled','Enabled')]",
+				"minimalTlsVersion": "[if(equals(parameters('Deploymenttype'),'Standard'),'TLSEnforcementDisabled','TLS1_2')]",//"TLSEnforcementDisabled",
+				"infrastructureEncryption": "Disabled",
+				"publicNetworkAccess": "[if(equals(parameters('Deploymenttype'),'Standard'),'Enabled','Disabled')]"
+			},
+			"resources": [
+				{
+					"condition": "[and(variables('isETL'),equals(parameters('Deploymenttype'),'Standard'))]",
+					"type": "Microsoft.DBforMySQL/servers/firewallRules",
+					"apiVersion": "2017-12-01",
+					"name": "[concat(variables('mySqlServerName'), '/AllowAllWindowsAzureIps')]",
+					"dependsOn": [
+						"[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]"
+					],
+					"properties": {
+						"startIpAddress": "0.0.0.0",
+						"endIpAddress": "0.0.0.0"
+					}
+				},
+				{
+					"condition": "[variables('isETL')]",
+					"type": "Microsoft.DBForMySQL/servers/databases",
+					"apiVersion": "2017-12-01",
+					"name": "[concat(variables('mySqlServerName'), '/', variables('commonId'))]",
+					"dependsOn": [
+						"[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]"
+					],
+					"properties": {
+						"charset": "utf8",
+						"collation": "utf8_general_ci"
+					}
+				}
+			]
+		},
 		//etlApiAppInsightsName
 		{
             "type": "microsoft.insights/components",
