@@ -227,6 +227,8 @@
 		"strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
 		"isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
 		"isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
+		"DefaultWorkspaceName":"[concat('DefaultWorkspace-',parameters('InstanceUniqueName'))]",
+		"WorkspaceResourceId":"[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.OperationalInsights/workspaces/',variables('DefaultWorkspaceName'))]",
 		"branch": "qa2test",
 		"repo": "https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
 		//"branch": "master",
@@ -1364,8 +1366,49 @@
 				}
 			}
 		},
-		//FUNCTIONS
+		//FUNCTIONS WORKSPACE FOR APP INSIGHTS
+		{
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "newWorkspaceTemplate",
+            "resourceGroup": "[resourceGroup().name]",
+            "subscriptionId": "[subscription().subscriptionId]",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "apiVersion": "2020-08-01",
+                            "name": "[variables('DefaultWorkspaceName')]", //"DefaultWorkspace-711d2629-ebac-4cb3-8b91-d1a57eb08cf2-EUS",
+                            "type": "Microsoft.OperationalInsights/workspaces",
+                            "location": "[resourceGroup().location]",
+                            "properties": {}
+                        }
+                    ]
+                }
+            }
+        },
 		//etlApiAppInsightsName
+		{
+            "type": "microsoft.insights/components",
+            "apiVersion": "2020-02-02",
+            "name": "[variables('etlApiAppInsightsName')]",
+            "location": "[variables('Location')]",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
+            "properties": {
+				"ApplicationId": "[variables('etlApiAppInsightsName')]",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "Flow_Type": "Redfield",
+                "Application_Type": "web",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]"
+            }
+        },
 		{
 			"condition": "[variables('isETL')]",
 			"type": "Microsoft.Web/sites",
@@ -1373,11 +1416,15 @@
 			"name": "[variables('etlApiAppName')]",
 			"location": "[variables('location')]",
 			"dependsOn": [
+				"[resourceId('Microsoft.insights/components', variables('etlApiAppInsightsName'))]",
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
+            "tags": {
+                "hidden-link: /app-insights-resource-id": "[resourceId('Microsoft.insights/components', variables('etlApiAppInsightsName'))]"
+            },
 			"kind": "functionapp",
 			"identity": {
 				"type": "SystemAssigned"
@@ -1403,6 +1450,14 @@
 				"siteConfig": {
 					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]", //"FtpsOnly",
 					"appSettings": [
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))).InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))).ConnectionString]"
+                        },
 						{
 							"name": "application_group",
 							"value": "[variables('resourcesNamespace')]"
