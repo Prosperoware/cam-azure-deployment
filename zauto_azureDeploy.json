@@ -1527,8 +1527,8 @@
 							"value": "[variables('etlApiAppName')]"
 						},
 						{
-							"name": "WEBSITE_DNS_SERVER",
-							"value": "168.63.129.16"
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
@@ -1691,8 +1691,8 @@
 							"value": "[variables('etlRenewalTopicName')]"
 						},
 						{
-							"name": "WEBSITE_DNS_SERVER",
-							"value": "168.63.129.16"
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
@@ -1854,8 +1854,8 @@
 							"value": "[variables('etlMappingTopicName')]"
 						},
 						{
-							"name": "WEBSITE_DNS_SERVER",
-							"value": "168.63.129.16"
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
@@ -2024,8 +2024,8 @@
 							"value": "60"
 						},
 						{
-							"name": "WEBSITE_DNS_SERVER",
-							"value": "168.63.129.16"
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
@@ -2183,8 +2183,8 @@
 							"value": "[variables('etlActionTopicName')]"
 						},
 						{
-							"name": "WEBSITE_DNS_SERVER",
-							"value": "168.63.129.16"
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
@@ -2228,7 +2228,7 @@
 				}
 			]
 		},
-		//configAppInsightsName READY
+		//configAppInsightsName READY THIS DOES NOT HAS THE ,"name": "WEBSITE_RUN_FROM_PACKAGE","value": "1"	Because it fails it is set in child template
 		{
 			"type": "Microsoft.Web/sites",
 			"apiVersion": "2018-11-01",
@@ -2370,10 +2370,6 @@
 						{
 							"name": "product_features",
 							"value": "[parameters('Features')]"
-						},
-						{
-							"name": "WEBSITE_DNS_SERVER",
-							"value": "168.63.129.16"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
@@ -2498,8 +2494,8 @@
 							"value": "[variables('csApiAppName')]"
 						},
 						{
-							"name": "WEBSITE_DNS_SERVER",
-							"value": "168.63.129.16"
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
@@ -2669,8 +2665,8 @@
 							"value": "60"
 						},
 						{
-							"name": "WEBSITE_DNS_SERVER",
-							"value": "168.63.129.16"
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
@@ -2831,8 +2827,8 @@
 							"value": "600"
 						},
 						{
-							"name": "WEBSITE_DNS_SERVER",
-							"value": "168.63.129.16"
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
@@ -3866,11 +3862,12 @@
 				}
 			}
 		},
-		// CHILD3 - RESTRICT STORAGE
+		// CHILD3 - RESTRICT STORAGE AND IN FUNCTIONS SET THE VNET ACCESS AND ROUTE
 		{
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2021-04-01",
 			"name": "SetFunctionsVnetAccess",
+			"condition": "[equals(parameters('Deploymenttype'),'Premium')]",
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
