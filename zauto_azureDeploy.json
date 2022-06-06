@@ -3903,10 +3903,6 @@
 		"apiEndPointBaseUrl": {
 			"type": "string",
 			"value": "[format('https://{0}.azurewebsites.net/', if(variables('isETL'), variables('etlApiAppName'), variables('csApiAppName')))]"
-		},
-		"ipp": {
-			"type": "string",
-			"value": "[reference('linkedTemplateVNet').outputs['publicip'].value]"
 		}
 
 	}
