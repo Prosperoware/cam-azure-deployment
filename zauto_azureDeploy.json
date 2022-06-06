@@ -3806,7 +3806,7 @@
 						"value": "[parameters('subnet2Name')]"
 					},
 					"publicip":{
-						"value": "[reference('linkedTemplateVNet').outputs['publicip'].value]"
+						"value": "[reference('linkedTemplateVNet','2017-01-010').outputs['publicip'].value]"
 					}
 				}
 			}
