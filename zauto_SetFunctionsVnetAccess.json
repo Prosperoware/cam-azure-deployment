@@ -1,4 +1,4 @@
-{
+{  // this set the "WEBSITE_CONTENTOVERVNET","name": "WEBSITE_VNET_ROUTE_ALL", "WEBSITE_DNS_SERVER", that are need only for Premium Deployment
 	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
 	"contentVersion": "1.0.0.0",
 	"parameters": {
@@ -299,7 +299,6 @@
 				"isXenon": false,
 				"hyperV": false,
 				"siteConfig": {
-					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]", //"FtpsOnly",
 					"appSettings": [
 						{
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -393,7 +392,9 @@
 							"name": "WEBSITE_RUN_FROM_PACKAGE",
 							"value": "1"
 						}
-					]
+					],
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -561,7 +562,9 @@
 							"name": "WEBSITE_RUN_FROM_PACKAGE",
 							"value": "1"
 						}
-					]
+					],
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -732,7 +735,9 @@
 							"name": "WEBSITE_RUN_FROM_PACKAGE",
 							"value": "1"
 						}
-					]
+					],
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -911,7 +916,9 @@
 							"name": "WEBSITE_RUN_FROM_PACKAGE",
 							"value": "1"
 						}
-					]
+					],
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -1075,7 +1082,9 @@
 							"name": "WEBSITE_RUN_FROM_PACKAGE",
 							"value": "1"
 						}
-					]
+					],
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -1266,7 +1275,9 @@
 							"name": "WEBSITE_RUN_FROM_PACKAGE",
 							"value": "1"
 						}
-					]
+					],
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -1400,7 +1411,9 @@
 							"name": "WEBSITE_RUN_FROM_PACKAGE",
 							"value": "1"
 						}
-					]
+					],
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -1579,7 +1592,9 @@
 							"name": "WEBSITE_RUN_FROM_PACKAGE",
 							"value": "1"
 						}
-					]
+					],
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -1747,7 +1762,9 @@
 							"name": "WEBSITE_RUN_FROM_PACKAGE",
 							"value": "1"
 						}
-					]
+					],
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
