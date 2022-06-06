@@ -91,6 +91,12 @@
 			"metadata": {
 				"description": "repo"
 			}
+		},
+		"WorkspaceResourceId": { 
+			"type": "string",
+			"metadata": {
+				"description": "WorkspaceResourceId"
+			}
 		}
 	},
 	"variables": {
@@ -190,11 +196,27 @@
 		},
 		//etlApiAppInsightsName
 		{
+            "type": "microsoft.insights/components",
+            "apiVersion": "2020-02-02",
+            "name": "[variables('etlApiAppInsightsName')]",
+            "location": "[variables('Location')]",
+            "properties": {
+				"ApplicationId": "[variables('etlApiAppInsightsName')]",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "Flow_Type": "Redfield",
+                "Application_Type": "web",
+                "WorkspaceResourceId": "[parameters('WorkspaceResourceId')]"
+            }
+        },
+		{
 			"condition": "[variables('isETL')]",
 			"type": "Microsoft.Web/sites",
 			"apiVersion": "2018-11-01",
 			"name": "[variables('etlApiAppName')]",
 			"location": "[variables('location')]",
+            "tags": {
+                "hidden-link: /app-insights-resource-id": "[resourceId('Microsoft.insights/components', variables('etlApiAppInsightsName'))]"
+            },
 			"kind": "functionapp",
 			"identity": {
 				"type": "SystemAssigned"
@@ -219,7 +241,16 @@
 				"isXenon": false,
 				"hyperV": false,
 				"siteConfig": {
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]", //"FtpsOnly",
 					"appSettings": [
+						{
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))).InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))).ConnectionString]"
+                        },
 						{
 							"name": "application_group",
 							"value": "[variables('resourcesNamespace')]"

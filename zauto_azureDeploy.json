@@ -3891,7 +3891,7 @@
 				},
 				"mode": "Incremental",
 				"templateLink": {
-					"uri": "[concat(variables('repo'), variables('branch'),'/zauto_nestedChild2.json')]"
+					"uri": "[concat(variables('repo'), variables('branch'),'/zauto_SetFunctionsVnetAccess.json')]"
 				},
 				"parameters": {
 					"Deploymenttype": {
@@ -3938,6 +3938,9 @@
 					},
 					"subnet1Name": {
 						"value": "[parameters('subnet1Name')]"
+					},
+					"WorkspaceResourceId": {
+						"value": "[variables('WorkspaceResourceId')]"
 					}
 				}
 			}
