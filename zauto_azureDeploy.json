@@ -2356,11 +2356,28 @@
 		},
 		//configAppInsightsName READY THIS DOES NOT HAS THE ,"name": "WEBSITE_RUN_FROM_PACKAGE","value": "1"	Because it fails it is set in child template
 		{
+            "type": "microsoft.insights/components",
+            "apiVersion": "2020-02-02",
+            "name": "[variables('configAppInsightsName')]",
+            "location": "[variables('Location')]",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
+            "properties": {
+				"ApplicationId": "[variables('configAppInsightsName')]",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "Flow_Type": "Redfield",
+                "Application_Type": "web",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]"
+            }
+        },
+		{
 			"type": "Microsoft.Web/sites",
 			"apiVersion": "2018-11-01",
 			"name": "[variables('configAppName')]",
 			"location": "[variables('Location')]",
 			"dependsOn": [
+				"[resourceId('Microsoft.insights/components', variables('configAppInsightsName'))]",
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]",
 				"[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
@@ -2369,6 +2386,9 @@
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
+			"tags": {
+                "hidden-link: /app-insights-resource-id": "[resourceId('Microsoft.insights/components', variables('configAppInsightsName'))]"
+            },
 			"kind": "functionapp",
 			"identity": {
 				"type": "SystemAssigned"
@@ -2393,6 +2413,14 @@
 				"hyperV": false,
 				"siteConfig": {
 					"appSettings": [
+						{
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))).InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))).ConnectionString]"
+                        },
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
 							"value": "~3"

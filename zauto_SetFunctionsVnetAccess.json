@@ -1246,10 +1246,32 @@
 		},
 		//configAppInsightsName
 		{
+            "type": "microsoft.insights/components",
+            "apiVersion": "2020-02-02",
+            "name": "[variables('configAppInsightsName')]",
+            "location": "[variables('Location')]",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
+            "properties": {
+				"ApplicationId": "[variables('configAppInsightsName')]",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "Flow_Type": "Redfield",
+                "Application_Type": "web",
+                "WorkspaceResourceId": "[parameters('WorkspaceResourceId')]"
+            }
+        },
+		{
 			"type": "Microsoft.Web/sites",
 			"apiVersion": "2018-11-01",
 			"name": "[variables('configAppName')]",
 			"location": "[variables('Location')]",
+			"dependsOn":[
+				"[resourceId('Microsoft.insights/components', variables('configAppInsightsName'))]"
+			],
+			"tags": {
+                "hidden-link: /app-insights-resource-id": "[resourceId('Microsoft.insights/components', variables('configAppInsightsName'))]"
+            },
 			"kind": "functionapp",
 			"identity": {
 				"type": "SystemAssigned"
@@ -1274,6 +1296,14 @@
 				"hyperV": false,
 				"siteConfig": {
 					"appSettings": [
+						{
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))).InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))).ConnectionString]"
+                        },
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
 							"value": "~3"
