@@ -230,9 +230,9 @@
 		"DefaultWorkspaceName":"[concat('DefaultWorkspace-',parameters('InstanceUniqueName'))]",
 		"WorkspaceResourceId":"[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.OperationalInsights/workspaces/',variables('DefaultWorkspaceName'))]",
 		"branch": "qa2test",
-		//"repo": "https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
+		"repo": "https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
 		//"branch": "master",
-		"repo":"https://generalsupport.blob.core.windows.net/prospero/"//"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
+		//"repo":"https://generalsupport.blob.core.windows.net/prospero/"//"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
 	},
 	"resources": [
 		{
