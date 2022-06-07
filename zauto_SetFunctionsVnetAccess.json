@@ -455,11 +455,7 @@
 			"name": "[variables('etlRenewalAppName')]",
 			"location": "[variables('location')]",
 			"dependsOn": [
-				"[resourceId('Microsoft.insights/components', variables('etlRenewalAppInsightsName'))]",
-				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-				"[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlRenewalTopicName'), concat(variables('etlRenewalTopicName'), '-sub'))]",
-				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
-				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
+				"[resourceId('Microsoft.insights/components', variables('etlRenewalAppInsightsName'))]"
 			],
 			"tags": {
                 "hidden-link: /app-insights-resource-id": "[resourceId('Microsoft.insights/components', variables('etlRenewalAppInsightsName'))]"
