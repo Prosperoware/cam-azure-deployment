@@ -440,9 +440,6 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('etlRenewalAppInsightsName')]",
             "location": "[variables('Location')]",
-			"dependsOn":[
-				"newWorkspaceTemplate"
-			],
             "properties": {
 				"ApplicationId": "[variables('etlRenewalAppInsightsName')]",
                 "Request_Source": "IbizaWebAppExtensionCreate",
@@ -644,9 +641,6 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('etlMappingAppInsightsName')]",
             "location": "[variables('Location')]",
-			"dependsOn":[
-				"newWorkspaceTemplate"
-			],
             "properties": {
 				"ApplicationId": "[variables('etlMappingAppInsightsName')]",
                 "Request_Source": "IbizaWebAppExtensionCreate",
@@ -845,9 +839,6 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('etlProcessAppInsightsName')]",
             "location": "[variables('Location')]",
-			"dependsOn":[
-				"newWorkspaceTemplate"
-			],
             "properties": {
 				"ApplicationId": "[variables('etlProcessAppInsightsName')]",
                 "Request_Source": "IbizaWebAppExtensionCreate",
@@ -1054,9 +1045,6 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('etlActionAppInsightsName')]",
             "location": "[variables('Location')]",
-			"dependsOn":[
-				"newWorkspaceTemplate"
-			],
             "properties": {
 				"ApplicationId": "[variables('etlActionAppInsightsName')]",
                 "Request_Source": "IbizaWebAppExtensionCreate",
@@ -1250,9 +1238,6 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('configAppInsightsName')]",
             "location": "[variables('Location')]",
-			"dependsOn":[
-				"newWorkspaceTemplate"
-			],
             "properties": {
 				"ApplicationId": "[variables('configAppInsightsName')]",
                 "Request_Source": "IbizaWebAppExtensionCreate",
@@ -1448,9 +1433,6 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('csApiAppInsightsName')]",
             "location": "[variables('Location')]",
-			"dependsOn":[
-				"newWorkspaceTemplate"
-			],
             "properties": {
 				"ApplicationId": "[variables('csApiAppInsightsName')]",
                 "Request_Source": "IbizaWebAppExtensionCreate",
@@ -1637,9 +1619,6 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('csProcessAppInsightsName')]",
             "location": "[variables('Location')]",
-			"dependsOn":[
-				"newWorkspaceTemplate"
-			],
             "properties": {
 				"ApplicationId": "[variables('csProcessAppInsightsName')]",
                 "Request_Source": "IbizaWebAppExtensionCreate",
@@ -1846,9 +1825,6 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('csRetryAppInsightsName')]",
             "location": "[variables('Location')]",
-			"dependsOn":[
-				"newWorkspaceTemplate"
-			],
             "properties": {
 				"ApplicationId": "[variables('csRetryAppInsightsName')]",
                 "Request_Source": "IbizaWebAppExtensionCreate",
