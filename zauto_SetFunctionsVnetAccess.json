@@ -640,14 +640,34 @@
 		},
 		//etlMappingAppInsightsName
 		{
+            "type": "microsoft.insights/components",
+            "apiVersion": "2020-02-02",
+            "name": "[variables('etlMappingAppInsightsName')]",
+            "location": "[variables('Location')]",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
+            "properties": {
+				"ApplicationId": "[variables('etlMappingAppInsightsName')]",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "Flow_Type": "Redfield",
+                "Application_Type": "web",
+                "WorkspaceResourceId": "[parameters('WorkspaceResourceId')]"
+            }
+        },
+		{
 			"condition": "[variables('isETL')]",
 			"type": "Microsoft.Web/sites",
 			"apiVersion": "2018-11-01",
 			"name": "[variables('etlMappingAppName')]",
 			"location": "[variables('location')]",
 			"dependsOn": [
+				"[resourceId('Microsoft.insights/components', variables('etlMappingAppInsightsName'))]",
 				"[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
 			],
+			"tags": {
+                "hidden-link: /app-insights-resource-id": "[resourceId('Microsoft.insights/components', variables('etlMappingAppInsightsName'))]"
+            },
 			"kind": "functionapp",
 			"identity": {
 				"type": "SystemAssigned"
@@ -672,6 +692,14 @@
 				"hyperV": false,
 				"siteConfig": {
 					"appSettings": [
+						{
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName'))).InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName'))).ConnectionString]"
+                        },
 						{
 							"name": "application_group",
 							"value": "[variables('resourcesNamespace')]"
