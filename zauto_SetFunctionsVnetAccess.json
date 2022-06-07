@@ -280,7 +280,6 @@
 				"type": "SystemAssigned"
 			},
 			"properties": {
-				"clientCertMode": "Optional",
 				"enabled": true,
 				"hostNameSslStates": [
 					{
@@ -399,6 +398,7 @@
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
 				"clientCertEnabled": true,
+				"clientCertMode": "Optional",
 				"hostNamesDisabled": false,
 				"containerSize": 1536,
 				"dailyMemoryTimeQuota": 0,
@@ -446,7 +446,6 @@
 				"type": "SystemAssigned"
 			},
 			"properties": {
-				"clientCertMode": "Optional",
 				"enabled": true,
 				"hostNameSslStates": [
 					{
@@ -569,6 +568,7 @@
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
 				"clientCertEnabled": true,
+				"clientCertMode": "Optional",
 				"hostNamesDisabled": false,
 				"containerSize": 1536,
 				"dailyMemoryTimeQuota": 0,
@@ -619,7 +619,6 @@
 				"type": "SystemAssigned"
 			},
 			"properties": {
-				"clientCertMode": "Optional",
 				"enabled": true,
 				"hostNameSslStates": [
 					{
@@ -742,6 +741,7 @@
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
 				"clientCertEnabled": true,
+				"clientCertMode": "Optional",
 				"hostNamesDisabled": false,
 				"containerSize": 1536,
 				"dailyMemoryTimeQuota": 0,
@@ -970,7 +970,6 @@
 				"type": "SystemAssigned"
 			},
 			"properties": {
-				"clientCertMode": "Optional",
 				"enabled": true,
 				"hostNameSslStates": [
 					{
@@ -1089,6 +1088,7 @@
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
 				"clientCertEnabled": true,
+				"clientCertMode": "Optional",
 				"hostNamesDisabled": false,
 				"containerSize": 1536,
 				"dailyMemoryTimeQuota": 0,
@@ -1135,7 +1135,6 @@
 				"type": "SystemAssigned"
 			},
 			"properties": {
-				"clientCertMode": "Optional",
 				"enabled": true,
 				"hostNameSslStates": [
 					{
@@ -1282,6 +1281,7 @@
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
 				"clientCertEnabled": true,
+				"clientCertMode": "Optional",
 				"hostNamesDisabled": false,
 				"containerSize": 1536,
 				"dailyMemoryTimeQuota": 0,
@@ -1307,7 +1307,6 @@
 				"type": "SystemAssigned"
 			},
 			"properties": {
-				"clientCertMode": "Optional",
 				"enabled": true,
 				"hostNameSslStates": [
 					{
@@ -1418,6 +1417,7 @@
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
 				"clientCertEnabled": true,
+				"clientCertMode": "Optional",
 				"hostNamesDisabled": false,
 				"containerSize": 1536,
 				"dailyMemoryTimeQuota": 0,
@@ -1468,7 +1468,6 @@
 				"type": "SystemAssigned"
 			},
 			"properties": {
-				"clientCertMode": "Optional",
 				"enabled": true,
 				"hostNameSslStates": [
 					{
@@ -1599,6 +1598,7 @@
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
 				"clientCertEnabled": true,
+				"clientCertMode": "Optional",
 				"hostNamesDisabled": false,
 				"containerSize": 1536,
 				"dailyMemoryTimeQuota": 0,
@@ -1646,7 +1646,6 @@
 				"type": "SystemAssigned"
 			},
 			"properties": {
-				"clientCertMode": "Optional",
 				"enabled": true,
 				"hostNameSslStates": [
 					{
@@ -1769,6 +1768,7 @@
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
 				"clientCertEnabled": true,
+				"clientCertMode": "Optional",
 				"hostNamesDisabled": false,
 				"containerSize": 1536,
 				"dailyMemoryTimeQuota": 0,

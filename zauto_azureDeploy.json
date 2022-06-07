@@ -1462,7 +1462,6 @@
 				"isXenon": false,
 				"hyperV": false,
 				"siteConfig": {
-					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]", //"FtpsOnly",
 					"appSettings": [
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -1545,7 +1544,8 @@
 							"value": "1"
 						}
 					],
-					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]" //"FtpsOnly",
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -1622,7 +1622,6 @@
 				"isXenon": false,
 				"hyperV": false,
 				"siteConfig": {
-					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]",
 					"appSettings": [
 						{
 							"name": "application_group",
@@ -1709,7 +1708,8 @@
 							"value": "1"
 						}
 					],
-					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
@@ -1785,7 +1785,6 @@
 				"isXenon": false,
 				"hyperV": false,
 				"siteConfig": {
-					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]",
 					"appSettings": [
 						{
 							"name": "application_group",
@@ -1872,7 +1871,8 @@
 							"value": "1"
 						}
 					],
-					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]"
+					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
+					"ftpsState": "[if(equals(parameters('Deploymenttype'),'Standard'),'FtpsOnly','Disabled')]"
 				},
 				"scmSiteAlsoStopped": false,
 				"clientAffinityEnabled": false,
