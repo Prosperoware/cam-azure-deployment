@@ -2922,16 +2922,36 @@
 		},
 		//csRetryAppInsightsName
 		{
+            "type": "microsoft.insights/components",
+            "apiVersion": "2020-02-02",
+            "name": "[variables('csRetryAppInsightsName')]",
+            "location": "[variables('Location')]",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
+            "properties": {
+				"ApplicationId": "[variables('csRetryAppInsightsName')]",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "Flow_Type": "Redfield",
+                "Application_Type": "web",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]"
+            }
+        },
+		{
 			"condition": "[variables('isCS')]",
 			"type": "Microsoft.Web/sites",
 			"apiVersion": "2018-11-01",
 			"name": "[variables('csRetryAppName')]",
 			"location": "[variables('location')]",
 			"dependsOn": [
+				"[resourceId('Microsoft.insights/components', variables('csRetryAppInsightsName'))]",
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
+			"tags": {
+                "hidden-link: /app-insights-resource-id": "[resourceId('Microsoft.insights/components', variables('csRetryAppInsightsName'))]"
+            },
 			"kind": "functionapp",
 			"identity": {
 				"type": "SystemAssigned"
@@ -2956,6 +2976,14 @@
 				"hyperV": false,
 				"siteConfig": {
 					"appSettings": [
+						{
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))).InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))).ConnectionString]"
+                        },
 						{
 							"name": "application_group",
 							"value": "[variables('resourcesNamespace')]"
