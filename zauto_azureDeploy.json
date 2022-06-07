@@ -4008,6 +4008,9 @@
 					},
 					"subnet1Name": {
 						"value": "[parameters('subnet1Name')]"
+					},
+					"WorkspaceResourceId": {
+						"value": "[variables('WorkspaceResourceId')]"
 					}
 				}
 			}
