@@ -3885,6 +3885,7 @@
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
+				"[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
 			],
 			"properties": {

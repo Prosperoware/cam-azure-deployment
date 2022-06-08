@@ -158,11 +158,82 @@
 		"strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
 		"isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
 		"isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-		"branch": "SeparateIacFromCode"
+		"virtualNetworkId":"[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+		"subnet2id":"[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet2Name'))]",
+		"mysqlId":"[resourceId('Microsoft.DBforMySQL/servers',variables('mySqlServerName'))]"
 	},
 	"resources": [
 		//PREMIUM TEMPLATE
 		//ENDPOINTS
+		//Mysql	
+		{
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2021-03-01",
+            "name": "mysql-endpoint",
+            "location": "[parameters('location')]",
+            "properties": {
+                "subnet": {
+                    "id":  "[variables('subnet2id')]"
+                },
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "mysql-endpoint",
+                        "properties": {
+                            "privateLinkServiceId": "[variables('mysqlId')]",
+                            "groupIds": ["mysqlServer"]
+                        }
+                    }
+                ]
+            }
+        },
+		{
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2018-09-01",
+            "name": "privatelink.mysql.database.azure.com",
+			"dependsOn": [
+                "mysql-endpoint"
+            ],
+            "location": "global",
+            "tags": {},
+            "properties": {}
+        },
+		{
+			"type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+			"apiVersion": "2018-09-01",
+			"name": "[concat('privatelink.mysql.database.azure.com', '/', uniqueString(variables('virtualNetworkId')))]",
+			 "dependsOn": [
+                "privatelink.mysql.database.azure.com"
+            ],
+			"location": "global",
+			"properties": {
+				"virtualNetwork": {
+					"id": "[variables('virtualNetworkId')]"
+				},
+				"registrationEnabled": false
+			}
+		},
+		{
+            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+            "apiVersion": "2021-03-01",
+            "name": "mysql-endpoint/default",
+            "location": "[parameters('location')]",
+			"dependsOn": [
+               "mysql-endpoint",
+               "privatelink.mysql.database.azure.com"
+            ],
+            "properties": {
+                "privateDnsZoneConfigs": [
+                    {
+                        "name": "privatelink-mysql-database-azure-com",
+                        "properties": {
+							"privateDnsZoneId": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Network/privateDnsZones/privatelink.mysql.database.azure.com')]"
+                            // "privateDnsZoneId": "/subscriptions/9fdd1d9e-4e7b-452e-acd9-32d50cd7c591/resourceGroups/xcpr76p/providers/Microsoft.Network/privateDnsZones/privatelink.mysql.database.azure.com"
+                        }
+                    }
+                ]
+            }
+        },
+		//storage
 		{
 			"type": "Microsoft.Network/privateEndpoints",
 			"apiVersion": "2020-06-01",
