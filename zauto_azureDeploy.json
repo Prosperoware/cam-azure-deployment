@@ -3938,6 +3938,7 @@
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "2021-04-01",
 			"name": "linkedTemplateC1",
+			"condition": "[equals(parameters('Deploymenttype'),'Standard')]",
 			"dependsOn": [
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
