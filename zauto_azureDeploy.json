@@ -131,7 +131,7 @@
 			"type": "array",
 			"defaultValue": [
 				{
-					"id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), 'Subnet1')]",
+					"id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'),  parameters('subnet1Name'))]",
 					"ignoreMissingVNetServiceEndpoint": true
 				}
 			]
@@ -458,7 +458,7 @@
                 "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
             ],
             "properties": {
-				"virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), 'Subnet1')]",
+				"virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
                 "ignoreMissingVnetServiceEndpoint": false
             }
         },
@@ -4181,6 +4181,9 @@
 					},
 					"subnet1Name": {
 						"value": "[parameters('subnet1Name')]"
+					},
+					"subnet2Name": {
+						"value": "[parameters('subnet2Name')]"
 					},
 					"WorkspaceResourceId": {
 						"value": "[variables('WorkspaceResourceId')]"

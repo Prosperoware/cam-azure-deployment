@@ -55,6 +55,13 @@
 				"description": "Subnet 1 Name"
 			}
 		},
+		"subnet2Name": {
+			"type": "string",
+			"defaultValue": "Subnet2",
+			"metadata": {
+				"description": "Subnet 2 Name"
+			}
+		},
 		"Features": {
 			"type": "string",
 			"allowedValues": ["ETL", "Content Sync", "Both"]
@@ -136,10 +143,7 @@
 		"csProcessAppInsightsName": "[concat(variables('resourcesNamespace'), '-contentsync-process')]",
 		"csRetryAppInsightsName": "[concat(variables('resourcesNamespace'), '-contentsync-retry')]",
 		"isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
-		"isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-		"vnetName": "Vnet1",
-		"subnet1Name": "Subnet1",
-		"subnet2Name": "Subnet2"
+		"isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]"
 	},
 	"resources": [
 		//STORAGEACCOUNT
@@ -165,11 +169,11 @@
 					"bypass": "AzureServices",
 					"virtualNetworkRules": [
 						{
-							"id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet1Name'))]",
+							"id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
 							"action": "Allow"
 						},
 						{
-							"id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet2Name'))]",
+							"id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet2Name'))]",
 							"action": "Allow"
 						}
 					],
