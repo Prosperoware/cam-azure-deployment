@@ -306,11 +306,11 @@
 					"appSettings": [
 						{
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))).InstrumentationKey]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName')),'2022-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))).ConnectionString]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName')),'2022-05-01').ConnectionString]"
                         },
 						{
 							"name": "application_group",
@@ -492,11 +492,11 @@
 					"appSettings": [
 						{
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))).InstrumentationKey]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName')),'2022-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))).ConnectionString]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName')),'2022-05-01').ConnectionString]"
                         },
 						{
 							"name": "application_group",
@@ -691,11 +691,11 @@
 					"appSettings": [
 						{
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName'))).InstrumentationKey]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName')),'2022-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName'))).ConnectionString]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName')),'2022-05-01').ConnectionString]"
                         },
 						{
 							"name": "application_group",
@@ -891,11 +891,11 @@
 					"appSettings": [
 						{
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))).InstrumentationKey]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName')),'2022-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))).ConnectionString]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName')),'2022-05-01').ConnectionString]"
                         },
 						{
 							"name": "application_group",
@@ -1065,7 +1065,7 @@
 			"name": "[variables('etlActionAppName')]",
 			"location": "[variables('location')]",
 			"dependsOn":[
-				"[resourceId('Microsoft.insights/components', variables('etlActionAppInsightsName'))]",
+				"[resourceId('Microsoft.insights/components', variables('etlActionAppInsightsName'))]"
 			],
 			"tags": {
                 "hidden-link: /app-insights-resource-id": "[resourceId('Microsoft.insights/components', variables('etlActionAppInsightsName'))]"
@@ -1096,11 +1096,11 @@
 					"appSettings": [
 						{
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))).InstrumentationKey]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName')),'2022-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))).ConnectionString]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName')),'2022-05-01').ConnectionString]"
                         },
 						{
 							"name": "application_group",
@@ -1288,11 +1288,11 @@
 					"appSettings": [
 						{
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))).InstrumentationKey]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName')),'2022-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))).ConnectionString]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName')),'2022-05-01').ConnectionString]"
                         },
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
@@ -1486,11 +1486,11 @@
 					"appSettings": [
 						{
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName'))).InstrumentationKey]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName')),'2022-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName'))).ConnectionString]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName')),'2022-05-01').ConnectionString]"
                         },
 						{
 							"name": "application_group",
@@ -1673,11 +1673,11 @@
 					"appSettings": [
 						{
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName'))).InstrumentationKey]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName')),'2022-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName'))).ConnectionString]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName')),'2022-05-01').ConnectionString]"
                         },
 						{
 							"name": "application_group",
@@ -1879,11 +1879,11 @@
 					"appSettings": [
 						{
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))).InstrumentationKey]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName')),'2022-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))).ConnectionString]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName')),'2022-05-01').ConnectionString]"
                         },
 						{
 							"name": "application_group",
