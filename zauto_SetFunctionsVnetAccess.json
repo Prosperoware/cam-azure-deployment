@@ -838,7 +838,8 @@
 		},
 		//etlProcessAppInsightsName
 		{
-            "type": "microsoft.insights/components",
+            "condition": "[variables('isETL')]",
+			"type": "microsoft.insights/components",
             "apiVersion": "2020-02-02",
             "name": "[variables('etlProcessAppInsightsName')]",
             "location": "[variables('Location')]",
