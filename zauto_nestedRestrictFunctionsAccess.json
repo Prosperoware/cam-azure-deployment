@@ -154,6 +154,7 @@
     "resources": [
          //etlApiAppInsightsName
         {
+            "condition": "[variables('isETL')]",
             "type": "Microsoft.Web/sites/config",
             "apiVersion": "2021-03-01",
             "name": "[concat(variables('etlApiAppName'), '/web')]",

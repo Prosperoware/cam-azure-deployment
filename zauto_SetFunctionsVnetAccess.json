@@ -258,6 +258,7 @@
 		},
 		//etlApiAppInsightsName
 		{
+			"condition": "[variables('isETL')]",
             "type": "microsoft.insights/components",
             "apiVersion": "2020-02-02",
             "name": "[variables('etlApiAppInsightsName')]",
