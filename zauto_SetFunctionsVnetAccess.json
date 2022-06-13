@@ -1434,6 +1434,7 @@
 		},
 		//csApiAppInsightsName
 		{
+			"condition": "[variables('isCS')]",
             "type": "microsoft.insights/components",
             "apiVersion": "2020-02-02",
             "name": "[variables('csApiAppInsightsName')]",

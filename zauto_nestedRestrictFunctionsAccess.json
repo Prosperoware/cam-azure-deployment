@@ -1279,6 +1279,7 @@
         },
         //csApiAppInsightsName
         {
+            "condition": "[variables('isCS')]",
             "type": "Microsoft.Web/sites/config",
             "apiVersion": "2021-03-01",
             "name": "[concat(variables('csApiAppName'), '/web')]",
