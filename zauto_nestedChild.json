@@ -193,11 +193,11 @@
 					"appSettings": [
 						{
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName')),'2022-05-01').InstrumentationKey]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName')),'2020-02-02').InstrumentationKey]"
                         },
                         {
                             "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName')),'2022-05-01').ConnectionString]"
+							"value": "[reference(resourceId('Microsoft.Insights/components', variables('configAppInsightsName')),'2020-02-02').ConnectionString]"
                         },
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
