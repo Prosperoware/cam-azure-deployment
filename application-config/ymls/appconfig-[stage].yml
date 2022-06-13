@@ -10,8 +10,8 @@ dbserver:
     database: [db_name]
     connectTimeout: 5000
     connectionParams: 
-      useSSL: false
-      requireSSL: false
+      useSSL: true
+      requireSSL: true
       serverTimezone: UTC
   adminDb:
     host: localhost
