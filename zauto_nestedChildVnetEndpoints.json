@@ -167,7 +167,8 @@
 		//ENDPOINTS
 		//Mysql	
 		{
-            "type": "Microsoft.Network/privateEndpoints",
+            "condition": "[variables('isETL')]",
+			"type": "Microsoft.Network/privateEndpoints",
             "apiVersion": "2021-03-01",
             "name": "mysql-endpoint",
             "location": "[parameters('location')]",
@@ -187,6 +188,7 @@
             }
         },
 		{
+			"condition": "[variables('isETL')]",
             "type": "Microsoft.Network/privateDnsZones",
             "apiVersion": "2018-09-01",
             "name": "privatelink.mysql.database.azure.com",
@@ -198,6 +200,7 @@
             "properties": {}
         },
 		{
+			"condition": "[variables('isETL')]",
 			"type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
 			"apiVersion": "2018-09-01",
 			"name": "[concat('privatelink.mysql.database.azure.com', '/', uniqueString(variables('virtualNetworkId')))]",
@@ -213,6 +216,7 @@
 			}
 		},
 		{
+			"condition": "[variables('isETL')]",
             "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
             "apiVersion": "2021-03-01",
             "name": "mysql-endpoint/default",
