@@ -207,7 +207,7 @@
         "strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        "branch": "CAMHD1248",
+        "branch": "master",
         "repo":"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
         //"branch": "qat2test",
         //"repo":"https://carlosstgprospero.blob.core.windows.net/armtemplates/"//"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
