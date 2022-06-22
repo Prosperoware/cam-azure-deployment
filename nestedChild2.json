@@ -1847,6 +1847,9 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('csRetryAppName')]",
                     "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))]"
+                    ],
                     "kind": "functionapp",
                     "identity": {
                         "type": "SystemAssigned"
