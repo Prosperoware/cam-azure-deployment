@@ -141,6 +141,9 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlApiAppName')]",
                     "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
+                    ],
                     "kind": "functionapp",
                     "identity": {
                         "type": "SystemAssigned"
@@ -312,6 +315,9 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlRenewalAppName')]",
                     "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))]"
+                    ],
                     "kind": "functionapp",
                     "identity": {
                         "type": "SystemAssigned"
@@ -684,7 +690,6 @@
                     "name": "[variables('etlProcessAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        
                         "[resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
@@ -1060,7 +1065,6 @@
                     "name": "[variables('configAppName')]",
                     "location": "[variables('Location')]",
                     "dependsOn": [
-                        
                         "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]"
                     ],
                     "kind": "functionapp",
@@ -1250,7 +1254,6 @@
                     "name": "[variables('csApiAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        
                         "[resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
@@ -1428,7 +1431,6 @@
                     "name": "[variables('csProcessAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        
                         "[resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
