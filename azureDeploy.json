@@ -217,6 +217,8 @@
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
         "branch": "qa2test",
+        "DefaultWorkspaceName":"[concat('DefaultWorkspace-',parameters('InstanceUniqueName'))]",
+		"WorkspaceResourceId":"[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.OperationalInsights/workspaces/',variables('DefaultWorkspaceName'))]",
         "repo":"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
         //"branch": "qat2test",
         //"repo":"https://carlosstgprospero.blob.core.windows.net/armtemplates/"//"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
@@ -1454,18 +1456,49 @@
                 } 
             }
         },
+		//FUNCTIONS WORKSPACE FOR APP INSIGHTS
+		{
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "newWorkspaceTemplate",
+            "resourceGroup": "[resourceGroup().name]",
+            "subscriptionId": "[subscription().subscriptionId]",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "apiVersion": "2020-08-01",
+                            "name": "[variables('DefaultWorkspaceName')]", //"DefaultWorkspace-711d2629-ebac-4cb3-8b91-d1a57eb08cf2-EUS",
+                            "type": "Microsoft.OperationalInsights/workspaces",
+                            "location": "[resourceGroup().location]",
+                            "properties": {}
+                        }
+                    ]
+                }
+            }
+        },
         //FUNCTIONS
         //etlApiAppInsightsName
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2020-02-02-preview",
+            "apiVersion": "2020-02-02",
             "name": "[variables('etlApiAppInsightsName')]",
             "location": "[variables('Location')]",
-            "kind": "web",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
             "properties": {
+				"ApplicationId": "[variables('etlApiAppInsightsName')]",
                 "Application_Type": "web",
-                "IngestionMode": "ApplicationInsights",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]",
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
@@ -1598,14 +1631,20 @@
         //etlRenewalAppInsightsName
         {
             "condition": "[variables('isETL')]",
+            "name": "[variables('etlRenewalAppInsightsName')]",
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2020-02-02-preview",
+            "apiVersion": "2020-02-02",
             "name": "[variables('etlRenewalAppInsightsName')]",
             "location": "[variables('Location')]",
-            "kind": "web",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
             "properties": {
+				"ApplicationId": "[variables('etlRenewalAppInsightsName')]",
                 "Application_Type": "web",
-                "IngestionMode": "ApplicationInsights",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]",
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
@@ -1751,13 +1790,18 @@
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2020-02-02-preview",
+            "apiVersion": "2020-02-02",
             "name": "[variables('etlMappingAppInsightsName')]",
             "location": "[variables('Location')]",
-            "kind": "web",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
             "properties": {
+				"ApplicationId": "[variables('etlMappingAppInsightsName')]",
                 "Application_Type": "web",
-                "IngestionMode": "ApplicationInsights",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]",
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
@@ -1903,13 +1947,18 @@
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2020-02-02-preview",
+            "apiVersion": "2020-02-02",
             "name": "[variables('etlProcessAppInsightsName')]",
             "location": "[variables('Location')]",
-            "kind": "web",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
             "properties": {
+				"ApplicationId": "[variables('etlProcessAppInsightsName')]",
                 "Application_Type": "web",
-                "IngestionMode": "ApplicationInsights",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]",
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
@@ -2063,13 +2112,18 @@
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2020-02-02-preview",
+            "apiVersion": "2020-02-02",
             "name": "[variables('etlActionAppInsightsName')]",
             "location": "[variables('Location')]",
-            "kind": "web",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
             "properties": {
+				"ApplicationId": "[variables('etlActionAppInsightsName')]",
                 "Application_Type": "web",
-                "IngestionMode": "ApplicationInsights",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]",
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
@@ -2211,13 +2265,18 @@
         {
             "condition": "[variables('isETL')]",
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2020-02-02-preview",
+            "apiVersion": "2020-02-02",
             "name": "[variables('etlOfficeAuditAppInsightsName')]",
             "location": "[variables('Location')]",
-            "kind": "web",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
             "properties": {
+				"ApplicationId": "[variables('etlOfficeAuditAppInsightsName')]",
                 "Application_Type": "web",
-                "IngestionMode": "ApplicationInsights",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]",
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
@@ -2421,13 +2480,18 @@
         //configAppInsightsName
         {
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2020-02-02-preview",
+            "apiVersion": "2020-02-02",
             "name": "[variables('configAppInsightsName')]",
             "location": "[variables('Location')]",
-            "kind": "web",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
             "properties": {
+				"ApplicationId": "[variables('configAppInsightsName')]",
                 "Application_Type": "web",
-                "IngestionMode": "ApplicationInsights",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]",
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
@@ -2603,13 +2667,18 @@
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2020-02-02-preview",
+            "apiVersion": "2020-02-02",
             "name": "[variables('csApiAppInsightsName')]",
             "location": "[variables('Location')]",
-            "kind": "web",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
             "properties": {
+				"ApplicationId": "[variables('csApiAppInsightsName')]",
                 "Application_Type": "web",
-                "IngestionMode": "ApplicationInsights",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]",
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
@@ -2742,13 +2811,18 @@
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2020-02-02-preview",
+            "apiVersion": "2020-02-02",
             "name": "[variables('csProcessAppInsightsName')]",
             "location": "[variables('Location')]",
-            "kind": "web",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
             "properties": {
+				"ApplicationId": "[variables('csProcessAppInsightsName')]",
                 "Application_Type": "web",
-                "IngestionMode": "ApplicationInsights",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]",
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
@@ -2902,13 +2976,18 @@
         {
             "condition": "[variables('isCS')]",
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2020-02-02-preview",
+            "apiVersion": "2020-02-02",
             "name": "[variables('csRetryAppInsightsName')]",
             "location": "[variables('Location')]",
-            "kind": "web",
+			"dependsOn":[
+				"newWorkspaceTemplate"
+			],
             "properties": {
+				"ApplicationId": "[variables('csRetryAppInsightsName')]",
                 "Application_Type": "web",
-                "IngestionMode": "ApplicationInsights",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "WorkspaceResourceId": "[variables('WorkspaceResourceId')]",
                 "publicNetworkAccessForIngestion": "Enabled",
                 "publicNetworkAccessForQuery": "Enabled"
             },
