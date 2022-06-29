@@ -277,6 +277,9 @@
 			"apiVersion": "2018-11-01",
 			"name": "[variables('etlApiAppName')]",
 			"location": "[variables('location')]",
+			"dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
+            ],
             "tags": {
                 "hidden-link: /app-insights-resource-id": "[resourceId('Microsoft.insights/components', variables('etlApiAppInsightsName'))]"
             },
