@@ -397,7 +397,7 @@
                 "administratorLogin": "[parameters('administratorLogin')]",
                 "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
                 "storageProfile": {
-                    "storageMB": 30720,
+                    "storageMB": 40960,
                     "backupRetentionDays": 7,
                     "geoRedundantBackup": "Disabled",
                     "storageAutogrow": "Enabled"
@@ -1263,6 +1263,98 @@
                             "location": "[variables('location')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('etlActionTopicName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+                            ],
+                            "properties": {
+                                "lockDuration": "PT5M",
+                                "requiresSession": false,
+                                "defaultMessageTimeToLive": "P14D",
+                                "deadLetteringOnMessageExpiration": false,
+                                "deadLetteringOnFilterEvaluationExceptions": false,
+                                "maxDeliveryCount": 1,
+                                "status": "Active",
+                                "enableBatchedOperations": true,
+                                "autoDeleteOnIdle": "P14D"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "condition": "[variables('isETL')]",
+                    "type": "Microsoft.ServiceBus/namespaces/topics",
+                    "apiVersion": "2018-01-01-preview",
+                    "name": "[concat(variables('serviceBusName'), '/', variables('etlOfficeAuditDownloadTopicName'))]",
+                    "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+                    ],
+                    "properties": {
+                        "defaultMessageTimeToLive": "P14D",
+                        "maxSizeInMegabytes": 1024,
+                        "requiresDuplicateDetection": false,
+                        "duplicateDetectionHistoryTimeWindow": "PT10M",
+                        "enableBatchedOperations": true,
+                        "status": "Active",
+                        "supportOrdering": true,
+                        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                        "enablePartitioning": false,
+                        "enableExpress": false
+                    },
+                    "resources": [
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+                            "apiVersion": "2018-01-01-preview",
+                            "name": "[concat(variables('serviceBusName'), '/', variables('etlOfficeAuditDownloadTopicName'), '/', variables('etlOfficeAuditDownloadTopicName'), '-sub')]",
+                            "location": "[variables('location')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('etlOfficeAuditDownloadTopicName'))]",
+                                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+                            ],
+                            "properties": {
+                                "lockDuration": "PT5M",
+                                "requiresSession": false,
+                                "defaultMessageTimeToLive": "P14D",
+                                "deadLetteringOnMessageExpiration": false,
+                                "deadLetteringOnFilterEvaluationExceptions": false,
+                                "maxDeliveryCount": 1,
+                                "status": "Active",
+                                "enableBatchedOperations": true,
+                                "autoDeleteOnIdle": "P14D"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "condition": "[variables('isETL')]",
+                    "type": "Microsoft.ServiceBus/namespaces/topics",
+                    "apiVersion": "2018-01-01-preview",
+                    "name": "[concat(variables('serviceBusName'), '/', variables('etlOfficeAuditJobUpdateTopicName'))]",
+                    "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+                    ],
+                    "properties": {
+                        "defaultMessageTimeToLive": "P14D",
+                        "maxSizeInMegabytes": 1024,
+                        "requiresDuplicateDetection": false,
+                        "duplicateDetectionHistoryTimeWindow": "PT10M",
+                        "enableBatchedOperations": true,
+                        "status": "Active",
+                        "supportOrdering": true,
+                        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                        "enablePartitioning": false,
+                        "enableExpress": false
+                    },
+                    "resources": [
+                        {
+                            "condition": "[variables('isETL')]",
+                            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+                            "apiVersion": "2018-01-01-preview",
+                            "name": "[concat(variables('serviceBusName'), '/', variables('etlOfficeAuditJobUpdateTopicName'), '/', variables('etlOfficeAuditJobUpdateTopicName'), '-sub')]",
+                            "location": "[variables('location')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('etlOfficeAuditJobUpdateTopicName'))]",
                                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
                             ],
                             "properties": {
