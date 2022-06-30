@@ -141,6 +141,9 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlApiAppName')]",
                     "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
+                    ],
                     "kind": "functionapp",
                     "identity": {
                         "type": "SystemAssigned"
@@ -312,6 +315,9 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlRenewalAppName')]",
                     "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))]"
+                    ],
                     "kind": "functionapp",
                     "identity": {
                         "type": "SystemAssigned"
