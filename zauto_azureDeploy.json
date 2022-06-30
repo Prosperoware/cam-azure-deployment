@@ -3877,7 +3877,58 @@
 				"principalId": "[if(variables('isCS'), reference(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
 				"principalType": "ServicePrincipal"
 			}
-		},
+		}, // SA28 OFFICE AUDIT
+        {
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('raEtlOfficeAuditAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlOfficeAuditAppName'), '/Extensions/ZipDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('readerAndDataAccess')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        { // SA29 OFFICE AUDIT
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('skEtlOfficeAuditAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlOfficeAuditAppName'), '/Extensions/ZipDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgKeyOperator')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        { // SA30 OFFICE AUDIT
+            "scope": "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('strgBlobOwnerEtlOfficeAuditAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName'))]",
+                "[concat('Microsoft.Web/Sites/', variables('etlOfficeAuditAppName'), '/Extensions/ZipDeploy')]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('strgBlobDataOwner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
 		{
 			//SB1
 			"scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
