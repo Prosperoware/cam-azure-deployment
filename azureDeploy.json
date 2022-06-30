@@ -46,7 +46,10 @@
         "InstanceUniqueName": {
             "type": "string",
             "minLength": 3,
-            "maxLength": 5
+            "maxLength": 5,
+            "metadata": {
+                "description": "Unique Name between 3 to 5 characters"
+            }
         },
         "TopLevelDomain": {
             "type": "string",
