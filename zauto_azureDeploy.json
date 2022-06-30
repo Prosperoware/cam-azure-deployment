@@ -1812,7 +1812,7 @@
 						},
 						{
 							"name": "api_base_url",
-							"value": "[concat('https://', variables('etlRenewalAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+							"value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
 						{
 							"name": "service_id",
@@ -2004,7 +2004,7 @@
 						},
 						{
 							"name": "api_base_url",
-							"value": "[concat('https://', variables('etlMappingAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+							"value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
 						{
 							"name": "service_id",
@@ -2200,7 +2200,7 @@
 						},
 						{
 							"name": "api_base_url",
-							"value": "[concat('https://', variables('etlProcessAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+							"value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
 						{
 							"name": "service_id",
@@ -2396,7 +2396,7 @@
 						},
 						{
 							"name": "api_base_url",
-							"value": "[concat('https://', variables('etlActionAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+							"value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
 						{
 							"name": "service_id",
@@ -2956,7 +2956,7 @@
 						},
 						{
 							"name": "api_base_url",
-							"value": "[concat('https://', variables('csProcessAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+							"value": "[concat('https://', variables('csApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
 						{
 							"name": "service_id",
@@ -3155,7 +3155,7 @@
 						},
 						{
 							"name": "api_base_url",
-							"value": "[concat('https://', variables('csRetryAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+							"value": "[concat('https://', variables('csApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
 						},
 						{
 							"name": "service_id",
