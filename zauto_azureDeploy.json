@@ -44,10 +44,13 @@
 			"allowedValues": ["dev", "qa", "stg", "prod"]
 		},
 		"InstanceUniqueName": {
-			"type": "string",
-			"minLength": 3,
-			"maxLength": 5
-		},
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 11,
+            "metadata": {
+                "description": "Unique Name between 3 to 11 characters"
+            }
+        },
 		"TopLevelDomain": {
 			"type": "string",
 			"allowedValues": ["io", "eu", "com", "co.uk"]
@@ -225,8 +228,8 @@
 		"strgBlobOwnerCsApiAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csApiAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
 		"strgBlobOwnerCsProcessAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csProcessAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
 		"strgBlobOwnerCsRetryAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('csRetryAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
-		"etlOfficeAuditDownloadTopicName": "[concat(variables('resourcesNamespace'), '-etl_audit_download_worker_start')]",
-        "etlOfficeAuditJobUpdateTopicName": "[concat(variables('resourcesNamespace'), '-etl_audit_job_update_worker_start')]",
+		"etlOfficeAuditDownloadTopicName": "[concat(variables('resourcesNamespace'), '-etladtdownldwrkrstrt')]",
+        "etlOfficeAuditJobUpdateTopicName": "[concat(variables('resourcesNamespace'), '-etladtjbupdtwrkrstrt')]",
         "etlOfficeAuditAppName": "[concat(variables('resourcesNamespace'), '-etl-office-audit')]",
         "etlOfficeAuditAppInsightsName": "[concat(variables('resourcesNamespace'), '-etl-office-audit')]",
         "raEtlOfficeAuditAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('readerAndDataAccess'))]",
