@@ -3928,6 +3928,7 @@
                 "principalType": "ServicePrincipal"
             }
         },
+		// SERVICEBUS roleAssignments
 		{
 			//SB1
 			"scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
@@ -3945,7 +3946,6 @@
 				"principalType": "ServicePrincipal"
 			}
 		},
-		// SERVICEBUS roleAssignments
 		{
 			//SB2
 			"scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
@@ -4233,6 +4233,38 @@
 				"principalType": "ServicePrincipal"
 			}
 		},
+        { // SB19 OFFICE AUDIT
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbEtlOfficeAuditAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName'))]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('owner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
+        { // SB20 OFFICE AUDIT
+            "scope": "[concat('Microsoft.ServiceBus/namespaces/', variables('serviceBusName'))]",
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('sbDataOwnerEtlOfficeAuditAppRoleId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]",
+                "[resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName'))]"
+            ],
+            "properties": {
+                "roleDefinitionId": "[variables('sbdataowner')]",
+                "principalId": "[if(variables('isETL'), reference(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), '2018-02-01', 'Full').identity.principalId, '')]",
+                "principalType": "ServicePrincipal"
+            }
+        },
 		//PREMIUM TEMPLATE
 		//VIRTUALNETWORK MOVED TO PremiumnestedChildVnet
 		//ENDPOINTS MOVED TO PremiumnestedChildVnetEndpoints
