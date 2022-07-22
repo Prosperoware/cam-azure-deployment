@@ -491,7 +491,7 @@
                                 },
                                 {
                                     "name": "api_base_url",
-                                    "value": "[concat('https://', variables('etlApiAppName'), '.azurewebsites.net', variables('apiVersion'))]"
+                                    "value": "[concat('https://', variables('etlRenewalAppName'), '.azurewebsites.net', variables('apiVersion'))]"
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -1033,8 +1033,7 @@
                     "name": "[variables('etlActionAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Insights/components', variables('etlActionAppName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                        "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]",
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -1857,8 +1856,7 @@
                     "name": "[variables('csRetryAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))]",
-                        "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
+                        "[resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))]"
                     ],
                     "kind": "functionapp",
                     "identity": {
