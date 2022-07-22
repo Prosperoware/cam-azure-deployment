@@ -2241,7 +2241,7 @@
                                     "value": "[variables('etlActionAppName')]"
                                 },
                                 {
-                                    "name": "etl_mapping_action_subscription",
+                                    "name": "etl_mapping_action_topic_subscription",
                                     "value": "[concat(variables('etlActionTopicName'), '-sub')]"
                                 },
                                 {
