@@ -5,7 +5,7 @@ name: AzureDeployerStandard
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ qa2test ]
+    branches: [ master ]
     paths: 
       - 'azureDeploy.json'
 
