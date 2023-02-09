@@ -331,7 +331,7 @@
                 "name": "B_Gen5_1",
                 "tier": "Basic",
                 "family": "Gen5",
-                "capacity": 1
+                "capacity": 2
             },
             "properties": {
                 "createMode": "Default",
