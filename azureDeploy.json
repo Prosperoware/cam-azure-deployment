@@ -328,7 +328,7 @@
             "name": "[variables('mySqlServerName')]",
             "location": "[variables('location')]",
             "sku": {
-                "name": "B_Gen5_1",
+                "name": "B_Gen5_2",
                 "tier": "Basic",
                 "family": "Gen5",
                 "capacity": 2
