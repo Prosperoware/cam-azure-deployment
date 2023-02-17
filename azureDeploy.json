@@ -79,7 +79,7 @@
         "etlRenewalTopicName": "[concat(variables('resourcesNamespace'), '-etl_renewal_worker_start')]",
         "etlMappingTopicName": "[concat(variables('resourcesNamespace'), '-etl_mapping_worker_start')]",
         "reloadTopicName": "[concat(variables('resourcesNamespace'), '-systemauth_reload')]",
-        "etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
+        // "etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
         "etlOfficeAuditDownloadTopicName": "[concat(variables('resourcesNamespace'), '-etladtdownldwrkrstrt')]",
         "etlOfficeAuditJobUpdateTopicName": "[concat(variables('resourcesNamespace'), '-etladtjbupdtwrkrstrt')]",
         "webServerName": "[concat(variables('resourcesNamespace'), '-api-app-srvr')]",
@@ -1198,52 +1198,52 @@
                         }
                     ]
                 },
-                {
-                    "condition": "[variables('isETL')]",
-                    "type": "Microsoft.ServiceBus/namespaces/topics",
-                    "apiVersion": "2018-01-01-preview",
-                    "name": "[concat(variables('serviceBusName'), '/', variables('etlActionTopicName'))]",
-                    "location": "[variables('location')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
-                    ],
-                    "properties": {
-                        "defaultMessageTimeToLive": "P14D",
-                        "maxSizeInMegabytes": 1024,
-                        "requiresDuplicateDetection": false,
-                        "duplicateDetectionHistoryTimeWindow": "PT10M",
-                        "enableBatchedOperations": true,
-                        "status": "Active",
-                        "supportOrdering": true,
-                        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
-                        "enablePartitioning": false,
-                        "enableExpress": false
-                    },
-                    "resources": [
-                        {
-                            "condition": "[variables('isETL')]",
-                            "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
-                            "apiVersion": "2018-01-01-preview",
-                            "name": "[concat(variables('serviceBusName'), '/', variables('etlActionTopicName'), '/', variables('etlActionTopicName'), '-sub')]",
-                            "location": "[variables('location')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('etlActionTopicName'))]",
-                                "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
-                            ],
-                            "properties": {
-                                "lockDuration": "PT5M",
-                                "requiresSession": false,
-                                "defaultMessageTimeToLive": "P14D",
-                                "deadLetteringOnMessageExpiration": false,
-                                "deadLetteringOnFilterEvaluationExceptions": false,
-                                "maxDeliveryCount": 1,
-                                "status": "Active",
-                                "enableBatchedOperations": true,
-                                "autoDeleteOnIdle": "P14D"
-                            }
-                        }
-                    ]
-                },
+                // {
+                //     "condition": "[variables('isETL')]",
+                //     "type": "Microsoft.ServiceBus/namespaces/topics",
+                //     "apiVersion": "2018-01-01-preview",
+                //     "name": "[concat(variables('serviceBusName'), '/', variables('etlActionTopicName'))]",
+                //     "location": "[variables('location')]",
+                //     "dependsOn": [
+                //         "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+                //     ],
+                //     "properties": {
+                //         "defaultMessageTimeToLive": "P14D",
+                //         "maxSizeInMegabytes": 1024,
+                //         "requiresDuplicateDetection": false,
+                //         "duplicateDetectionHistoryTimeWindow": "PT10M",
+                //         "enableBatchedOperations": true,
+                //         "status": "Active",
+                //         "supportOrdering": true,
+                //         "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                //         "enablePartitioning": false,
+                //         "enableExpress": false
+                //     },
+                //     "resources": [
+                //         {
+                //             "condition": "[variables('isETL')]",
+                //             "type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+                //             "apiVersion": "2018-01-01-preview",
+                //             "name": "[concat(variables('serviceBusName'), '/', variables('etlActionTopicName'), '/', variables('etlActionTopicName'), '-sub')]",
+                //             "location": "[variables('location')]",
+                //             "dependsOn": [
+                //                 "[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('etlActionTopicName'))]",
+                //                 "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+                //             ],
+                //             "properties": {
+                //                 "lockDuration": "PT5M",
+                //                 "requiresSession": false,
+                //                 "defaultMessageTimeToLive": "P14D",
+                //                 "deadLetteringOnMessageExpiration": false,
+                //                 "deadLetteringOnFilterEvaluationExceptions": false,
+                //                 "maxDeliveryCount": 1,
+                //                 "status": "Active",
+                //                 "enableBatchedOperations": true,
+                //                 "autoDeleteOnIdle": "P14D"
+                //             }
+                //         }
+                //     ]
+                // },
                 {
                     "condition": "[variables('isETL')]",
                     "type": "Microsoft.ServiceBus/namespaces/topics",
