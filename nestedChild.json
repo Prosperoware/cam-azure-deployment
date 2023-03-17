@@ -91,10 +91,11 @@
         "serviceBusName": "[concat('servicebus-', variables('resourcesNamespace'))]",
         "cosmosTenantdb": "[concat(variables('resourcesNamespace'),'-contentsync-tenant')]",
         "etlQueueName": "[concat(variables('resourcesNamespace'), '-etl-process-v1')]",
+        "etlDocumentActionQueueName": "[concat(variables('resourcesNamespace'), '-etl-document-action-v1')]",
         "csQueueName": "[concat(variables('resourcesNamespace'), '-job-process-v1')]",
         "etlRenewalTopicName": "[concat(variables('resourcesNamespace'), '-etl_renewal_worker_start')]",
         "etlMappingTopicName": "[concat(variables('resourcesNamespace'), '-etl_mapping_worker_start')]",
-        "etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
+        // "etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
         "etlApiAppName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
         "etlRenewalAppName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
         "etlMappingAppName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
@@ -142,7 +143,7 @@
                     "name": "[variables('etlApiAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
+                        "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -690,7 +691,6 @@
                     "name": "[variables('etlProcessAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        
                         "[resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
                     ],
@@ -886,7 +886,7 @@
                     "name": "[variables('etlActionAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]",
+                        "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]"
                     ],
                     "kind": "functionapp",
                     "identity": {
@@ -984,13 +984,17 @@
                                     "name": "service_name",
                                     "value": "[variables('etlActionAppName')]"
                                 },
+                                // {
+                                //     "name": "etl_mapping_action_subscription",
+                                //     "value": "[concat(variables('etlActionTopicName'), '-sub')]"
+                                // },
+                                // {
+                                //     "name": "etl_mapping_action_topic",
+                                //     "value": "[variables('etlActionTopicName')]"
+                                // }
                                 {
-                                    "name": "etl_mapping_action_subscription",
-                                    "value": "[concat(variables('etlActionTopicName'), '-sub')]"
-                                },
-                                {
-                                    "name": "etl_mapping_action_topic",
-                                    "value": "[variables('etlActionTopicName')]"
+                                    "name": "etl_document_action_queue",
+                                    "value": "[variables('etlDocumentActionQueueName')]"
                                 }
                             ]
                         },
@@ -1066,7 +1070,6 @@
                     "name": "[variables('configAppName')]",
                     "location": "[variables('Location')]",
                     "dependsOn": [
-                        
                         "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]"
                     ],
                     "kind": "functionapp",
@@ -1204,6 +1207,10 @@
                                 {
                                     "name": "product_features",
                                     "value": "[parameters('Features')]"
+                                },
+                                {
+                                    "name": "etl_document_action_queue",
+                                    "value": "[variables('etlDocumentActionQueueName')]"
                                 }
                             ]
                         },
