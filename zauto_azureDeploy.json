@@ -242,7 +242,7 @@
 		"isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
 		"DefaultWorkspaceName":"[concat('DefaultWorkspace-',parameters('InstanceUniqueName'))]",
 		"WorkspaceResourceId":"[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.OperationalInsights/workspaces/',variables('DefaultWorkspaceName'))]",
-		"branch": "qa2test",
+		"branch": "qa2testpremium",
 		"repo": "https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
 		// "branch": "master",
 		//"repo":"https://generalsupport.blob.core.windows.net/prospero/"//"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
