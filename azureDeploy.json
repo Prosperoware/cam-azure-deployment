@@ -1382,14 +1382,7 @@
                 "tier": "ElasticPremium",
                 "size": "EP1",
                 "family": "EP",
-                "capacity": 1,
-                "skuCapacity": {
-                    "default": 1,
-                    "elasticMaximum": 50,
-                    "maximum": 50,
-                    "minimum": 50,
-                    "scaleType": "Automatic"
-                }
+                "capacity": 1
             },
             "kind": "functionapp",
             "properties": {
