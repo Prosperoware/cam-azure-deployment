@@ -2085,7 +2085,11 @@
                                 },
                                 {
                                     "name": "etl_job_process_dl_schedule",
-                                    "value": "0 0/15 * * * *"
+                                    "value": "[if(equals(parameters('ServicePlan'),'Premium'), '0 0/65 * * * *', '0 0/15 * * * *')]"
+                                },
+                                {
+                                    "name": "etl_job_process_reset_time_sec",
+                                    "value": "[if(equals(parameters('ServicePlan'),'Premium'), '7200', '3600')]"
                                 },
                                 {
                                     "name": "etl_job_process_queue",
@@ -2093,7 +2097,7 @@
                                 },
                                 {
                                     "name": "etlJobProcessHandler_timeout_sec",
-                                    "value": "600"
+                                    "value": "[if(equals(parameters('ServicePlan'),'Premium'), '3540', '600')]"
                                 },
                                 {
                                     "name": "safe_remaining_time",
