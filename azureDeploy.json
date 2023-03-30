@@ -87,7 +87,7 @@
         "etlRenewalTopicName": "[concat(variables('resourcesNamespace'), '-etl_renewal_worker_start')]",
         "etlMappingTopicName": "[concat(variables('resourcesNamespace'), '-etl_mapping_worker_start')]",
         "reloadTopicName": "[concat(variables('resourcesNamespace'), '-systemauth_reload')]",
-        // "etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
+        //  "etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
         "etlOfficeAuditDownloadTopicName": "[concat(variables('resourcesNamespace'), '-etladtdownldwrkrstrt')]",
         "etlOfficeAuditJobUpdateTopicName": "[concat(variables('resourcesNamespace'), '-etladtjbupdtwrkrstrt')]",
         "webServerName": "[concat(variables('resourcesNamespace'), '-api-app-srvr')]",
