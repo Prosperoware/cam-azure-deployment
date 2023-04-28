@@ -151,11 +151,12 @@
 		"serviceBusName": "[concat('servicebus-', variables('resourcesNamespace'))]",
 		"cosmosTenantdb": "[concat(variables('resourcesNamespace'),'-contentsync-tenant')]",
 		"etlQueueName": "[concat(variables('resourcesNamespace'), '-etl-process-v1')]",
+		"etlDocumentActionQueueName": "[concat(variables('resourcesNamespace'), '-etl-document-action-v1')]",
 		"csQueueName": "[concat(variables('resourcesNamespace'), '-job-process-v1')]",
 		"etlRenewalTopicName": "[concat(variables('resourcesNamespace'), '-etl_renewal_worker_start')]",
 		"etlMappingTopicName": "[concat(variables('resourcesNamespace'), '-etl_mapping_worker_start')]",
 		"reloadTopicName": "[concat(variables('resourcesNamespace'), '-systemauth_reload')]",
-		"etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
+		// "etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
 		"webServerName": "[concat(variables('resourcesNamespace'), '-api-app-srvr')]",
 		"etlApiAppName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
 		"etlRenewalAppName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
@@ -241,9 +242,9 @@
 		"isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
 		"DefaultWorkspaceName":"[concat('DefaultWorkspace-',parameters('InstanceUniqueName'))]",
 		"WorkspaceResourceId":"[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.OperationalInsights/workspaces/',variables('DefaultWorkspaceName'))]",
-		//"branch": "qa2test",
-		"repo": "https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
 		"branch": "master",
+		"repo": "https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
+		// "branch": "master",
 		//"repo":"https://generalsupport.blob.core.windows.net/prospero/"//"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
 	},
 	"resources": [
@@ -1104,6 +1105,31 @@
 					}
 				},
 				{
+                    "condition": "[variables('isETL')]",
+                    "type": "Microsoft.ServiceBus/namespaces/queues",
+                    "apiVersion": "2018-01-01-preview",
+                    "name": "[concat(variables('serviceBusName'), '/', variables('etlDocumentActionQueueName'))]",
+                    "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+                    ],
+                    "properties": {
+                        "lockDuration": "PT5M",
+                        "maxSizeInMegabytes": 1024,
+                        "requiresDuplicateDetection": false,
+                        "requiresSession": false,
+                        "defaultMessageTimeToLive": "P14D",
+                        "deadLetteringOnMessageExpiration": false,
+                        "enableBatchedOperations": true,
+                        "duplicateDetectionHistoryTimeWindow": "PT10M",
+                        "maxDeliveryCount": 1,
+                        "status": "Active",
+                        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                        "enablePartitioning": false,
+                        "enableExpress": false
+                    }
+                },
+				{
 					"condition": "[variables('isCS')]",
 					"type": "Microsoft.ServiceBus/namespaces/queues",
 					"apiVersion": "2018-01-01-preview",
@@ -1264,52 +1290,52 @@
 						}
 					]
 				},
-				{
-					"condition": "[variables('isETL')]",
-					"type": "Microsoft.ServiceBus/namespaces/topics",
-					"apiVersion": "2018-01-01-preview",
-					"name": "[concat(variables('serviceBusName'), '/', variables('etlActionTopicName'))]",
-					"location": "[variables('location')]",
-					"dependsOn": [
-						"[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
-					],
-					"properties": {
-						"defaultMessageTimeToLive": "P14D",
-						"maxSizeInMegabytes": 1024,
-						"requiresDuplicateDetection": false,
-						"duplicateDetectionHistoryTimeWindow": "PT10M",
-						"enableBatchedOperations": true,
-						"status": "Active",
-						"supportOrdering": true,
-						"autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
-						"enablePartitioning": false,
-						"enableExpress": false
-					},
-					"resources": [
-						{
-							"condition": "[variables('isETL')]",
-							"type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
-							"apiVersion": "2018-01-01-preview",
-							"name": "[concat(variables('serviceBusName'), '/', variables('etlActionTopicName'), '/', variables('etlActionTopicName'), '-sub')]",
-							"location": "[variables('location')]",
-							"dependsOn": [
-								"[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('etlActionTopicName'))]",
-								"[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
-							],
-							"properties": {
-								"lockDuration": "PT5M",
-								"requiresSession": false,
-								"defaultMessageTimeToLive": "P14D",
-								"deadLetteringOnMessageExpiration": false,
-								"deadLetteringOnFilterEvaluationExceptions": false,
-								"maxDeliveryCount": 1,
-								"status": "Active",
-								"enableBatchedOperations": true,
-								"autoDeleteOnIdle": "P14D"
-							}
-						}
-					]
-				},
+				// {
+				// 	"condition": "[variables('isETL')]",
+				// 	"type": "Microsoft.ServiceBus/namespaces/topics",
+				// 	"apiVersion": "2018-01-01-preview",
+				// 	"name": "[concat(variables('serviceBusName'), '/', variables('etlActionTopicName'))]",
+				// 	"location": "[variables('location')]",
+				// 	"dependsOn": [
+				// 		"[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+				// 	],
+				// 	"properties": {
+				// 		"defaultMessageTimeToLive": "P14D",
+				// 		"maxSizeInMegabytes": 1024,
+				// 		"requiresDuplicateDetection": false,
+				// 		"duplicateDetectionHistoryTimeWindow": "PT10M",
+				// 		"enableBatchedOperations": true,
+				// 		"status": "Active",
+				// 		"supportOrdering": true,
+				// 		"autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+				// 		"enablePartitioning": false,
+				// 		"enableExpress": false
+				// 	},
+				// 	"resources": [
+				// 		{
+				// 			"condition": "[variables('isETL')]",
+				// 			"type": "Microsoft.ServiceBus/namespaces/topics/subscriptions",
+				// 			"apiVersion": "2018-01-01-preview",
+				// 			"name": "[concat(variables('serviceBusName'), '/', variables('etlActionTopicName'), '/', variables('etlActionTopicName'), '-sub')]",
+				// 			"location": "[variables('location')]",
+				// 			"dependsOn": [
+				// 				"[resourceId('Microsoft.ServiceBus/namespaces/topics', variables('serviceBusName'), variables('etlActionTopicName'))]",
+				// 				"[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
+				// 			],
+				// 			"properties": {
+				// 				"lockDuration": "PT5M",
+				// 				"requiresSession": false,
+				// 				"defaultMessageTimeToLive": "P14D",
+				// 				"deadLetteringOnMessageExpiration": false,
+				// 				"deadLetteringOnFilterEvaluationExceptions": false,
+				// 				"maxDeliveryCount": 1,
+				// 				"status": "Active",
+				// 				"enableBatchedOperations": true,
+				// 				"autoDeleteOnIdle": "P14D"
+				// 			}
+				// 		}
+				// 	]
+				// },
                 {
                     "condition": "[variables('isETL')]",
                     "type": "Microsoft.ServiceBus/namespaces/topics",
@@ -2302,7 +2328,8 @@
 			"dependsOn": [
 				"[resourceId('Microsoft.insights/components', variables('etlActionAppInsightsName'))]",
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
-				"[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlActionTopicName'), concat(variables('etlActionTopicName'), '-sub'))]",
+				// "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlActionTopicName'), concat(variables('etlActionTopicName'), '-sub'))]",
+				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlDocumentActionQueueName'))]",
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
 			],
@@ -2409,13 +2436,17 @@
 							"name": "service_name",
 							"value": "[variables('etlActionAppName')]"
 						},
+						// {
+						// 	"name": "etl_mapping_action_subscription",
+						// 	"value": "[concat(variables('etlActionTopicName'), '-sub')]"
+						// },
+						// {
+						// 	"name": "etl_mapping_action_topic",
+						// 	"value": "[variables('etlActionTopicName')]"
+						// },
 						{
-							"name": "etl_mapping_action_subscription",
-							"value": "[concat(variables('etlActionTopicName'), '-sub')]"
-						},
-						{
-							"name": "etl_mapping_action_topic",
-							"value": "[variables('etlActionTopicName')]"
+							"name": "etl_document_action_queue",
+							"value": "[variables('etlDocumentActionQueueName')]"
 						},
 						{
 							"name": "WEBSITE_RUN_FROM_PACKAGE",
@@ -2693,6 +2724,7 @@
 				"[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]",
 				"[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
+				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlDocumentActionQueueName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateEndpoints')]"
@@ -2835,6 +2867,10 @@
 						{
 							"name": "product_features",
 							"value": "[parameters('Features')]"
+						},
+						{
+							"name": "etl_document_action_queue",
+							"value": "[variables('etlDocumentActionQueueName')]"
 						}
 					],
 					"vnetRouteAllEnabled": "[if(equals(parameters('Deploymenttype'),'Standard'),'false','true')]",
