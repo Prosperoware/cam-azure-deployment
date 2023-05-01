@@ -109,6 +109,7 @@
         "etlMappingTopicName": "[concat(variables('resourcesNamespace'), '-etl_mapping_worker_start')]",
         // "etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
         "webServerName": "[concat(variables('resourcesNamespace'), '-api-app-srvr')]",
+        "webServerNamePremium": "[concat(variables('resourcesNamespace'), '-premium-app-srvr')]",
         "etlApiAppName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
         "etlRenewalAppName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
         "etlMappingAppName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
@@ -134,7 +135,7 @@
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
         "vnetName": "Vnet1",
         "subnet1Name": "Subnet1",
-        "subnet2Name": "Subnet2",
+        "subnet2Name": "Subnet2"
     },
     "resources": [
         //STORAGEACCOUNT
@@ -842,7 +843,7 @@
                                 "hostType": "Repository"
                             }
                         ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerNamePremium'))]",
                         "reserved": false,
                         "isXenon": false,
                         "hyperV": false,
@@ -926,7 +927,7 @@
                                 },
                                 {
                                     "name": "etl_job_process_dl_schedule",
-                                    "value": "0 0/15 * * * *"
+                                    "value": "0 0/55 * * * *"
                                 },
                                 {
                                     "name": "etl_job_process_queue",
@@ -934,7 +935,7 @@
                                 },
                                 {
                                     "name": "etlJobProcessHandler_timeout_sec",
-                                    "value": "600"
+                                    "value": "2500"
                                 },
                                 {
                                     "name": "safe_remaining_time",
