@@ -979,6 +979,10 @@
 							"value": "0 0/55 * * * *"
 						},
 						{
+							"name": "etl_job_process_reset_time_sec",
+							"value": "7200"
+						},
+						{
 							"name": "etl_job_process_queue",
 							"value": "[variables('etlQueueName')]"
 						},
