@@ -927,7 +927,11 @@
                                 },
                                 {
                                     "name": "etl_job_process_dl_schedule",
-                                    "value": "0 0/15 * * * *"
+                                    "value": "0 0/55 * * * *"
+                                },
+                                {
+                                    "name": "etl_job_process_reset_time_sec",
+                                    "value": "7200"
                                 },
                                 {
                                     "name": "etl_job_process_queue",
