@@ -138,6 +138,7 @@
         "reloadTopicName": "[concat(variables('resourcesNamespace'), '-systemauth_reload')]",
         // "etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
         "webServerName": "[concat(variables('resourcesNamespace'), '-api-app-srvr')]",
+        "webServerNamePremium": "[concat(variables('resourcesNamespace'), '-premium-app-srvr')]",
         "etlApiAppName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
         "etlRenewalAppName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
         "etlMappingAppName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
@@ -1429,6 +1430,32 @@
                 "targetWorkerSizeId": 0
             }
         },
+        {
+            "condition": "[variables('isETL')]",
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "name": "[variables('webServerNamePremium')]",
+            "location": "[variables('location')]",
+            "sku": {
+                "name": "EP1",
+                "tier": "ElasticPremium",
+                "size": "EP1",
+                "family": "EP",
+                "capacity": 1
+            },
+            "kind": "functionapp",
+            "properties": {
+                "elasticScaleEnabled": true,
+                "perSiteScaling": false,
+                "maximumElasticWorkerCount": 100,
+                "isSpot": false,
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0
+            }
+        },
         //LINKED TEMPLATE VNET ONLY PREMIUM
         {
             "type": "Microsoft.Resources/deployments",
@@ -1999,7 +2026,7 @@
                     "name": "[variables('etlProcessAppName')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "[resourceId('Microsoft.Web/serverfarms', variables('webServerNamePremium'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))]",
                         "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
@@ -2022,7 +2049,7 @@
                                 "hostType": "Repository"
                             }
                         ],
-                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
+                        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webServerNamePremium'))]",
                         "reserved": false,
                         "isXenon": false,
                         "hyperV": false,
@@ -2107,7 +2134,11 @@
                                 },
                                 {
                                     "name": "etl_job_process_dl_schedule",
-                                    "value": "0 0/15 * * * *"
+                                    "value": "0 0/55 * * * *"
+                                },
+                                {
+                                    "name": "etl_job_process_reset_time_sec",
+                                    "value": "7200"
                                 },
                                 {
                                     "name": "etl_job_process_queue",
@@ -2115,7 +2146,7 @@
                                 },
                                 {
                                     "name": "etlJobProcessHandler_timeout_sec",
-                                    "value": "600"
+                                    "value": "2500"
                                 },
                                 {
                                     "name": "safe_remaining_time",
