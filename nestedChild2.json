@@ -109,7 +109,7 @@
         "etlMappingTopicName": "[concat(variables('resourcesNamespace'), '-etl_mapping_worker_start')]",
         // "etlActionTopicName": "[concat(variables('resourcesNamespace'), '-etl_document_action')]",
         "webServerName": "[concat(variables('resourcesNamespace'), '-api-app-srvr')]",
-        "webServerNamePremium": "[concat(variables('resourcesNamespace'), '-premium-app-srvr')]"
+        "webServerNamePremium": "[concat(variables('resourcesNamespace'), '-premium-app-srvr')]",
         "etlApiAppName": "[concat(variables('resourcesNamespace'), '-etl-api')]",
         "etlRenewalAppName": "[concat(variables('resourcesNamespace'), '-etl-renewal')]",
         "etlMappingAppName": "[concat(variables('resourcesNamespace'), '-etl-mapping')]",
