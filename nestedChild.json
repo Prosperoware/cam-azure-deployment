@@ -796,7 +796,11 @@
                                 },
                                 {
                                     "name": "etl_job_process_dl_schedule",
-                                    "value": "0 0/15 * * * *"
+                                    "value": "0 0/55 * * * *"
+                                },
+                                {
+                                    "name": "etl_job_process_reset_time_sec",
+                                    "value": "7200"
                                 },
                                 {
                                     "name": "etl_job_process_queue",
@@ -804,7 +808,7 @@
                                 },
                                 {
                                     "name": "etlJobProcessHandler_timeout_sec",
-                                    "value": "600"
+                                    "value": "2500"
                                 },
                                 {
                                     "name": "safe_remaining_time",
