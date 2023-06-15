@@ -7,7 +7,7 @@
 
 
 ## CAM Azure Stack Architecture
-![](https://github.com/Prosperoware/cam-azure-deployment/blob/qa2test/Archi.png)
+![](https://github.com/Prosperoware/cam-azure-deployment/blob/master/Archi.png)
 test push
 
 ## Azure Resources
