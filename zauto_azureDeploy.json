@@ -1754,11 +1754,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": false,
-									"days": 0
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -1946,11 +1942,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": false,
-									"days": 0
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -2138,11 +2130,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": false,
-									"days": 0
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -2342,11 +2330,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": false,
-									"days": 0
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -2535,11 +2519,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": false,
-									"days": 0
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -2735,11 +2715,7 @@
                                 "logs": [
                                     {
                                         "category": "FunctionAppLogs",
-                                        "enabled": true,
-                                        "retentionPolicy": {
-                                            "enabled": false,
-                                            "days": 0
-                                        }
+                                        "enabled": true
                                     }
                                 ]
                             }
@@ -3110,11 +3086,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": false,
-									"days": 0
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -3310,11 +3282,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": false,
-									"days": 0
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -3501,11 +3469,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": false,
-									"days": 0
-								}
+								"enabled": true
 							}
 						]
 					}

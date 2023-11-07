@@ -387,7 +387,7 @@
                                       "actions": {
                                         "baseBlob": {
                                           "delete": {
-                                            "daysAfterModificationGreaterThan": 7
+                                            "daysAfterModificationGreaterThan": 1
                                           }
                                         }
                                       },
@@ -2550,11 +2550,7 @@
                                 "logs": [
                                     {
                                         "category": "FunctionAppLogs",
-                                        "enabled": true,
-                                        "retentionPolicy": {
-                                            "enabled": false,
-                                            "days": 0
-                                        }
+                                        "enabled": true
                                     }
                                 ]
                             }
