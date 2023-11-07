@@ -435,8 +435,8 @@
 								"category": "FunctionAppLogs",
 								"enabled": true,
 								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
+									"enabled": false,
+									"days": 0
 								}
 							}
 						]
@@ -633,8 +633,8 @@
 								"category": "FunctionAppLogs",
 								"enabled": true,
 								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
+									"enabled": false,
+									"days": 0
 								}
 							}
 						]
@@ -832,8 +832,8 @@
 								"category": "FunctionAppLogs",
 								"enabled": true,
 								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
+									"enabled": false,
+									"days": 0
 								}
 							}
 						]
@@ -1043,8 +1043,8 @@
 								"category": "FunctionAppLogs",
 								"enabled": true,
 								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
+									"enabled": false,
+									"days": 0
 								}
 							}
 						]
@@ -1241,8 +1241,8 @@
 								"category": "FunctionAppLogs",
 								"enabled": true,
 								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
+									"enabled": false,
+									"days": 0
 								}
 							}
 						]
@@ -1627,8 +1627,8 @@
 								"category": "FunctionAppLogs",
 								"enabled": true,
 								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
+									"enabled": false,
+									"days": 0
 								}
 							}
 						]
@@ -1834,8 +1834,8 @@
 								"category": "FunctionAppLogs",
 								"enabled": true,
 								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
+									"enabled": false,
+									"days": 0
 								}
 							}
 						]
@@ -2032,8 +2032,8 @@
 								"category": "FunctionAppLogs",
 								"enabled": true,
 								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
+									"enabled": false,
+									"days": 0
 								}
 							}
 						]
