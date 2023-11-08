@@ -433,11 +433,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -631,11 +627,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -830,11 +822,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -1041,11 +1029,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -1239,11 +1223,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -1625,11 +1605,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -1832,11 +1808,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -2030,11 +2002,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
