@@ -397,7 +397,27 @@
 											]
 										}
 									}
-								}
+								},{
+									"enabled": true,
+									"name": "AzureFunctionLogLifeCycle",
+									"type": "Lifecycle",
+									"definition": {
+									  "actions": {
+										"baseBlob": {
+										  "delete": {
+											"daysAfterModificationGreaterThan": 7
+										  }
+										}
+									  },
+									  "filters": {
+										"blobTypes": [
+										  "appendBlob"
+										],
+										"prefixMatch": [
+										  "insights-logs-functionapplogs"
+										]
+									  }
+									}}
 							]
 						}
 					}
@@ -1732,11 +1752,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -1924,11 +1940,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -2116,11 +2128,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -2320,11 +2328,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -2513,11 +2517,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -2713,11 +2713,7 @@
                                 "logs": [
                                     {
                                         "category": "FunctionAppLogs",
-                                        "enabled": true,
-                                        "retentionPolicy": {
-                                            "enabled": true,
-                                            "days": 7
-                                        }
+                                        "enabled": true
                                     }
                                 ]
                             }
@@ -3088,11 +3084,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -3288,11 +3280,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
@@ -3479,11 +3467,7 @@
 						"logs": [
 							{
 								"category": "FunctionAppLogs",
-								"enabled": true,
-								"retentionPolicy": {
-									"enabled": true,
-									"days": 7
-								}
+								"enabled": true
 							}
 						]
 					}
