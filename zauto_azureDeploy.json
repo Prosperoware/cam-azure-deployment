@@ -405,7 +405,7 @@
                                       "actions": {
                                         "baseBlob": {
                                           "delete": {
-                                            "daysAfterModificationGreaterThan": 1
+                                            "daysAfterModificationGreaterThan": 7
                                           }
                                         }
                                       },
