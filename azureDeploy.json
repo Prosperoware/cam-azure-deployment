@@ -221,7 +221,7 @@
         "strgBlobOwnerEtlOfficeAuditAppRoleId": "[guid(resourceId('Microsoft.Web/sites', variables('etlOfficeAuditAppName')), resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), variables('strgBlobDataOwner'))]",
         "isETL": "[or(equals(parameters('Features'), 'ETL'), equals(parameters('Features'), 'Both'))]",
         "isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
-        // "branch": "master",
+        // "branch": "qa2test",
         "DefaultWorkspaceName":"[concat('DefaultWorkspace-',parameters('InstanceUniqueName'))]",
 		"WorkspaceResourceId":"[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.OperationalInsights/workspaces/',variables('DefaultWorkspaceName'))]",
         "repo":"https://github.com/Prosperoware/cam-azure-deployment/raw/", // must have the ending /
