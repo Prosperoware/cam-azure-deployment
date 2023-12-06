@@ -397,27 +397,29 @@
 											]
 										}
 									}
-								},{
-									"enabled": true,
-									"name": "AzureFunctionLogLifeCycle",
-									"type": "Lifecycle",
-									"definition": {
-									  "actions": {
-										"baseBlob": {
-										  "delete": {
-											"daysAfterModificationGreaterThan": 7
-										  }
+								},
+								{
+								  "enabled": true,
+								  "name": "AzureFunctionLogLifeCycle",
+								  "type": "Lifecycle",
+								  "definition": {
+									"actions": {
+									  "baseBlob": {
+										"delete": {
+										  "daysAfterModificationGreaterThan": 7
 										}
-									  },
-									  "filters": {
-										"blobTypes": [
-										  "appendBlob"
-										],
-										"prefixMatch": [
-										  "insights-logs-functionapplogs"
-										]
 									  }
-									}}
+									},
+									"filters": {
+									  "blobTypes": [
+										"appendBlob"
+									  ],
+									  "prefixMatch": [
+										"insights-logs-functionapplogs"
+									  ]
+									}
+								  }
+								}
 							]
 						}
 					}
