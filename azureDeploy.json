@@ -1614,6 +1614,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlApiAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]",
@@ -1760,6 +1761,7 @@
                     "type": "Microsoft.Web/sites",
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlRenewalAppName')]",
+                    "tags": "[parameters('resourceTags')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
@@ -1919,6 +1921,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlMappingAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlMappingTopicName'), concat(variables('etlMappingTopicName'), '-sub'))]",
@@ -2076,6 +2079,7 @@
                     "type": "Microsoft.Web/sites",
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlProcessAppName')]",
+                    "tags": "[parameters('resourceTags')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerNamePremium'))]",
