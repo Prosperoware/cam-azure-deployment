@@ -124,7 +124,7 @@
                 "bu": "governance",
                 "department": "engineering",
                 "product": "cam",
-                "environment": "dev",
+                "environment": "Dev",
                 "location": "us_east_nvirginia",
                 "region": "us-east-1",
                 "provisionedby": "Manual",
@@ -1762,6 +1762,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlRenewalAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlRenewalTopicName'), concat(variables('etlRenewalTopicName'), '-sub'))]",
