@@ -2818,6 +2818,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('csApiAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName'))]",
