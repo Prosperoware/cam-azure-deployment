@@ -1609,7 +1609,7 @@
             "name": "[variables('csRetryAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
-            "tags": "[parameters('resourceTags')]"
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
