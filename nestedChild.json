@@ -79,7 +79,7 @@
             "metadata": {	
               "description": "Server farm resource id"	
             }	
-        }
+        },
     },
     "variables": {
         "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), replace(parameters('TopLevelDomain'), '.', ''))]",
@@ -129,6 +129,7 @@
             "name": "[variables('etlApiAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -299,6 +300,7 @@
             "name": "[variables('etlRenewalAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]"
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -482,6 +484,7 @@
             "name": "[variables('etlMappingAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]"
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -664,6 +667,7 @@
             "apiVersion": "2020-02-02-preview",
             "name": "[variables('etlProcessAppInsightsName')]",
             "location": "[variables('Location')]",
+            "tags": "[parameters('resourceTags')]"
             "kind": "web",
             "properties": {
                 "Application_Type": "web",
@@ -860,6 +864,7 @@
             "name": "[variables('etlActionAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]"
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -1041,6 +1046,7 @@
             "name": "[variables('configAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]"
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -1233,6 +1239,7 @@
             "name": "[variables('csApiAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]"
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -1407,6 +1414,7 @@
             "name": "[variables('csProcessAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]"
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -1601,6 +1609,7 @@
             "name": "[variables('csRetryAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]"
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
