@@ -167,6 +167,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlApiAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]"
                     ],
@@ -338,6 +339,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlRenewalAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))]"
                     ],
@@ -522,6 +524,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlMappingAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
@@ -706,6 +709,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlProcessAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
@@ -902,6 +906,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlActionAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]"
                     ],
@@ -1083,6 +1088,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('configAppName')]",
                     "location": "[variables('Location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]"
                     ],
@@ -1277,6 +1283,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('csApiAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         
                         "[resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName'))]",
@@ -1452,6 +1459,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('csProcessAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         
                         "[resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName'))]",
@@ -1647,6 +1655,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('csRetryAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))]"
                     ],
