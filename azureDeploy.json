@@ -1761,7 +1761,6 @@
                     "type": "Microsoft.Web/sites",
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlRenewalAppName')]",
-                    "tags": "[parameters('resourceTags')]",
                     "location": "[variables('location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
