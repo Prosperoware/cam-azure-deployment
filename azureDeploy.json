@@ -2252,6 +2252,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlActionAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         // "[resourceId('Microsoft.ServiceBus/namespaces/topics/subscriptions', variables('serviceBusName'), variables('etlActionTopicName'), concat(variables('etlActionTopicName'), '-sub'))]",
@@ -2411,6 +2412,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlOfficeAuditAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]"
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
@@ -2622,6 +2624,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('configAppName')]",
                     "location": "[variables('Location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]",
@@ -2961,6 +2964,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('csProcessAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
@@ -3127,6 +3131,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('csRetryAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))]",
