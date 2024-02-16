@@ -124,7 +124,7 @@
                 "bu": "governance",
                 "department": "engineering",
                 "product": "cam",
-                "environment": "Dev",
+                "environment": "dev",
                 "location": "us_east_nvirginia",
                 "region": "us-east-1",
                 "provisionedby": "Manual",
