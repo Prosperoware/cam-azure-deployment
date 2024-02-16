@@ -1580,6 +1580,7 @@
                             "name": "[variables('DefaultWorkspaceName')]", //"DefaultWorkspace-711d2629-ebac-4cb3-8b91-d1a57eb08cf2-EUS",
                             "type": "Microsoft.OperationalInsights/workspaces",
                             "location": "[resourceGroup().location]",
+                            "tags": "[parameters('resourceTags')]",
                             "properties": {}
                         }
                     ]
