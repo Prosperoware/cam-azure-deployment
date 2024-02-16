@@ -499,11 +499,6 @@
             "name": "[variables('cosmosName')]",
             "location": "[variables('location')]",
             "tags": "[parameters('resourceTags')]",
-            "tags": {
-                "defaultExperience": "Core (SQL)",
-                "hidden-cosmos-mmspecial": "",
-                "CosmosAccountType": "[if(equals(parameters('IsProduction'),'true'), 'Production', 'Non-Production')]"
-            },
             "kind": "GlobalDocumentDB",
             "properties": {
                 "publicNetworkAccess": "Enabled",
