@@ -118,7 +118,31 @@
             "metadata": {
               "description": "Location for all resources."
             }
-        }
+        },"resourceTags": {
+            "type": "object",
+            "defaultValue": {
+                "bu": "governance",
+                "department": "engineering",
+                "product": "cam",
+                "environment": "Dev",
+                "location": "us_east_nvirginia",
+                "region": "us-east-1",
+                "provisionedby": "Manual",
+                "owner": "vikas agnihotri",
+                "billing": "tina harkins",
+                "schedule": "Variable",
+                "bcdr": "P2",
+                "customertype": "Internal",
+                "customername": "Litera",
+                "dataclassification": "Company",
+                "PublicNetworkAccess": "Closed",
+                "reassessdate": "2024-02-15",
+                "productionbackup": "NoBackup",
+                "ext_monitoring_enabled": "False",
+                "ext_monitoring_region": "N/A",
+                "creationdate": "2024-02-15"
+            }
+          }
     },
     "variables": {
         "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), replace(parameters('TopLevelDomain'), '.', ''))]",
@@ -253,6 +277,7 @@
                 "tier": "Standard"
             },
             "kind": "StorageV2",
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "minimumTlsVersion": "TLS1_2",
                 "allowBlobPublicAccess": true,
@@ -415,6 +440,7 @@
             "apiVersion": "2017-12-01",
             "name": "[variables('mySqlServerName')]",
             "location": "[variables('location')]",
+            "tags": "[parameters('resourceTags')]",
             "sku": {
                 "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'B_Gen5_2','GP_Gen5_2')]",
                 "tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'Basic','GeneralPurpose')]",
@@ -472,6 +498,7 @@
             "apiVersion": "2020-09-01",
             "name": "[variables('cosmosName')]",
             "location": "[variables('location')]",
+            "tags": "[parameters('resourceTags')]",
             "tags": {
                 "defaultExperience": "Core (SQL)",
                 "hidden-cosmos-mmspecial": "",
@@ -1056,6 +1083,7 @@
             "apiVersion": "2018-01-01-preview",
             "name": "[variables('serviceBusName')]",
             "location": "[variables('location')]",
+            "tags": "[parameters('resourceTags')]",
             "sku": {
                 "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard','Premium')]",
                 "tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard','Premium')]"
@@ -1433,6 +1461,7 @@
             "apiVersion": "2018-02-01",
             "name": "[variables('webServerName')]",
             "location": "[variables('location')]",
+            "tags": "[parameters('resourceTags')]",
             "sku": {
                 "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'Y1','EP1')]",
                 "tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'Dynamic','ElasticPremium')]",
@@ -1458,6 +1487,7 @@
             "apiVersion": "2018-02-01",
             "name": "[variables('webServerNamePremium')]",
             "location": "[variables('location')]",
+            "tags": "[parameters('resourceTags')]",
             "sku": {
                 "name": "EP1",
                 "tier": "ElasticPremium",
@@ -1484,6 +1514,7 @@
             "apiVersion": "2021-04-01",
             "name": "linkedTemplateVNet",
             "condition":"[equals(parameters('Deploymenttype'),'Premium')]",
+            "tags": "[parameters('resourceTags')]",
             "dependsOn": [
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
@@ -1541,6 +1572,7 @@
             "name": "newWorkspaceTemplate",
             "resourceGroup": "[resourceGroup().name]",
             "subscriptionId": "[subscription().subscriptionId]",
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -1568,6 +1600,7 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('etlApiAppInsightsName')]",
             "location": "[variables('Location')]",
+            "tags": "[parameters('resourceTags')]",
 			"dependsOn":[
 				"newWorkspaceTemplate"
 			],
@@ -1714,6 +1747,7 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('etlRenewalAppInsightsName')]",
             "location": "[variables('Location')]",
+            "tags": "[parameters('resourceTags')]",
 			"dependsOn":[
 				"newWorkspaceTemplate"
 			],
@@ -1871,6 +1905,7 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('etlMappingAppInsightsName')]",
             "location": "[variables('Location')]",
+            "tags": "[parameters('resourceTags')]",
 			"dependsOn":[
 				"newWorkspaceTemplate"
 			],
@@ -2028,6 +2063,7 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('etlProcessAppInsightsName')]",
             "location": "[variables('Location')]",
+            "tags": "[parameters('resourceTags')]",
 			"dependsOn":[
 				"newWorkspaceTemplate"
 			],
@@ -2197,6 +2233,7 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('etlActionAppInsightsName')]",
             "location": "[variables('Location')]",
+            "tags": "[parameters('resourceTags')]",
 			"dependsOn":[
 				"newWorkspaceTemplate"
 			],
@@ -2355,6 +2392,7 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('etlOfficeAuditAppInsightsName')]",
             "location": "[variables('Location')]",
+            "tags": "[parameters('resourceTags')]",
 			"dependsOn":[
 				"newWorkspaceTemplate"
 			],
@@ -2566,6 +2604,7 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('configAppInsightsName')]",
             "location": "[variables('Location')]",
+            "tags": "[parameters('resourceTags')]",
 			"dependsOn":[
 				"newWorkspaceTemplate"
 			],
@@ -2758,6 +2797,7 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('csApiAppInsightsName')]",
             "location": "[variables('Location')]",
+            "tags": "[parameters('resourceTags')]",
 			"dependsOn":[
 				"newWorkspaceTemplate"
 			],
@@ -2902,6 +2942,7 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('csProcessAppInsightsName')]",
             "location": "[variables('Location')]",
+            "tags": "[parameters('resourceTags')]",
 			"dependsOn":[
 				"newWorkspaceTemplate"
 			],
@@ -3067,6 +3108,7 @@
             "apiVersion": "2020-02-02",
             "name": "[variables('csRetryAppInsightsName')]",
             "location": "[variables('Location')]",
+            "tags": "[parameters('resourceTags')]",
 			"dependsOn":[
 				"newWorkspaceTemplate"
 			],
