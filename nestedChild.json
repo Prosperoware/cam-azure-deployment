@@ -79,8 +79,32 @@
             "metadata": {	
               "description": "Server farm resource id"	
             }	
-        }
-    },
+        },
+        "resourceTags": {
+            "type": "object",
+            "defaultValue": {
+                "bu": "governance",
+                "department": "engineering",
+                "product": "cam",
+                "environment": "Dev",
+                "location": "us_east_nvirginia",
+                "region": "us-east-1",
+                "provisionedby": "Manual",
+                "owner": "vikas agnihotri",
+                "billing": "tina harkins",
+                "schedule": "Variable",
+                "bcdr": "P2",
+                "customertype": "Internal",
+                "customername": "Litera",
+                "dataclassification": "Company",
+                "PublicNetworkAccess": "Closed",
+                "reassessdate": "2024-02-15",
+                "productionbackup": "NoBackup",
+                "ext_monitoring_enabled": "False",
+                "ext_monitoring_region": "N/A",
+                "creationdate": "2024-02-15"
+            }
+    }},
     "variables": {
         "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), replace(parameters('TopLevelDomain'), '.', ''))]",
         "resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', replace(parameters('TopLevelDomain'), '.', ''))]",
@@ -129,6 +153,7 @@
             "name": "[variables('etlApiAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -142,6 +167,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlApiAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('etlApiAppInsightsName'))]"
                     ],
@@ -299,6 +325,7 @@
             "name": "[variables('etlRenewalAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -312,6 +339,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlRenewalAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('etlRenewalAppInsightsName'))]"
                     ],
@@ -482,6 +510,7 @@
             "name": "[variables('etlMappingAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -495,6 +524,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlMappingAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('etlMappingAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
@@ -664,6 +694,7 @@
             "apiVersion": "2020-02-02-preview",
             "name": "[variables('etlProcessAppInsightsName')]",
             "location": "[variables('Location')]",
+            "tags": "[parameters('resourceTags')]",
             "kind": "web",
             "properties": {
                 "Application_Type": "web",
@@ -678,6 +709,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlProcessAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('etlProcessAppInsightsName'))]",
                         "[resourceId('Microsoft.Web/sites', variables('configAppName'))]"
@@ -860,6 +892,7 @@
             "name": "[variables('etlActionAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -873,6 +906,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('etlActionAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('etlActionAppInsightsName'))]"
                     ],
@@ -1041,6 +1075,7 @@
             "name": "[variables('configAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -1053,6 +1088,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('configAppName')]",
                     "location": "[variables('Location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]"
                     ],
@@ -1233,6 +1269,7 @@
             "name": "[variables('csApiAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -1246,6 +1283,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('csApiAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         
                         "[resourceId('Microsoft.Insights/components', variables('csApiAppInsightsName'))]",
@@ -1407,6 +1445,7 @@
             "name": "[variables('csProcessAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -1420,6 +1459,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('csProcessAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         
                         "[resourceId('Microsoft.Insights/components', variables('csProcessAppInsightsName'))]",
@@ -1601,6 +1641,7 @@
             "name": "[variables('csRetryAppInsightsName')]",
             "location": "[variables('Location')]",
             "kind": "web",
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "Application_Type": "web",
                 "IngestionMode": "ApplicationInsights",
@@ -1614,6 +1655,7 @@
                     "apiVersion": "2018-11-01",
                     "name": "[variables('csRetryAppName')]",
                     "location": "[variables('location')]",
+                    "tags": "[parameters('resourceTags')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Insights/components', variables('csRetryAppInsightsName'))]"
                     ],
