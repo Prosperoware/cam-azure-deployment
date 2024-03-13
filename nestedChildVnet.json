@@ -67,8 +67,32 @@
             "metadata": {
               "description": "Location for all resources."
             }
-        }
-    },
+        },
+        "resourceTags": {
+            "type": "object",
+            "defaultValue": {
+                "bu": "governance",
+                "department": "engineering",
+                "product": "cam",
+                "environment": "Dev",
+                "location": "us_east_nvirginia",
+                "region": "us-east-1",
+                "provisionedby": "Manual",
+                "owner": "vikas agnihotri",
+                "billing": "tina harkins",
+                "schedule": "Variable",
+                "bcdr": "P2",
+                "customertype": "Internal",
+                "customername": "Litera",
+                "dataclassification": "Company",
+                "PublicNetworkAccess": "Closed",
+                "reassessdate": "2024-02-15",
+                "productionbackup": "NoBackup",
+                "ext_monitoring_enabled": "False",
+                "ext_monitoring_region": "N/A",
+                "creationdate": "2024-02-15"
+            }
+    }},
     "variables": {
         "commonId": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), replace(parameters('TopLevelDomain'), '.', ''))]",
         "resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', replace(parameters('TopLevelDomain'), '.', ''))]",
