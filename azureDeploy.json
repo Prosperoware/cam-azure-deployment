@@ -464,6 +464,19 @@
             "resources": [
                 {
                     "condition": "[variables('isETL')]",
+                    "type": "Microsoft.DBforMySQL/flexibleServers/firewallRules",
+                    "apiVersion": "2021-12-01-preview",
+                    "name": "[concat(variables('mySqlServerName'), '/AllowAllWindowsAzureIps')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mySqlServerName'))]"
+                    ],
+                    "properties": {
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "0.0.0.0"
+                    }
+                },
+                {
+                    "condition": "[variables('isETL')]",
                     "type": "Microsoft.DBforMySQL/flexibleServers/databases",
                     "apiVersion": "2021-12-01-preview",
                     "name": "[concat(variables('mySqlServerName'), '/', variables('commonId'))]",
@@ -2616,7 +2629,7 @@
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]",
                         "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]",
-                        "[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
+                        "[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mySqlServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlDocumentActionQueueName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
