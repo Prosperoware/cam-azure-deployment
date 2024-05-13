@@ -1,6 +1,8 @@
 #!/bin/bash
+#What is prefix ,Prefix is common part of Function app. ie. if FunctionApp='prod2dev-io-etl-action' then 'prod2dev-io' is prefix 
 #az login
 #az account set in case of multiple account , set any one subscription
+#branch=feature/CLOUD-29153
 
 branch=master
 echo -e "Default branch is $branch.\n"
@@ -52,6 +54,10 @@ else
    exit 1
 fi
 
+echo -e "Prefix is common part of Function app. ie. if FunctionApp is 'prod2dev-io-etl-action','prod2dev-io-etl-mapping' then 'prod2dev-io' is prefix. \n"
+echo "Please enter the prefix of Functions app."
+read prefix
+
 echo -e "Please select a Feature: \n"
 echo "1. Press 1 for ETL:"
 echo -e "2. Press 2 for Content Sync: \n"
@@ -60,12 +66,9 @@ read choice
 # Perform action based on user input
 case $choice in
     1)
-        echo "Performing Action for ETL:"
-
-        echo -e "Please enter correct function app name for etl-api. \n\n"
-        read etlApi
+        echo -e "Performing Action for ETL:\n"
         echo "Please wait..."
-
+        etlApi="$prefix-etl-api"
         if az functionapp show --name $etlApi --resource-group $resourceGroup &> /dev/null; then
            echo "Functon App $etlApi exists in resource group $resourceGroup"
            echo -e "etl-api.zip will be deployed into $etlApi function app.\n"
@@ -74,57 +77,121 @@ case $choice in
             exit 1
         fi
 
-        echo -e "Please enter function app name for etl-action. \n\n"
-        read etlAction
+        etlAction="$prefix-etl-action"
         echo "Please wait..."
         if az functionapp show --name $etlAction --resource-group $resourceGroup &> /dev/null; then
            echo "Functon App $etlAction exists in resource group $resourceGroup"
-           echo -e "etl-api.zip will be deployed into $etlAction function app.\n"
+           echo -e "etl-action.zip will be deployed into $etlAction function app.\n"
         else
             echo "Functon App $etlAction does not exists in resource group $resourceGroup"
             exit 1
         fi
 
-        echo -e "Please enter function app name for etl-mapping. \n\n"
-        read etlMapping
+        etlMapping="$prefix-etl-mapping"
         echo "Please wait..."
         if az functionapp show --name $etlMapping --resource-group $resourceGroup &> /dev/null; then
            echo "Functon App $etlMapping exists in resource group $resourceGroup"
-           echo -e "etl-api.zip will be deployed into $etlMapping function app.\n"
+           echo -e "etl-mapping.zip will be deployed into $etlMapping function app.\n"
         else
             echo "Functon App $etlMapping does not exists in resource group $resourceGroup"
             exit 1
         fi
-        echo -e "Please enter function app name for etl-office-audit. \n\n"
-        read etlOfficeAudit
+
+        etlOfficeAudit="$prefix-etl-office-audit"
         echo "Please wait..."
         if az functionapp show --name $etlOfficeAudit --resource-group $resourceGroup &> /dev/null; then
            echo "Functon App $etlOfficeAudit exists in resource group $resourceGroup"
-           echo -e "etl-api.zip will be deployed into $etlOfficeAudit function app.\n"
+           echo -e "etl-office-audit.zip will be deployed into $etlOfficeAudit function app.\n"
         else
             echo "Functon App $etlOfficeAudit does not exists in resource group $resourceGroup"
             exit 1
         fi
-        echo -e "Please enter function app name for etl-process. \n\n"
-        read etlProcess
+
+        etlProcess="$prefix-etl-process"
         echo "Please wait..."
         if az functionapp show --name $etlProcess --resource-group $resourceGroup &> /dev/null; then
            echo "Functon App $etlProcess exists in resource group $resourceGroup"
-           echo -e "etl-api.zip will be deployed into $etlProcess function app.\n"
+           echo -e "etl-process.zip will be deployed into $etlProcess function app.\n"
         else
             echo "Functon App $etlProcess does not exists in resource group $resourceGroup"
             exit 1
         fi
-        echo -e "Please enter function app name for etl-renewal. \n\n"
-        read etlRenewal
+
+        etlRenewal="$prefix-etl-renewal"
         echo "Please wait..."
         if az functionapp show --name $etlRenewal --resource-group $resourceGroup &> /dev/null; then
            echo "Functon App $etlRenewal exists in resource group $resourceGroup"
-           echo -e "etl-api.zip will be deployed into $etlRenewal function app.\n"
+           echo -e "etl-renewal.zip will be deployed into $etlRenewal function app.\n"
         else
             echo "Functon App $etlRenewal does not exists in resource group $resourceGroup"
             exit 1
         fi
+
+
+
+        # echo -e "Please enter correct function app name for etl-api. \n\n"
+        # read etlApi
+        # echo "Please wait..."
+
+        # if az functionapp show --name $etlApi --resource-group $resourceGroup &> /dev/null; then
+        #    echo "Functon App $etlApi exists in resource group $resourceGroup"
+        #    echo -e "etl-api.zip will be deployed into $etlApi function app.\n"
+        # else
+        #     echo "Functon App $etlApi does not exists in resource group $resourceGroup"
+        #     exit 1
+        # fi
+
+        # echo -e "Please enter function app name for etl-action. \n\n"
+        # read etlAction
+        # echo "Please wait..."
+        # if az functionapp show --name $etlAction --resource-group $resourceGroup &> /dev/null; then
+        #    echo "Functon App $etlAction exists in resource group $resourceGroup"
+        #    echo -e "etl-api.zip will be deployed into $etlAction function app.\n"
+        # else
+        #     echo "Functon App $etlAction does not exists in resource group $resourceGroup"
+        #     exit 1
+        # fi
+
+        # echo -e "Please enter function app name for etl-mapping. \n\n"
+        # read etlMapping
+        # echo "Please wait..."
+        # if az functionapp show --name $etlMapping --resource-group $resourceGroup &> /dev/null; then
+        #    echo "Functon App $etlMapping exists in resource group $resourceGroup"
+        #    echo -e "etl-api.zip will be deployed into $etlMapping function app.\n"
+        # else
+        #     echo "Functon App $etlMapping does not exists in resource group $resourceGroup"
+        #     exit 1
+        # fi
+        # echo -e "Please enter function app name for etl-office-audit. \n\n"
+        # read etlOfficeAudit
+        # echo "Please wait..."
+        # if az functionapp show --name $etlOfficeAudit --resource-group $resourceGroup &> /dev/null; then
+        #    echo "Functon App $etlOfficeAudit exists in resource group $resourceGroup"
+        #    echo -e "etl-api.zip will be deployed into $etlOfficeAudit function app.\n"
+        # else
+        #     echo "Functon App $etlOfficeAudit does not exists in resource group $resourceGroup"
+        #     exit 1
+        # fi
+        # echo -e "Please enter function app name for etl-process. \n\n"
+        # read etlProcess
+        # echo "Please wait..."
+        # if az functionapp show --name $etlProcess --resource-group $resourceGroup &> /dev/null; then
+        #    echo "Functon App $etlProcess exists in resource group $resourceGroup"
+        #    echo -e "etl-api.zip will be deployed into $etlProcess function app.\n"
+        # else
+        #     echo "Functon App $etlProcess does not exists in resource group $resourceGroup"
+        #     exit 1
+        # fi
+        # echo -e "Please enter function app name for etl-renewal. \n\n"
+        # read etlRenewal
+        # echo "Please wait..."
+        # if az functionapp show --name $etlRenewal --resource-group $resourceGroup &> /dev/null; then
+        #    echo "Functon App $etlRenewal exists in resource group $resourceGroup"
+        #    echo -e "etl-api.zip will be deployed into $etlRenewal function app.\n"
+        # else
+        #     echo "Functon App $etlRenewal does not exists in resource group $resourceGroup"
+        #     exit 1
+        # fi
 
         echo -e "\n\n"
         echo -e "Downloading etl-api.zip file."
@@ -180,10 +247,9 @@ case $choice in
 
         ;;
     2)
-        echo -e "Performing Action for ContentSync:"
+        echo -e "Performing Action for ContentSync: \n"
 
-        echo -e "Please enter correct function app name for contentsync-api."
-        read contentSyncApi
+        contentSyncApi="$prefix-contentsync-api"
         echo "Please wait..."
 
         if az functionapp show --name $contentSyncApi --resource-group $resourceGroup &> /dev/null; then
@@ -194,8 +260,7 @@ case $choice in
             exit 1
         fi
 
-        echo -e "Please enter correct function app name for contentsync-process."
-        read contentSyncProcess
+        contentSyncProcess="$prefix-contentsync-process"
         echo "Please wait..."
         if az functionapp show --name $contentSyncProcess --resource-group $resourceGroup &> /dev/null; then
            echo "Functon App $contentSyncProcess exists in resource group $resourceGroup"
@@ -205,8 +270,7 @@ case $choice in
             exit 1
         fi
 
-        echo -e "Please enter correct function app name for contentsync-retry."
-        read contentSyncRetry
+        contentSyncRetry="$prefix-contentsync-retry"
         echo "Please wait..."
 
         if az functionapp show --name $contentSyncRetry --resource-group $resourceGroup &> /dev/null; then
