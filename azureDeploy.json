@@ -442,7 +442,7 @@
             "location": "[variables('location')]",
             "tags": "[parameters('resourceTags')]",
             "sku": {
-                "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard_B1ms','Standard_B1ms')]",
+                "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'B_Gen5_2','GP_Gen5_2')]",
                 "tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'GeneralPurpose','GeneralPurpose')]"
             },
             "properties": {
