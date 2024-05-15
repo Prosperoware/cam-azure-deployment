@@ -160,7 +160,7 @@
 		"isCS": "[or(equals(parameters('Features'), 'Content Sync'), equals(parameters('Features'), 'Both'))]",
 		"virtualNetworkId":"[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
 		"subnet2id":"[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet2Name'))]",
-		"mysqlId":"[resourceId('Microsoft.DBforMySQL/flexibleServers',variables('mySqlServerName'))]"
+		"mysqlId":"[resourceId('Microsoft.DBforMySQLFlexibleServers/flexibleServers',variables('mySqlServerName'))]"
 	},
 	"resources": [
 		//PREMIUM TEMPLATE
