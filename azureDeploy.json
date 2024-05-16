@@ -436,8 +436,8 @@
         //MYSQL SERVER
         {
             "condition": "[variables('isETL')]",
-            "type": "Microsoft.DBforMySQL/flexibleServers",
-            "apiVersion": "2021-12-01-preview",
+            "type": "Microsoft.DBforMySQL/servers",
+            "apiVersion": "2017-12-01",
             "name": "[variables('mySqlServerName')]",
             "location": "[variables('location')]",
             "tags": "[parameters('resourceTags')]",
