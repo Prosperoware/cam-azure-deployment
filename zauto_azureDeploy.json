@@ -484,20 +484,20 @@
 				// }
 			]
 		},
-		{
-            "condition": "[and(variables('isETL'),equals(parameters('Deploymenttype'),'Premium'))]",
-			"type": "Microsoft.DBforMySQL/servers/virtualNetworkRules",
-            "apiVersion": "2017-12-01",
-            "name": "[concat(variables('mySqlServerName'), '/vnetrule')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
-                "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
-            ],
-            "properties": {
-				"virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-                "ignoreMissingVnetServiceEndpoint": false
-            }
-        },
+		// {
+        //     "condition": "[and(variables('isETL'),equals(parameters('Deploymenttype'),'Premium'))]",
+		// 	"type": "Microsoft.DBforMySQL/servers/virtualNetworkRules",
+        //     "apiVersion": "2017-12-01",
+        //     "name": "[concat(variables('mySqlServerName'), '/vnetrule')]",
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
+        //         "[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]"
+        //     ],
+        //     "properties": {
+		// 		"virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
+        //         "ignoreMissingVnetServiceEndpoint": false
+        //     }
+        // },
 		//COSMOSDB
 		{
 			"type": "Microsoft.DocumentDB/databaseAccounts",
@@ -2750,7 +2750,7 @@
 				"[resourceId('Microsoft.insights/components', variables('configAppInsightsName'))]",
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]",
-				"[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
+				"[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mySqlServerName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlDocumentActionQueueName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
@@ -4331,7 +4331,7 @@
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
-				"[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
+				"[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mySqlServerName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
 			],
 			"properties": {
