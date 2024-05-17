@@ -436,8 +436,8 @@
         //MYSQL SERVER
         {
             "condition": "[variables('isETL')]",
-            "type": "Microsoft.DBforMySQL/flexibleServers",
-            "apiVersion": "2021-05-01",
+            "type": "Microsoft.DBforMySQL/servers",
+            "apiVersion": "2017-12-01",
             "name": "[variables('mySqlServerName')]",
             "location": "[variables('location')]",
             "tags": "[parameters('resourceTags')]",
@@ -475,19 +475,19 @@
                 //         "endIpAddress": "0.0.0.0"
                 //     }
                 // },
-                {
-                    "condition": "[variables('isETL')]",
-                    "type": "Microsoft.DBForMySQL/flexibleServers/databases",
-                    "apiVersion": "2021-05-01",
-                    "name": "[concat(variables('mySqlServerName'), '/', variables('commonId'))]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mySqlServerName'))]"
-                    ],
-                    "properties": {
-                        "charset": "utf8",
-                        "collation": "utf8_general_ci"
-                    }
-                }
+                // {
+                //     "condition": "[variables('isETL')]",
+                //     "type": "Microsoft.DBForMySQL/flexibleServers/databases",
+                //     "apiVersion": "2021-05-01",
+                //     "name": "[concat(variables('mySqlServerName'), '/', variables('commonId'))]",
+                //     "dependsOn": [
+                //         "[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mySqlServerName'))]"
+                //     ],
+                //     "properties": {
+                //         "charset": "utf8",
+                //         "collation": "utf8_general_ci"
+                //     }
+                // }
             ]
         },
         //COSMOSDB
@@ -2628,7 +2628,7 @@
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]",
                         "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]",
-                        "[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mySqlServerName'))]",
+                        "[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlDocumentActionQueueName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
