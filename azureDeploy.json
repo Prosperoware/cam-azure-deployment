@@ -443,7 +443,7 @@
             "tags": "[parameters('resourceTags')]",
             "sku": {
                 "name": "Standard_D11_v2",
-                "tier": "GeneralPurpose"
+                "tier": "Burstable"
             },
             "properties": {
                 "createMode": "Default",
