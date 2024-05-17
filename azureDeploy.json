@@ -440,7 +440,7 @@
             "apiVersion": "2021-12-01-preview",
             "name": "[variables('mySqlServerName')]",
             "location": "[variables('location')]",
-            // "tags": "[parameters('resourceTags')]",
+            "tags": "[parameters('resourceTags')]",
             "sku": {
                 "name": "Standard_D32s_v3",
                 "tier": "MemoryOptimized"
