@@ -450,7 +450,7 @@
                 "administratorLogin": "[parameters('administratorLogin')]",
                 "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
                 "storageProfile": {
-                    "storageMB": 102400,
+                    "storageMB": 102400
                     // "backupRetentionDays": 7,
                     // "geoRedundantBackup": "Disabled",
                     // "storageAutogrow": "Enabled"
