@@ -208,8 +208,8 @@
 			"name": "[variables('mySqlServerName')]",
 			"location": "[variables('location')]",
 			"sku": {
-                "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard_B1ms','Standard_B1ms')]",
-                "tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'GeneralPurpose','GeneralPurpose')]"
+                "name": "Standard_B1ms",
+                "tier": "GeneralPurpose"
             },
 			"properties": {
 				"createMode": "Default",
