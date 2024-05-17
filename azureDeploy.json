@@ -442,7 +442,7 @@
             "location": "[variables('location')]",
             "tags": "[parameters('resourceTags')]",
             "sku": {
-                "name": "Standard_B1ms",
+                "name": "B_Gen5_2",
                 "tier": "GeneralPurpose"
             },
             "properties": {
