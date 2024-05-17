@@ -2748,7 +2748,7 @@
 				"[resourceId('Microsoft.insights/components', variables('configAppInsightsName'))]",
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]",
-				"[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mySqlServerName'))]",
+				// "[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mySqlServerName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlDocumentActionQueueName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
@@ -4329,7 +4329,7 @@
 				"[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
 				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
 				"[resourceId('Microsoft.Resources/deployments', 'linkedTemplateVNet')]",
-				"[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mySqlServerName'))]",
+				// "[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mySqlServerName'))]",
 				"[resourceId('Microsoft.ServiceBus/namespaces', variables('serviceBusName'))]"
 			],
 			"properties": {
