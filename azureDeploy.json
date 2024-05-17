@@ -443,7 +443,7 @@
             "tags": "[parameters('resourceTags')]",
             "sku": {
                 "name": "B_Gen5_2",
-                "tier": "GeneralPurpose"
+                "tier": "Basic"
             },
             "properties": {
                 "createMode": "Default",
