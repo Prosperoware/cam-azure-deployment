@@ -442,8 +442,8 @@
             "location": "[variables('location')]",
             "tags": "[parameters('resourceTags')]",
             "sku": {
-                "name": "Standard_D11_v2",
-                "tier": "MemoryOptimized"
+                "name": "Standard_D2s_v3",
+                "tier": "GeneralPurpose"
             },
             "properties": {
                 "createMode": "Default",
