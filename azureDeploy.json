@@ -436,14 +436,14 @@
         //MYSQL SERVER
         {
             "condition": "[variables('isETL')]",
-            "type": "Microsoft.DBforMySQL/servers",
-            "apiVersion": "2017-12-01",
+            "type": "Microsoft.DBforMySQL/flexibleServers",
+            "apiVersion": "2021-12-01-preview",
             "name": "[variables('mySqlServerName')]",
             "location": "[variables('location')]",
-            "tags": "[parameters('resourceTags')]",
+            // "tags": "[parameters('resourceTags')]",
             "sku": {
-                "name": "B_Gen5_2",
-                "tier": "Basic"
+                "name": "Standard_D32s_v3",
+                "tier": "MemoryOptimized"
             },
             "properties": {
                 "createMode": "Default",
@@ -451,15 +451,15 @@
                 "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
                 "storageProfile": {
                     "storageMB": 102400,
-                    "backupRetentionDays": 7,
-                    "geoRedundantBackup": "Disabled",
-                    "storageAutogrow": "Enabled"
+                    // "backupRetentionDays": 7,
+                    // "geoRedundantBackup": "Disabled",
+                    // "storageAutogrow": "Enabled"
                 },
-                "version": "5.7",
-                "sslEnforcement": "Disabled",
-                "minimalTlsVersion": "TLSEnforcementDisabled",
-                "infrastructureEncryption": "Disabled",
-                "publicNetworkAccess": "Enabled"
+                "version": "5.7"
+                // "sslEnforcement": "Disabled",
+                // "minimalTlsVersion": "TLSEnforcementDisabled",
+                // "infrastructureEncryption": "Disabled",
+                // "publicNetworkAccess": "Enabled"
             },
             "resources": [
                 // {
@@ -2628,7 +2628,7 @@
                         "[resourceId('Microsoft.Web/serverfarms', variables('webServerName'))]",
                         "[resourceId('Microsoft.Insights/components', variables('configAppInsightsName'))]",
                         "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosName'))]",
-                        "[resourceId('Microsoft.DBforMySQL/servers', variables('mySqlServerName'))]",
+                        "[resourceId('Microsoft.DBforMySQL/flexibleServers', variables('mySqlServerName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlQueueName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('etlDocumentActionQueueName'))]",
                         "[resourceId('Microsoft.ServiceBus/namespaces/queues', variables('serviceBusName'), variables('csQueueName'))]",
