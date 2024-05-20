@@ -442,7 +442,7 @@
             "location": "[variables('location')]",
             "tags": "[parameters('resourceTags')]",
             "sku": {
-                "name": "Standard_D11_v2",
+                "name": "Standard_D2ds_v4",
                 "tier": "GeneralPurpose"
             },
             "properties": {
