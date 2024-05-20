@@ -290,7 +290,7 @@ if ($contentsyncRetry) {
         $csrrdul = $csrr.download_url
         Log-Message "Download Url $csrrdul."
         Invoke-WebRequest -Uri $csrrdul -OutFile "contentsync-retry.zip"
-        Write-Host "Downloading completed."
+        Write-Host "Downloading completed.`n"
         Log-Message "Downloading completed.`n"
     }
     catch {
