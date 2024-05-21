@@ -1,11 +1,17 @@
 $logFilePath = "ps-script-log.txt"
-Clear-Content -Path $logFilePath
 function Log-Message {
     param(
         [string]$message
     )
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     "$timestamp - $message" | Out-File -FilePath $logFilePath -Append
+}
+
+if(Test-Path $logFilePath){
+    Clear-Content -Path $logFilePath
+    Write-Host "Old log deleted."
+}else{
+    Write-Host "Log file not found , Creating $logFilePath"
 }
 
 Log-Message "------------------Starting script execution------------------------------------"
