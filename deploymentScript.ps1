@@ -296,7 +296,7 @@ if ($contentsyncRetry) {
         $csrrdul = $csrr.download_url
         Log-Message "Download Url $csrrdul."
         Invoke-WebRequest -Uri $csrrdul -OutFile "contentsync-retry.zip"
-        Write-Host "Downloading completed.`n"
+        Write-Host "Downloading completed."
         Log-Message "Downloading completed.`n"
     }
     catch {
@@ -306,7 +306,8 @@ if ($contentsyncRetry) {
 }
 
 if ($etlAPI) {
-    Write-Host "Deployment started for $etlAPI `n"
+    Write-Host "`n"
+    Write-Host "Deployment started for $etlAPI."
     Log-Message "Deployment started for $etlAPI."
     Write-Host "Please wait..."
     try {
@@ -321,7 +322,8 @@ if ($etlAPI) {
 
 }
 if ($etlAction) {
-    Write-Host "Deployment started for $etlAction `n"
+    Write-Host "`n"
+    Write-Host "Deployment started for $etlAction."
     Log-Message "Deployment started for $etlAction."
     Write-Host "Please wait..."
     try {
@@ -335,7 +337,8 @@ if ($etlAction) {
     }
 }
 if ($etlMapping) {
-    Write-Host "Deployment started for $etlMapping `n"
+    Write-Host "`n"
+    Write-Host "Deployment started for $etlMapping."
     Log-Message "Deployment started for $etlMapping."
     Write-Host "Please wait..."
     try {
@@ -349,7 +352,8 @@ if ($etlMapping) {
     }
 }
 if ($etlAudit) {
-    Write-Host "Deployment started for $etlAudit `n"
+    Write-Host "`n"
+    Write-Host "Deployment started for $etlAudit."
     Log-Message "Deployment started for $etlAudit."
     Write-Host "Please wait..."
     try {
@@ -364,7 +368,8 @@ if ($etlAudit) {
 }
 
 if ($etlProcess) {
-    Write-Host "Deployment started for $etlProcess `n"
+    Write-Host "`n"
+    Write-Host "Deployment started for $etlProcess."
     Log-Message "Deployment started for $etlProcess."
     Write-Host "Please wait..."
     try {
@@ -379,7 +384,8 @@ if ($etlProcess) {
 }
 
 if ($etlRenewal) {
-    Write-Host "Deployment started for $etlRenewal `n"
+    Write-Host "`n"
+    Write-Host "Deployment started for $etlRenewal."
     Log-Message "Deployment started for $etlRenewal."
     Write-Host "Please wait..."
     try {
@@ -394,6 +400,7 @@ if ($etlRenewal) {
 }
 
 if ($contentsyncAPI) {
+    Write-Host "`n"
     Write-Host "Downloading contentsync.api.zip file."
     Log-Message "Deployment started for $contentsyncAPI."
     Write-Host "Please wait..."
@@ -408,6 +415,7 @@ if ($contentsyncAPI) {
     }
 }
 if ($contentsyncProcess) {
+    Write-Host "`n"
     Write-Host "Downloading contentsync-process.zip file."
     Log-Message "Deployment started for $contentsyncProcess."
     Write-Host "Please wait..."
@@ -422,6 +430,7 @@ if ($contentsyncProcess) {
     }
 }
 if ($contentsyncRetry) { 
+    Write-Host "`n"
     Write-Host "Downloading contentsync-retry.zip file."
     Log-Message "Deployment started for $contentsyncRetry."
     Write-Host "Please wait..."
