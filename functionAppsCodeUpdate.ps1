@@ -36,7 +36,9 @@ function Select-AzureSubscription {
     $retryCount = 0
     do {
         try {
-			az login | Out-Null
+            if ($(az account list --all | ConvertFrom-Json).Count -le 0) {
+                az login | Out-Null
+            }
             $subscriptions = az account list --all | ConvertFrom-Json
             if ($subscriptions.Count -gt 0) {
                 if ($subscriptions.Count -gt 1) {
