@@ -36,9 +36,12 @@ function Select-AzureSubscription {
     $retryCount = 0
     do {
         try {
-            if ($(az account list --all | ConvertFrom-Json).Count -le 0) {
-                az login | Out-Null
-            }
+            # if ($(az account list --all | ConvertFrom-Json).Count -le 0) {
+            #     az login | Out-Null
+            # }
+
+            az login | Out-Null
+
             $subscriptions = az account list --all | ConvertFrom-Json
             if ($subscriptions.Count -gt 0) {
                 if ($subscriptions.Count -gt 1) {
@@ -109,7 +112,8 @@ function Download-and-Upgrade {
         Log-Message "Downloading from the URL: $downloadUrl."
         Invoke-WebRequest -Uri $downloadUrl -OutFile "$FileName.zip"
 		Log-Message "Upgrade started for $AppName"
-		$response = az webapp deployment source config-zip --resource-group $resourceGroupRes --name $AppName --src "$FileName.zip"
+        $response = az webapp deploy --resource-group $resourceGroupRes --name $AppName --src-path "$FileName.zip" --type zip --async true
+		# $response = az webapp deployment source config-zip --resource-group $resourceGroupRes --name $AppName --src "$FileName.zip"
         Log-Message "Upgrade response: $response" -WriteToHost $false
         Log-Message """$AppName"" upgrade succeeded."
     }
