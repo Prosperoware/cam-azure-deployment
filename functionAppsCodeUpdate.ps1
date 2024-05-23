@@ -5,6 +5,7 @@ param(
 )
 
 $maxRetries = 3
+$selectedSubscriptionId = $null
 $resourceGroupRes = $null
 $logFileTimestamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 $logFilePath = "CAM_Azure_Stack_log_$logFileTimestamp.txt"
@@ -32,7 +33,7 @@ function Log-Message {
 }
 
 function Select-AzureSubscription {
-    $success = $false
+    $subscriptionId = $null
     $retryCount = 0
     do {
         try {
@@ -46,17 +47,17 @@ function Select-AzureSubscription {
                         Write-Host "$($i + 1): $($subscriptions[$i].name) (ID: $($subscriptions[$i].id))"
                     }
                     do {
-            Write-Host "------------------------------------------------------------------------"
-                        $input = Read-Host "Enter the number of the desired subscription (1-$($subscriptions.Count))"
+                        Write-Host "------------------------------------------------------------------------"
+                        $input = Read-Host "Enter the index of the desired subscription (1-$($subscriptions.Count))"
                         $choice = $input -as [int]
                     } until ($choice -gt 0 -and $choice -le $subscriptions.Count)
                 } else {
                     $choice = 1
                 }
                 $selectedSubscription = $subscriptions[$choice - 1]
-                az account set --subscription $selectedSubscription.id
-                Log-Message "Azure subscription: ""$($selectedSubscription.name)"" was selected"
-                $success = $true
+                $subscriptionId = $selectedSubscription.id
+                az account set --subscription $subscriptionId
+                Log-Message "Azure subscription: ""$($selectedSubscription.name) (ID: $($subscriptionId))"" was selected"
                 break
             } else {
                 Log-Message "No subscriptions found." -Level "ERROR"
@@ -67,35 +68,59 @@ function Select-AzureSubscription {
             Log-Message "Failed to retrieve subscriptions. Please check your internet connection and try again." -Level "ERROR"
         }
         $retryCount++
-    } while (-not $success -and $retryCount -lt $maxRetries)
-    return $success
+    } while (-not $subscriptionId -and $retryCount -lt $maxRetries)
+    return $subscriptionId
 }
 
 function Select-ResourceGroup {
+    param(
+        [Parameter(Mandatory = $true)][string] $SubscriptionId
+    )
+    $resourceGroupName = $null
     $retryCount = 0
     do {
+        if (-not $SubscriptionId) {
+            Log-Message "Invalid subscription selected" -Level "ERROR"
+            break
+        }
         try {
-            Write-Host "------------------------------------------------------------------------"
-            $resourceGroup = Read-Host "Please enter the resource group name"
-            $response = az group show --name $resourceGroup | ConvertFrom-Json
-            $resourceGroupName = $response.name
-            if ($resourceGroupName -eq $resourceGroup) {
-            Log-Message "The resource group ""$resourceGroupName"" was found"
-        return $resourceGroupName
+            $resourceGroups = az group list --subscription $SubscriptionId | ConvertFrom-Json
+            if ($resourceGroups.Count -gt 0) {
+                if ($resourceGroups.Count -gt 1) {
+                    Write-Host "------------------------------------------------------------------------"
+                    Write-Host "Please select a resource group from the list below:"
+                    for ($i = 0; $i -lt $resourceGroups.Count; $i++) {
+                        Write-Host "$($i + 1): $($resourceGroups[$i].name)"
+                    }
+                    do {
+                        Write-Host "------------------------------------------------------------------------"
+                        $input = Read-Host "Enter the index of the desired resource group (1-$($resourceGroups.Count))"
+                        $choice = $input -as [int]
+                    } until ($choice -gt 0 -and $choice -le $resourceGroups.Count)
+                } else {
+                    $choice = 1
+                }
+                $resourceGroupName = $resourceGroups[$choice - 1].name
+                Log-Message "The resource group: ""$resourceGroupName"" was selected"
+                break
+            } else {
+                Log-Message "No resource groups found." -Level "ERROR"
+                break
             }
         }
         catch {
             Log-Message "Failed to retrieve the resource group. Either it doesn't exist or there's an authentication issue." -Level "ERROR"
         }
-    $retryCount++
+        $retryCount++
     } while ($retryCount -lt $maxRetries)
-    return $null
+    return $resourceGroupName
 }
 
 function Download-and-Upgrade {
     param(
         [string]$AppName,
-        [string]$FileName
+        [string]$FileName,
+        [Parameter(Mandatory = $true)][string] $ResourceGroupName
     )
     $downloadUri = "$GitHubRepositoryURL/contents/$FileName.zip?ref=$Branch"
     Write-Host "------------------------------------------------------------------------"
@@ -107,7 +132,7 @@ function Download-and-Upgrade {
         Log-Message "Downloading from the URL: $downloadUrl."
         Invoke-WebRequest -Uri $downloadUrl -OutFile "$FileName.zip"
         Log-Message "Upgrade started for $AppName"
-        $response = az webapp deploy --resource-group $resourceGroupRes --name $AppName --src-path "$FileName.zip" --type zip --async true
+        $response = az webapp deploy --resource-group $ResourceGroupName --name $AppName --src-path "$FileName.zip" --type zip --async true
         Log-Message "Upgrade response: $response" -WriteToHost $false
         Log-Message """$AppName"" upgrade succeeded."
     }
@@ -120,13 +145,13 @@ Write-Host "Logging to file $logFilePath"
 
 Log-Message "------------------------------------ Starting script execution ------------------------------------"
 Log-Message "Upgrading CAM Azure Stack from ""$Branch"" branch"
-$subscriptionSelected = Select-AzureSubscription
-if (-not $subscriptionSelected) {
+$selectedSubscriptionId = Select-AzureSubscription
+if (-not $selectedSubscriptionId) {
     Log-Message "Login to Azure failed. Exiting" -Level "ERROR"
     exit 1
 }
 
-$resourceGroupRes = Select-ResourceGroup
+$resourceGroupRes = Select-ResourceGroup -subscriptionId $selectedSubscriptionId
 if (-not $resourceGroupRes) {
     Log-Message "Failed to retrieve the resource group." -Level "ERROR"
     exit 1
@@ -156,7 +181,7 @@ foreach ($functionApp in $functionApps) {
     foreach ($stackApp in $stackApps.Keys) {
         if ($functionApp -like "*$stackApp*") {
             Log-Message "The function app ""$functionApp"" matched with the stack app $stackApp"
-            Download-and-Upgrade -AppName $functionApp -FileName $stackApps[$stackApp]
+            Download-and-Upgrade -AppName $functionApp -FileName $stackApps[$stackApp] -ResourceGroupName $resourceGroupRes
             $matchingAppsCount++
         }
     }
