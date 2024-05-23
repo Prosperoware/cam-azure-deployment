@@ -20,14 +20,14 @@ function Log-Message {
     $logEntry | Out-File -FilePath $logFilePath -Append
     
     if ($WriteToHost) {
-		$foregroundColor = "White"
-		if ($Level -eq "WARNING") {
-			$foregroundColor = "Yellow"
-		}
-		elseif ($Level -eq "ERROR") {
-			$foregroundColor = "Red"
-		}
-		Write-Host $Message -ForegroundColor $foregroundColor
+        $foregroundColor = "White"
+        if ($Level -eq "WARNING") {
+            $foregroundColor = "Yellow"
+        }
+        elseif ($Level -eq "ERROR") {
+            $foregroundColor = "Red"
+        }
+        Write-Host $Message -ForegroundColor $foregroundColor
     }
 }
 
@@ -36,22 +36,17 @@ function Select-AzureSubscription {
     $retryCount = 0
     do {
         try {
-            # if ($(az account list --all | ConvertFrom-Json).Count -le 0) {
-            #     az login | Out-Null
-            # }
-
             az login | Out-Null
-
             $subscriptions = az account list --all | ConvertFrom-Json
             if ($subscriptions.Count -gt 0) {
                 if ($subscriptions.Count -gt 1) {
-					Write-Host "------------------------------------------------------------------------"
+                    Write-Host "------------------------------------------------------------------------"
                     Write-Host "Please select a subscription from the list below:"
                     for ($i = 0; $i -lt $subscriptions.Count; $i++) {
                         Write-Host "$($i + 1): $($subscriptions[$i].name) (ID: $($subscriptions[$i].id))"
                     }
                     do {
-						Write-Host "------------------------------------------------------------------------"
+            Write-Host "------------------------------------------------------------------------"
                         $input = Read-Host "Enter the number of the desired subscription (1-$($subscriptions.Count))"
                         $choice = $input -as [int]
                     } until ($choice -gt 0 -and $choice -le $subscriptions.Count)
@@ -77,43 +72,42 @@ function Select-AzureSubscription {
 }
 
 function Select-ResourceGroup {
-	$retryCount = 0
+    $retryCount = 0
     do {
         try {
-			Write-Host "------------------------------------------------------------------------"
+            Write-Host "------------------------------------------------------------------------"
             $resourceGroup = Read-Host "Please enter the resource group name"
             $response = az group show --name $resourceGroup | ConvertFrom-Json
             $resourceGroupName = $response.name
-			if ($resourceGroupName -eq $resourceGroup) {
-				Log-Message "The resource group ""$resourceGroupName"" was found"
-				return $resourceGroupName
-			}
+            if ($resourceGroupName -eq $resourceGroup) {
+            Log-Message "The resource group ""$resourceGroupName"" was found"
+        return $resourceGroupName
+            }
         }
         catch {
             Log-Message "Failed to retrieve the resource group. Either it doesn't exist or there's an authentication issue." -Level "ERROR"
         }
-		$retryCount++
+    $retryCount++
     } while ($retryCount -lt $maxRetries)
-	return $null
+    return $null
 }
 
 function Download-and-Upgrade {
-	param(
+    param(
         [string]$AppName,
         [string]$FileName
     )
-	$downloadUri = "$GitHubRepositoryURL/contents/$FileName.zip?ref=$Branch"
+    $downloadUri = "$GitHubRepositoryURL/contents/$FileName.zip?ref=$Branch"
     Write-Host "------------------------------------------------------------------------"
-	Log-Message "Downloading ""$FileName.zip"" file."
-	Write-Host "Please wait..."
-	try {
+    Log-Message "Downloading ""$FileName.zip"" file."
+    Write-Host "Please wait..."
+    try {
         $apiResponse = Invoke-RestMethod -Uri $downloadUri
         $downloadUrl = $apiResponse.download_url
         Log-Message "Downloading from the URL: $downloadUrl."
         Invoke-WebRequest -Uri $downloadUrl -OutFile "$FileName.zip"
-		Log-Message "Upgrade started for $AppName"
+        Log-Message "Upgrade started for $AppName"
         $response = az webapp deploy --resource-group $resourceGroupRes --name $AppName --src-path "$FileName.zip" --type zip --async true
-		# $response = az webapp deployment source config-zip --resource-group $resourceGroupRes --name $AppName --src "$FileName.zip"
         Log-Message "Upgrade response: $response" -WriteToHost $false
         Log-Message """$AppName"" upgrade succeeded."
     }
@@ -128,13 +122,13 @@ Log-Message "------------------------------------ Starting script execution ----
 Log-Message "Upgrading CAM Azure Stack from ""$Branch"" branch"
 $subscriptionSelected = Select-AzureSubscription
 if (-not $subscriptionSelected) {
-	Log-Message "Login to Azure failed. Exiting" -Level "ERROR"
+    Log-Message "Login to Azure failed. Exiting" -Level "ERROR"
     exit 1
 }
 
 $resourceGroupRes = Select-ResourceGroup
 if (-not $resourceGroupRes) {
-	Log-Message "Failed to retrieve the resource group." -Level "ERROR"
+    Log-Message "Failed to retrieve the resource group." -Level "ERROR"
     exit 1
 }
 
@@ -159,17 +153,17 @@ $stackApps = @{
 
 $matchingAppsCount = 0
 foreach ($functionApp in $functionApps) {
-	foreach ($stackApp in $stackApps.Keys) {
-		if ($functionApp -like "*$stackApp*") {
-			Log-Message "The function app ""$functionApp"" matched with the stack app $stackApp"
+    foreach ($stackApp in $stackApps.Keys) {
+        if ($functionApp -like "*$stackApp*") {
+            Log-Message "The function app ""$functionApp"" matched with the stack app $stackApp"
             Download-and-Upgrade -AppName $functionApp -FileName $stackApps[$stackApp]
-			$matchingAppsCount++
-		}
-	}
+            $matchingAppsCount++
+        }
+    }
 }
 
 if ($matchingAppsCount -eq 0) {
-	Log-Message "No matching CAM function apps found in the resource group ""$resourceGroupRes""." -Level "ERROR"
+    Log-Message "No matching CAM function apps found in the resource group ""$resourceGroupRes""." -Level "ERROR"
     exit 1
 }
 
