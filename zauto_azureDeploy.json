@@ -434,7 +434,7 @@
 			"name": "[variables('mySqlServerName')]",
 			"location": "[variables('location')]",
 			"sku": {
-                "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard_D2ds_v4','Standard_D2ds_v4')]",
+                "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard_D4ds_v4','Standard_D4ds_v4')]",
                 "tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'GeneralPurpose','GeneralPurpose')]"
             },
 			"properties": {
