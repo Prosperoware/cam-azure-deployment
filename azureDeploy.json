@@ -150,7 +150,7 @@
         "storageAccountName": "[concat('strg',variables('commonId'))]",
         "applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
         "encryptedBucket": "[concat(variables('resourcesNamespace'), '-encrypted-bucket')]",
-        "mySqlServerName": "[concat('mysql-', variables('resourcesNamespace'))]",
+        "mySqlServerName": "[concat('mysql-flxible-', variables('resourcesNamespace'))]",
         "cosmosName": "[concat('cosmos-', variables('resourcesNamespace'))]",
         "serviceBusName": "[concat('servicebus-', variables('resourcesNamespace'))]",
         "cosmosTenantdb": "[concat(variables('resourcesNamespace'),'-contentsync-tenant')]",

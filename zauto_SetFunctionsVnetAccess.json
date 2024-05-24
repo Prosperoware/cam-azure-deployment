@@ -111,7 +111,7 @@
 		"resourcesNamespace": "[concat(parameters('InstanceUniqueName'), parameters('EnvironmentStage'), '-', replace(parameters('TopLevelDomain'), '.', ''))]",
 		"storageAccountName": "[concat('strg',variables('commonId'))]",
 		"applicationConfigBucket": "[concat(variables('resourcesNamespace'), '-application-config')]",
-		"mySqlServerName": "[concat('mysql-', variables('resourcesNamespace'))]",
+		"mySqlServerName": "[concat('mysql-flxible-', variables('resourcesNamespace'))]",
 		"cosmosName": "[concat('cosmos-', variables('resourcesNamespace'))]",
 		"serviceBusName": "[concat('servicebus-', variables('resourcesNamespace'))]",
 		"cosmosTenantdb": "[concat(variables('resourcesNamespace'),'-contentsync-tenant')]",
