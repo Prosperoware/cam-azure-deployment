@@ -2,7 +2,7 @@ dbserver:
   primary:
     host: [mySQL_server].mysql.database.azure.com
     port: [db_port]
-    username: [mySQL_db_user]@[mySQL_server]
+    username: [mySQL_db_user]
     password: [admin_login_password]
     driverClass: com.mysql.cj.jdbc.Driver
     validationInterval: 3000
