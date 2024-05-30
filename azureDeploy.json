@@ -248,7 +248,7 @@
         "branch": "flexible-server-test",
         "DefaultWorkspaceName":"[concat('DefaultWorkspace-',parameters('InstanceUniqueName'))]",
 		"WorkspaceResourceId":"[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.OperationalInsights/workspaces/',variables('DefaultWorkspaceName'))]",
-        "repo":"https://github.com/Prosperoware/cam-azure-deployment/raw/", // must have the ending /
+        "repo":"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
         //"repo":"https://carlosstgprospero.blob.core.windows.net/armtemplates/"//"https://github.com/Prosperoware/cam-azure-deployment/raw/" // must have the ending /
     },
     "resources": [
