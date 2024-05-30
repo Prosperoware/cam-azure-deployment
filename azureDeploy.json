@@ -476,7 +476,7 @@
                 },
                 {
                     "condition": "[variables('isETL')]",
-                    "type": "Microsoft.DBforMySQL/flexibleServers/firewallRules",
+                    "type": "Microsoft.DBforMySQL/flexibleServers/databases",
                     "apiVersion": "2021-12-01-preview",
                     "name": "[concat(variables('mySqlServerName'), '/', variables('commonId'))]",
                     "dependsOn": [
