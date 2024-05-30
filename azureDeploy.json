@@ -455,6 +455,13 @@
                     "geoRedundantBackup": "Disabled",
                     "storageAutogrow": "Enabled"
                 },
+                "storage": {
+                    "storageSizeGB": 100,
+                    "iops": 600,
+                    "autoGrow": "Enabled",
+                    "autoIoScaling": "Disabled",
+                    "logOnDisk": "Disabled"
+                },
                 "version": "5.7",
                 "sslEnforcement": "Disabled",
                 "minimalTlsVersion": "TLSEnforcementDisabled",
