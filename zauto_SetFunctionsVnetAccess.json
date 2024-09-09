@@ -208,8 +208,8 @@
 			"name": "[variables('mySqlServerName')]",
 			"location": "[variables('location')]",
 			"sku": {
-				"name": "[if(equals(parameters('Deploymenttype'),'Standard'),'B_Gen5_1','GP_Gen5_2')]",
-				"tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'Basic','GeneralPurpose')]",
+				"name": "[if(equals(parameters('Deploymenttype'),'Standard'),'GP_Gen5_2','GP_Gen5_2')]",
+				"tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'GeneralPurpose','GeneralPurpose')]",
 				"family": "Gen5",
 				"capacity": "[if(equals(parameters('Deploymenttype'),'Standard'),1,2)]"
 			},
@@ -223,7 +223,7 @@
 					"geoRedundantBackup": "Disabled",
 					"storageAutogrow": "Enabled"
 				},
-				"version": "5.7",
+				"version": "8.0",
 				"sslEnforcement": "[if(equals(parameters('Deploymenttype'),'Standard'),'Disabled','Enabled')]",
 				"minimalTlsVersion": "[if(equals(parameters('Deploymenttype'),'Standard'),'TLSEnforcementDisabled','TLS1_2')]",//"TLSEnforcementDisabled",
 				"infrastructureEncryption": "Disabled",
