@@ -462,7 +462,7 @@
                     "autoIoScaling": "Disabled",
                     "logOnDisk": "Disabled"
                 },
-                "version": "5.7",
+                "version": "8.0.21",
                 "sslEnforcement": "Disabled",
                 "minimalTlsVersion": "TLSEnforcementDisabled",
                 "infrastructureEncryption": "Disabled",
