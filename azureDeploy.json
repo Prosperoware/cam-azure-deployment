@@ -441,7 +441,7 @@
             "location": "[variables('location')]",
             "tags": "[parameters('resourceTags')]",
             "sku": {
-                "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'Standard_D4d_v4','Standard_D4d_v4')]",
+                "name": "[if(equals(parameters('Deploymenttype'),'Standard'),'GP_Gen5','GP_Gen5')]",
                 "tier": "[if(equals(parameters('Deploymenttype'),'Standard'),'GeneralPurpose','GeneralPurpose')]"
             },
             "properties": {
