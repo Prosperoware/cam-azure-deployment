@@ -1684,7 +1684,7 @@
 						},
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
-							"value": "~3"
+							"value": "~4"
 						},
 						{
 							"name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
@@ -1861,7 +1861,7 @@
 						},
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
-							"value": "~3"
+							"value": "~4"
 						},
 						{
 							"name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
@@ -2049,7 +2049,7 @@
 						},
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
-							"value": "~3"
+							"value": "~4"
 						},
 						{
 							"name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
@@ -2241,7 +2241,7 @@
 						},
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
-							"value": "~3"
+							"value": "~4"
 						},
 						{
 							"name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
@@ -2438,7 +2438,7 @@
 						},
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
-							"value": "~3"
+							"value": "~4"
 						},
 						{
 							"name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
@@ -2617,7 +2617,7 @@
                                 },
                                 {
                                     "name": "FUNCTIONS_EXTENSION_VERSION",
-                                    "value": "~3"
+                                    "value": "~4"
                                 },
                                 {
                                     "name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
@@ -2794,7 +2794,7 @@
                         },
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
-							"value": "~3"
+							"value": "~4"
 						},
 						{
 							"name": "FUNCTIONS_WORKER_RUNTIME",
@@ -3017,7 +3017,7 @@
 						},
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
-							"value": "~3"
+							"value": "~4"
 						},
 						{
 							"name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
@@ -3197,7 +3197,7 @@
 						},
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
-							"value": "~3"
+							"value": "~4"
 						},
 						{
 							"name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
@@ -3392,7 +3392,7 @@
 						},
 						{
 							"name": "FUNCTIONS_EXTENSION_VERSION",
-							"value": "~3"
+							"value": "~4"
 						},
 						{
 							"name": "FUNCTIONS_WORKER_JAVA_LOAD_APP_LIBS",
